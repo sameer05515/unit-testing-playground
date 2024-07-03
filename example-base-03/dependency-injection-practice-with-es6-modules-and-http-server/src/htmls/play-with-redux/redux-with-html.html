@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux with HTML</title>
+    <style>
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-container input,
+      .form-container select,
+      .form-container button {
+        margin-bottom: 15px;
+      }
+
+      .form-container label {
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="formContainer" class="form-container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.1.0/redux.min.js"></script>
+    <script type="module">
+      import { createConsoleAndRegisterMyId } from "../../js/lib/utils.js";
+
+      let LOGGER = null;
+
+      const { createStore } = Redux;
+
+      // Initial State
+      const initialState = {
+        name: "",
+        email: "",
+        option: "",
+        gender: "",
+        agree: false,
+      };
+
+      // Actions
+      const UPDATE_FIELD = "UPDATE_FIELD";
+      const updateField = (field, value) => ({
+        type: UPDATE_FIELD,
+        payload: { field, value },
+      });
+
+      // Reducer
+      const formReducer = (state = initialState, action) => {
+        switch (action.type) {
+          case UPDATE_FIELD:
+            return {
+              ...state,
+              [action.payload.field]: action.payload.value,
+            };
+          default:
+            return state;
+        }
+      };
+
+      // Store
+      const store = createStore(formReducer);
+
+      // Subscribe to store changes
+      store.subscribe(() => {
+        console.log("State updated:", JSON.stringify(store.getState()));
+        LOGGER.info("State updated:", JSON.stringify(store.getState()));
+      });
+
+      const formConfig = {
+        elements: [
+          {
+            type: "input",
+            attributes: {
+              type: "text",
+              placeholder: "Name",
+              name: "name",
+            },
+            style: {
+              padding: "10px",
+              fontSize: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+            },
+            events: {
+              change: (event) => {
+                store.dispatch(updateField("name", event.target.value));
+              },
+            },
+          },
+          {
+            type: "input",
+            attributes: {
+              type: "email",
+              placeholder: "Email",
+              name: "email",
+            },
+            style: {
+              padding: "10px",
+              fontSize: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+            },
+            events: {
+              change: (event) => {
+                store.dispatch(updateField("email", event.target.value));
+              },
+            },
+          },
+          {
+            type: "select",
+            attributes: {
+              name: "options",
+            },
+            options: [
+              { value: "", text: "Select an option" },
+              { value: "option1", text: "Option 1" },
+              { value: "option2", text: "Option 2" },
+            ],
+            style: {
+              padding: "10px",
+              fontSize: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+            },
+            events: {
+              change: (event) => {
+                store.dispatch(updateField("option", event.target.value));
+              },
+            },
+          },
+          {
+            type: "label",
+            textContent: "Gender:",
+            style: {},
+          },
+          {
+            type: "input",
+            attributes: {
+              type: "radio",
+              name: "gender",
+              value: "male",
+            },
+            label: "Male",
+            style: {},
+            events: {
+              change: (event) => {
+                store.dispatch(updateField("gender", event.target.value));
+              },
+            },
+          },
+          {
+            type: "input",
+            attributes: {
+              type: "radio",
+              name: "gender",
+              value: "female",
+            },
+            label: "Female",
+            style: {},
+            events: {
+              change: (event) => {
+                store.dispatch(updateField("gender", event.target.value));
+              },
+            },
+          },
+          {
+            type: "input",
+            attributes: {
+              type: "checkbox",
+              name: "agree",
+              value: "yes",
+            },
+            label: "I agree to the terms and conditions",
+            style: {},
+            events: {
+              change: (event) => {
+                store.dispatch(updateField("agree", event.target.checked));
+              },
+            },
+          },
+          {
+            type: "button",
+            attributes: {
+              type: "submit",
+            },
+            textContent: "Submit",
+            style: {
+              padding: "10px",
+              fontSize: "16px",
+              backgroundColor: "#28a745",
+              color: "#fff",
+              border: "none",
+              borderRadius: "3px",
+              cursor: "pointer",
+            },
+            events: {
+              click: (event) => {
+                event.preventDefault();
+                console.log(
+                  "Form submitted:",
+                  JSON.stringify(store.getState())
+                );
+                LOGGER.info(
+                  "Form submitted:",
+                  JSON.stringify(store.getState())
+                );
+              },
+            },
+          },
+        ],
+      };
+
+      function applyStyles(element, styles) {
+        for (let property in styles) {
+          if (styles.hasOwnProperty(property)) {
+            element.style[property] = styles[property];
+          }
+        }
+      }
+
+      function addEventListeners(element, events) {
+        for (let event in events) {
+          if (events.hasOwnProperty(event)) {
+            element.addEventListener(event, events[event]);
+          }
+        }
+      }
+
+      function createForm(config) {
+        const form = document.createElement("form");
+
+        config.elements.forEach((el) => {
+          let element;
+
+          if (el.type === "select") {
+            element = document.createElement("select");
+            if (el.attributes) {
+              for (let attr in el.attributes) {
+                element.setAttribute(attr, el.attributes[attr]);
+              }
+            }
+            el.options.forEach((optionData) => {
+              const option = document.createElement("option");
+              option.value = optionData.value;
+              option.textContent = optionData.text;
+              element.appendChild(option);
+            });
+          } else if (
+            (el.type === "input" && el.attributes.type === "radio") ||
+            (el.type === "input" && el.attributes.type === "checkbox")
+          ) {
+            element = document.createElement("div");
+            const input = document.createElement("input");
+            for (let attr in el.attributes) {
+              input.setAttribute(attr, el.attributes[attr]);
+            }
+            const label = document.createElement("label");
+            label.textContent = el.label;
+            element.appendChild(input);
+            element.appendChild(label);
+            if (el.events) {
+              addEventListeners(input, el.events);
+            }
+          } else {
+            element = document.createElement(el.type);
+            if (el.attributes) {
+              for (let attr in el.attributes) {
+                element.setAttribute(attr, el.attributes[attr]);
+              }
+            }
+            if (el.textContent) {
+              element.textContent = el.textContent;
+            }
+            if (el.events) {
+              addEventListeners(element, el.events);
+            }
+          }
+
+          if (el.style) {
+            applyStyles(element, el.style);
+          }
+
+          form.appendChild(element);
+        });
+
+        return form;
+      }
+
+      const formContainer = document.getElementById("formContainer");
+      const form = createForm(formConfig);
+      formContainer.appendChild(form);
+
+      /////////////////////////////////////////////////////////////
+
+      let consoleDivId = null;
+
+      const reshuffle = () => {
+        const div3 = document.createElement("div");
+        // Style the new div as a flex container
+        div3.style.display = "flex";
+        div3.style.flexDirection = "row"; // You can change to 'column' if needed
+        div3.style.gap = "10px"; // Optional: Adds space between flex items
+
+        // Append existing divs to the new div
+        div3.appendChild(document.getElementById("formContainer"));
+        div3.appendChild(document.getElementById(consoleDivId));
+        // Append the new div to the body
+        document.body.appendChild(div3);
+      };
+      
+      createConsoleAndRegisterMyId(
+        (successResponse) => {
+          console.clear();
+          LOGGER = successResponse.LOGGER;
+          consoleDivId = successResponse.consoleDivId;
+
+          console.log("[Success]: ", successResponse);
+          LOGGER.error("[Success]: ", successResponse);
+          reshuffle();
+        },
+        (errorMessage) => {
+          console.error("[Fail]: ", errorMessage);
+        },
+        (LOGGERR) => {
+          LOGGERR.reset();
+          LOGGER.info('Console cleared.')
+        }
+      );
+    </script>
+  </body>
+</html>

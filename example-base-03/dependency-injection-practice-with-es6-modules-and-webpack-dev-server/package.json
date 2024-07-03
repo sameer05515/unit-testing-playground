@@ -1,0 +1,23 @@
+{
+  "name": "dependency-injection-practice-with-es6-modules-and-webpack-dev-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server src -p 6060",
+    "start-with-nodemon": "nodemon --watch src src/start-server.js",
+    "serve": "browser-sync start --proxy 'localhost:6060' --files 'src'"
+  },
+  "keywords": [],
+  "author": "Premendra Kumar",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "browser-sync": "^3.0.2",
+    "http-server": "^14.1.1",
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "d3": "^7.9.0"
+  }
+}

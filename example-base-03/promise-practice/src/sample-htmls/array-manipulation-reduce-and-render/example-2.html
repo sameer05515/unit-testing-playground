@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <title>Document</title>
+  </head>
+  <body>
+    <pre id="myPre"></pre>
+
+    <script>
+      // Helper function to generate table styles
+      const styles = {
+        table: {
+          width: "100%",
+          borderCollapse: "collapse",
+        },
+        th: {
+          backgroundColor: "#f2f2f2",
+          border: "1px solid #ddd",
+          padding: "8px",
+          textAlign: "left",
+        },
+        td: {
+          border: "1px solid #ddd",
+          padding: "8px",
+        },
+        tr: {
+          "&:nth-child(even)": {
+            backgroundColor: "#f9f9f9",
+          },
+          "&:hover": {
+            backgroundColor: "#ddd",
+          },
+        },
+        container: {
+          margin: "20px 0",
+          fontFamily: "Arial, sans-serif",
+        },
+      };
+
+      // Function to generate table for attendance data
+      const generateAttendanceTable = (attendanceData) => {
+        // Create table element
+        const table = document.createElement("table");
+        Object.assign(table.style, styles.table);
+
+        // Create table header
+        const thead = table.createTHead();
+        const headerRow = thead.insertRow();
+        ["Employee Code", "Date", "Is Present"].forEach((text) => {
+          const th = document.createElement("th");
+          Object.assign(th.style, styles.th);
+          th.textContent = text;
+          headerRow.appendChild(th);
+        });
+
+        // Create table body
+        const tbody = table.createTBody();
+        attendanceData.forEach((record) => {
+          const row = tbody.insertRow();
+          Object.assign(row.style, styles.tr);
+
+          const cellEmployeeCode = row.insertCell();
+          Object.assign(cellEmployeeCode.style, styles.td);
+          cellEmployeeCode.textContent = record.employeeCode;
+
+          const cellDate = row.insertCell();
+          Object.assign(cellDate.style, styles.td);
+          cellDate.textContent = record.date;
+
+          const cellIsPresent = row.insertCell();
+          Object.assign(cellIsPresent.style, styles.td);
+          cellIsPresent.textContent = record.isPresent ? "Yes" : "No";
+        });
+
+        return table;
+      };
+
+      // Function to render the table to the document
+      const renderTable = (attendanceData) => {
+        const container = document.createElement("div");
+        Object.assign(container.style, styles.container);
+        container.appendChild(generateAttendanceTable(attendanceData));
+        document.body.appendChild(container);
+      };
+
+      // Sample data
+      const attendanceData = [
+        { employeeCode: "1000001", date: "2024-07-01", isPresent: true },
+        { employeeCode: "1000001", date: "2024-07-02", isPresent: false },
+        { employeeCode: "1000002", date: "2024-07-01", isPresent: true },
+        { employeeCode: "1000002", date: "2024-07-02", isPresent: true },
+      ];
+
+      // Render table with sample data
+      renderTable(attendanceData);
+    </script>
+  </body>
+</html>
