@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import employeeRoutes from './routes/employeeRoutes.js';
+import studentsRouter from './routes/students.js'
 import cors from 'cors'; // Import cors package
 
 const app = express();
@@ -12,6 +13,9 @@ app.use(cors()); // Use cors middleware to allow all origins
 
 // Routes
 app.use('/api', employeeRoutes);
+
+// const studentsRouter = require('./routes/students');
+app.use('/students', studentsRouter);
 
 // Start the server
 app.listen(port, () => {

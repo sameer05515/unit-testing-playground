@@ -1,0 +1,29 @@
+<!-- src/app/student/student.component.html -->
+<div>
+    <h1>Student List</h1>
+    <ul>
+      <li *ngFor="let student of students">
+        {{ student.name }} ({{ student.age }}) 
+        <button (click)="edit(student)">Edit</button>
+        <button (click)="deleteStudent(student.id)">Delete</button>
+      </li>
+    </ul>
+  
+    <h2>Add New Student</h2>
+    <form (ngSubmit)="addStudent()">
+      <input [(ngModel)]="newStudent.name" name="name" placeholder="Name" required>
+      <input [(ngModel)]="newStudent.age" name="age" type="number" placeholder="Age" required>
+      <button type="submit">Add</button>
+    </form>
+  
+    <div *ngIf="editStudent">
+      <h2>Edit Student</h2>
+      <form (ngSubmit)="updateStudent()">
+        <input [(ngModel)]="editStudent.name" name="editName" placeholder="Name" required>
+        <input [(ngModel)]="editStudent.age" name="editAge" type="number" placeholder="Age" required>
+        <button type="submit">Update</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      </form>
+    </div>
+  </div>
+  
