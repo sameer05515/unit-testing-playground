@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MutationObserver Example</title>
+  </head>
+  <body>
+    <div id="do-not-delete-this-div">
+      <button id="addScriptButton">Add Script</button>
+      <button id="removeLastScriptButton" style="display: none">
+        Remove Last Script
+      </button>
+    </div>
+
+    
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const customComponentsIdList = [];
+
+        const addScriptButtonEl = document.getElementById("addScriptButton");
+        const removeScriptButtonEl = document.getElementById(
+          "removeLastScriptButton"
+        );
+
+        function addScript() {
+          const scriptId = `script-${customComponentsIdList.length + 1}`;
+          const script = document.createElement("script");
+          script.src = "../../scripts/custom/add-and-remove-elements-on-click.js"; // Replace with actual script URL
+          script.id = scriptId;
+          document.body.appendChild(script);
+          customComponentsIdList.push(scriptId);
+          console.log(`Script with ID ${scriptId} added.`);
+          updateButtonVisibility();
+        }
+
+        function removeLastScript() {
+          const lastScriptId = customComponentsIdList.pop(); // Remove the last script ID from the array
+          if (lastScriptId) {
+            const script = document.getElementById(lastScriptId);
+            if (script) {
+              script.parentElement.removeChild(script);
+              console.log(`Script with ID ${lastScriptId} has been removed.`);
+            } else {
+              console.log(
+                `Script with ID ${lastScriptId} does not exist in the DOM.`
+              );
+            }
+          } else {
+            console.log("No scripts in customComponentsIdList to remove.");
+          }
+          updateButtonVisibility();
+        }
+
+        function updateButtonVisibility() {
+          if (customComponentsIdList.length > 0) {
+            removeScriptButtonEl.style.display = "inline-block";
+          } else {
+            removeScriptButtonEl.style.display = "none";
+            // console.log('Clear console');
+            // console.clear();
+          }
+        }
+
+        addScriptButtonEl.addEventListener("click", addScript);
+        removeScriptButtonEl.addEventListener("click", removeLastScript);
+
+        const observer = new MutationObserver((mutationsList) => {
+          for (const mutation of mutationsList) {
+            if (mutation.type === "childList") {
+              if (mutation.addedNodes.length > 0) {
+                console.log(
+                  "[MutationObserver]: A child node has been added:",
+                  mutation.addedNodes
+                );
+              }
+              if (mutation.removedNodes.length > 0) {
+                console.log(
+                  "[MutationObserver]: A child node has been removed:",
+                  mutation.removedNodes
+                );
+              }
+            }
+          }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        updateButtonVisibility();
+      });
+    </script>
+  </body>
+</html>

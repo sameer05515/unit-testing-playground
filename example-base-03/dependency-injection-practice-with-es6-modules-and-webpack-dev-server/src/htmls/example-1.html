@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dependency Injection Example</title>
+</head>
+<body>
+  <h1>Check the console for output</h1>
+  <script>
+    // The JavaScript code goes here
+
+    class DIContainer {
+      constructor() {
+        this.services = {};
+      }
+
+      register(name, dependency) {
+        this.services[name] = dependency;
+      }
+
+      get(name) {
+        return this.services[name];
+      }
+    }
+
+    class Logger {
+      log(message) {
+        console.log(message);
+      }
+    }
+
+    class UserService {
+      constructor(logger) {
+        this.logger = logger;
+      }
+
+      getUser() {
+        this.logger.log('Getting user');
+        // Simulated user fetch
+        return { id: 1, name: 'John Doe' };
+      }
+    }
+
+    // Create DI container
+    const container = new DIContainer();
+
+    // Register dependencies
+    container.register('logger', new Logger());
+    container.register('userService', new UserService(container.get('logger')));
+
+    // Resolve dependencies
+    const userService = container.get('userService');
+    const user = userService.getUser();
+    console.log(user);
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Component Example</title>
+</head>
+<body>
+
+    <select id="personSelect"></select>
+    <div id="selectedPerson"></div>
+
+    <script>
+        // Function to generate value dynamically
+        const getValue = (firstName, lastName) => `${firstName} ${lastName}`;
+
+        // Array of objects with Indian persons
+        const indianPersons = [
+            { firstName: 'Narendra', lastName: 'Modi', label: 'Modi' },
+            { firstName: 'Amitabh', lastName: 'Bachchan', label: 'Bachchan' },
+            { firstName: 'Sachin', lastName: 'Tendulkar', label: 'Tendulkar' },
+            { firstName: 'Lata', lastName: 'Mangeshkar', label: 'Lata' },
+            { firstName: 'Ratan', lastName: 'Tata', label: 'Tata' },
+            { firstName: 'MS', lastName: 'Dhoni', label: 'Dhoni' },
+            { firstName: 'Virat', lastName: 'Kohli', label: 'Kohli' },
+            { firstName: 'A.P.J. Abdul', lastName: 'Kalam', label: 'Kalam' },
+            { firstName: 'Deepika', lastName: 'Padukone', label: 'Deepika' },
+            { firstName: 'Priyanka', lastName: 'Chopra', label: 'Priyanka' }
+        ];
+
+        // Get the select and div elements
+        const personSelect = document.getElementById('personSelect');
+        const selectedPersonDiv = document.getElementById('selectedPerson');
+
+        // Populate the select element with options
+        indianPersons.forEach(person => {
+            const option = document.createElement('option');
+            option.value = getValue(person.firstName, person.lastName);
+            option.text = person.label;
+            personSelect.appendChild(option);
+        });
+
+        // Add event listener for select change
+        personSelect.addEventListener('change', (event) => {
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            selectedPersonDiv.innerHTML = `Selected: <strong>${selectedOption.text}</strong> (${selectedOption.value})`;
+            console.log(selectedOption);
+        });
+
+    </script>
+    
+</body>
+</html>

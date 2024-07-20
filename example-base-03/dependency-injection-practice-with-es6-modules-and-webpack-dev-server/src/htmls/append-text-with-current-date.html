@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Append Text with Current Date</title>
+    <style>
+        #dateContainer {
+            height: 200px;
+            white-space: pre;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="dateContainer"></div>
+
+<script>
+    const dateContainer = document.getElementById('dateContainer');
+
+    const appendCurrentDate = () => {
+        const currentDate = new Date().toString();
+        const textNode = document.createTextNode(currentDate + '\n');
+        dateContainer.appendChild(textNode);
+        dateContainer.scrollTop = dateContainer.scrollHeight; // Scroll to the bottom
+    };
+
+    setInterval(appendCurrentDate, 10);
+</script>
+
+</body>
+</html>
