@@ -63,7 +63,10 @@ const globalConstants = (() => {
 
         { link: 'css-flex-learning/elements/tooltip/tooltip-style-0.1.js'},
 
-        { link: 'use-case-to-learn-promise/use-case-just-chain-promises.js'}
+        { link: 'use-case-to-learn-promise/use-case-just-chain-promises.js'},
+        { link: 'use-case-to-learn-promise/use-case-just-chain-promises-0.1.js'},        
+        { link: 'use-case-to-learn-promise/chaining-in-cleaner-way.js'},        
+        { link: 'use-case-to-learn-promise/chaining-in-cleaner-way-0.1.js'}
     ];
 
     const SCRIPTS_OPTIONS = scriptNames.map((v) => ({
