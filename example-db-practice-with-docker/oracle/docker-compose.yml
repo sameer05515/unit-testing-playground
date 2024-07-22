@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim # Or use 18-slim for Oracle XE 18c
+    container_name: oracle-db
+    ports:
+      - "1521:1521" # Database port
+      - "5500:5500" # EM Express port
+    environment:
+      ORACLE_PASSWORD: admin@123
+    volumes:
+      - D:\docker-volumes\oracle-data:/opt/oracle/oradata # Persist data
+    restart: always
+
+# volumes:
+#   oracle-data:
+#     driver: local

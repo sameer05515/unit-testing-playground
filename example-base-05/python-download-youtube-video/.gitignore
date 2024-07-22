@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+
+# Python cache files
+*.egg
+*.egg-info/
+dist/
+build/
+*.egg-info
+
+# Logs and debugging
+*.log
+*.pid
+*.gz
+*.cover
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+*.bak
+*.tmp
+
+# yt-dlp temporary files
+*.part
+*.temp
+*.ytdl
+*.info.json
+
+# Other
+output/
+downloads/**  # Skip downloaded video folder if generated

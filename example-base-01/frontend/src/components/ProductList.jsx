@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const ProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
-    const [products, setProducts] = useState([]);
-    const [error, setError] = useState(null);
-    useEffect(() => {
-        axios.get(`http://localhost:3000/app`)
-            .then(res => {
-                const persons = res.data;
-                setProducts([...persons]);
-            })
-            .catch(err => {
-                setError(`Failed to load products`);
-              });
-    }, []);
+  useEffect(() => {
+    setError(null);
+    setProducts([]);
+    axios
+      .get(`http://localhost:3000/app`)
+      .then((res) => {
+        const { products } = res.data; // Fix: Match the API response structure
+        setProducts(products);
+      })
+      .catch(() => {
+        setError(`Failed to load products`);
+      });
+  }, []);
 
-
-    return (
-        <div>
+  return (
+    <div>
       {error ? (
         <p>{error}</p>
       ) : (
@@ -29,9 +31,8 @@ const ProductList = () => {
           </div>
         ))
       )}
-      ProductList
     </div>
-    )
-}
+  );
+};
 
-export default ProductList
+export default ProductList;
