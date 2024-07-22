@@ -56,12 +56,27 @@ const globalConstants = (() => {
         { link: 'css-flex-learning/elements/select/select-style-0.3.js' },
         { link: 'css-flex-learning/elements/select/custom-dropdown-0.1.js' },
 
-        { link: 'css-flex-learning/elements/input/input-style-0.1.js'},
-        { link: 'css-flex-learning/elements/input/custom-dropdown-0.2.js'},
+        { link: 'css-flex-learning/elements/input/input-style-0.1.js' },
+        { link: 'css-flex-learning/elements/input/custom-dropdown-0.2.js' },
 
-        { link: 'css-flex-learning/elements/label/label-style-0.1.js'},
+        { link: 'css-flex-learning/elements/label/label-style-0.1.js' },
 
-        { link: 'css-flex-learning/elements/tooltip/tooltip-style-0.1.js'},
+        { link: 'css-flex-learning/elements/tooltip/tooltip-style-0.1.js' },
+
+        { link: 'use-case-to-learn-promise/use-case-just-chain-promises.js' },
+        { link: 'use-case-to-learn-promise/use-case-just-chain-promises-0.1.js' },
+        { link: 'use-case-to-learn-promise/chaining-in-cleaner-way.js' },
+        { link: 'use-case-to-learn-promise/chaining-in-cleaner-way-0.1.js' },
+
+        { link: 'graphql-consume/gql-demo-0.1.js' },
+        { link: 'graphql-consume/gql-demo-0.2.js' },
+
+        { link: 'css-flex-learning/learning-0.1.js' },
+        { link: 'css-flex-learning/learning-0.2.js' },
+
+        { link: 'graphql-consume/gql-demo-0.3.js' },
+        { link: 'graphql-consume/gql-demo-0.3.1.js' },
+        {link: 'markdown-to-html/md-to-html-v1.0.js'}
     ];
 
     const SCRIPTS_OPTIONS = scriptNames.map((v) => ({

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shapes</title>
+  <style>
+    /* Circle with CSS */
+    .circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: #3498db;
+      margin-bottom: 20px;
+    }
+    
+    canvas {
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="circle"></div>
+
+  <canvas id="parabolaCanvas" width="400" height="400"></canvas>
+  <canvas id="hyperbolaCanvas" width="400" height="400"></canvas>
+  <canvas id="ellipseCanvas" width="400" height="400"></canvas>
+
+  <script>
+    // Parabola drawing
+    function drawParabola(ctx, width, height) {
+      ctx.beginPath();
+      for (let x = -200; x <= 200; x++) {
+        let y = (x * x) / 100;  // Equation of parabola: y = x^2 / a
+        ctx.lineTo(width / 2 + x, height / 2 - y);
+      }
+      ctx.strokeStyle = '#e74c3c';
+      ctx.stroke();
+    }
+
+    // Hyperbola drawing
+    function drawHyperbola(ctx, width, height) {
+      ctx.beginPath();
+      for (let x = -200; x <= 200; x++) {
+        let y = 100 / x; // Equation of hyperbola: y = a / x
+        ctx.lineTo(width / 2 + x, height / 2 - y);
+      }
+      ctx.strokeStyle = '#8e44ad';
+      ctx.stroke();
+    }
+
+    // Ellipse drawing
+    function drawEllipse(ctx, width, height) {
+      ctx.beginPath();
+      ctx.ellipse(width / 2, height / 2, 150, 100, 0, 0, 2 * Math.PI); // Equation of ellipse: (x/a)^2 + (y/b)^2 = 1
+      ctx.strokeStyle = '#27ae60';
+      ctx.stroke();
+    }
+
+    // Canvas setups
+    const parabolaCanvas = document.getElementById('parabolaCanvas');
+    const parabolaCtx = parabolaCanvas.getContext('2d');
+    drawParabola(parabolaCtx, parabolaCanvas.width, parabolaCanvas.height);
+
+    const hyperbolaCanvas = document.getElementById('hyperbolaCanvas');
+    const hyperbolaCtx = hyperbolaCanvas.getContext('2d');
+    drawHyperbola(hyperbolaCtx, hyperbolaCanvas.width, hyperbolaCanvas.height);
+
+    const ellipseCanvas = document.getElementById('ellipseCanvas');
+    const ellipseCtx = ellipseCanvas.getContext('2d');
+    drawEllipse(ellipseCtx, ellipseCanvas.width, ellipseCanvas.height);
+  </script>
+</body>
+</html>

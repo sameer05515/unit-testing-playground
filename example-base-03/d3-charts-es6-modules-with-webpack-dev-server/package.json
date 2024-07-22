@@ -7,8 +7,8 @@
     "start-http-server": "http-server dist -p 6060",
     "build": "webpack",
     "start-my-webpack": "npx webpack --config webpack.config.js --watch",
-    "start": "concurrently \"npm run start-http-server\" \"npm run start-my-webpack\"",
-    "start-dev": "webpack serve --config webpack.config.js"
+    "start-dev": "concurrently \"npm run start-http-server\" \"npm run start-my-webpack\"",
+    "start": "webpack serve --config webpack.config.js"
   },
   "keywords": [],
   "author": "",
