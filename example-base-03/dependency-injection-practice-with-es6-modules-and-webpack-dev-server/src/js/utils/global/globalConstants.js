@@ -24,16 +24,48 @@ const globalConstants = (() => {
         // { link: "promise-dot-all-use-case.js" },
         // { link: "promiseChain-example-2.js" },
         // { link: "object-to-a-new-array.js" },
-        {link: 'elementAdderUtility-examples/custom1.js'},
-        {link: 'elementAdderUtility-examples/custom2.js'},
-        {link: 'elementAdderUtility-examples/custom3.js'},
-        {link: 'elementAdderUtility-examples/custom4.js'},
-        {link: 'chart-usage/attendance-visualization-v3.js'},
-        {link: 'elementAdderUtility-examples/custom0.1.js'},
+        //////{link: 'elementAdderUtility-examples/custom1.js'},
+        // {link: 'elementAdderUtility-examples/custom2.js'},
+        // {link: 'elementAdderUtility-examples/custom3.js'},
+        { link: 'chart-usage/attendance-visualization-v3.js' },
+
+        { link: 'elementAdderUtility-examples/custom0.1.js' },
+        { link: 'elementAdderUtility-examples/custom4.js' },
+
+        { link: 'use-case-to-learn-promise/use-case-01.js' },
+        { link: 'use-case-to-learn-promise/use-case-02.js' },
+        { link: 'use-case-to-learn-promise/use-case-03-batching-requests.js' },
+        { link: 'use-case-to-learn-promise/use-case-04-sequential-processing.js' },
+
+        { link: 'css-flex-learning/CSS-Flexbox-basics-01.js' },
+        { link: 'css-flex-learning/CSS-Flexbox-basics-02.js' },
+        { link: 'css-flex-learning/CSS-Flexbox-basics-03.js' },
+        { link: 'css-flex-learning/CSS-Flexbox-basics-04.js' },
+
+        { link: 'css-flex-learning/elements/button/buttons-style-0.1.js' },
+        { link: 'css-flex-learning/elements/button/buttons-style-0.2.js' },
+        { link: 'css-flex-learning/elements/button/buttons-style-0.3.js' },
+        { link: 'css-flex-learning/elements/button/buttons-style-0.4.js' },
+        { link: 'css-flex-learning/elements/button/button-attributes.js' },
+        { link: 'css-flex-learning/elements/button/buttons-style-0.4.1.js' },
+        { link: 'css-flex-learning/elements/button/buttons-style-0.4.2.js' },
+        { link: 'css-flex-learning/elements/button/buttons-style-0.4.2.1.js' },
+
+        { link: 'css-flex-learning/elements/select/select-style-0.1.js' },
+        { link: 'css-flex-learning/elements/select/select-style-0.2.js' },
+        { link: 'css-flex-learning/elements/select/select-style-0.3.js' },
+        { link: 'css-flex-learning/elements/select/custom-dropdown-0.1.js' },
+
+        { link: 'css-flex-learning/elements/input/input-style-0.1.js'},
+        { link: 'css-flex-learning/elements/input/custom-dropdown-0.2.js'},
+
+        { link: 'css-flex-learning/elements/label/label-style-0.1.js'},
+
+        { link: 'css-flex-learning/elements/tooltip/tooltip-style-0.1.js'},
     ];
 
     const SCRIPTS_OPTIONS = scriptNames.map((v) => ({
-        value: !v.external || v.external !== true ? `js/custom/${v.link}` : v.link,
+        value: !v.external || v.external !== true ? `/dist/custom/${v.link}` : v.link,
         label: v.link,
     }));
 
