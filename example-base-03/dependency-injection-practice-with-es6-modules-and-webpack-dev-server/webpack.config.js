@@ -44,7 +44,7 @@ module.exports = {
     },
     compress: true,
     port: 6060,
-    open: true,
+    open: false,
     hot: true,
   },
 };

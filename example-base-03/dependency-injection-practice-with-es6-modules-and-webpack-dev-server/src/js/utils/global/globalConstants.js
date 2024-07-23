@@ -68,7 +68,11 @@ const globalConstants = (() => {
         { link: 'use-case-to-learn-promise/chaining-in-cleaner-way.js'},        
         { link: 'use-case-to-learn-promise/chaining-in-cleaner-way-0.1.js'},
 
-        { link: 'graphql-consume/gql-demo-0.1.js'}
+        { link: 'graphql-consume/gql-demo-0.1.js'},
+        { link: 'graphql-consume/gql-demo-0.2.js'},
+
+        {link:'css-flex-learning/learning-0.1.js'},
+        {link:'css-flex-learning/learning-0.2.js'}
     ];
 
     const SCRIPTS_OPTIONS = scriptNames.map((v) => ({
