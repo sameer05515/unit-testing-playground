@@ -69,6 +69,25 @@ const getNewId = () => idUtility.generateId({ length: 20, prefix: "" });
 const wrapInStrongEl = (text) => `<strong>${text}</strong>`;
 const wrapInItalicEl = (text) => `<i>${text}</i>`;
 
+const createStyledAnchor=(href, text)=> {
+    const anchor = document.createElement('a');
+    anchor.href = href;
+    anchor.innerText = text;
+    
+    // Applying styles using JSON format
+    const styles = {
+        'text-decoration': 'none',
+        'color': 'black',
+        'cursor': 'pointer'
+    };
+
+    for (let style in styles) {
+        anchor.style[style] = styles[style];
+    }
+
+    return anchor;
+}
+
 // "General Info Div"
 const getGeneralInfoDiv = (resumedata) => {
     const {
@@ -196,28 +215,7 @@ const getKeySkillsDiv = (employeeKeySkills) => {
     innerDiv.style.cssText = `
         list-style-type: disc;
         padding-left: 20px; /* Adjust based on your bullet position preference */
-    `;
-
-    // Adding styles via a class instead of inline styles
-    const style = document.createElement('style');
-    style.textContent = `
-        .bulleted-list {
-            list-style-type: disc;
-            padding-left: 20px; /* Adjust based on your bullet position preference */
-        }
-
-        .bulleted-list > div {
-            position: relative;
-            margin-left: 20px; /* Adjust based on your bullet position preference */
-        }
-
-        .bulleted-list > div::before {
-            content: "•"; /* Bullet character */
-            position: absolute;
-            left: -20px; /* Adjust based on your bullet position preference */
-        }
-    `;
-    document.head.appendChild(style);
+    `;   
 
     employeeKeySkillsDiv.innerHTML = `
     ${wrapInStrongEl('Key skills')}
@@ -236,10 +234,102 @@ const getKeySkillsDiv = (employeeKeySkills) => {
     return employeeKeySkillsDiv;
 };
 
+const getCertificationsDiv= (employeeCertifications)=>{
+    const employeeCertificationsDiv = createDiv({ id: getNewId() }, '', {marginTop:'10px'}, {});
+
+    const innerDiv = createDiv({ id: getNewId() });
+    // Inline CSS should only include style rules, not CSS selectors
+    innerDiv.style.cssText = `
+        list-style-type: disc;
+        padding-left: 20px; /* Adjust based on your bullet position preference */
+    `;
+
+    employeeCertificationsDiv.innerHTML = `
+    ${wrapInStrongEl('Certifications:')}
+    `;
+
+    innerDiv.innerHTML = `
+    <div class="bulleted-list">
+        ${employeeCertifications.map(
+            ({ name, provider, url }) => 
+            `<div>
+                <a style="text-decoration: none; color: black; cursor: pointer;" href="${url}">
+                    ${wrapInStrongEl(name)} by ${wrapInItalicEl(provider)}
+                </a>            
+            </div>`
+        ).join('')}
+    </div>
+    `;
+
+    employeeCertificationsDiv.appendChild(innerDiv);
+    return employeeCertificationsDiv;
+}
+
+const getLanguagesDiv= (employeeLanguages)=>{
+    const employeeLanguagesDiv = createDiv({ id: getNewId() }, '', {marginTop:'10px'}, {});
+
+    const innerDiv = createDiv({ id: getNewId() });
+    // Inline CSS should only include style rules, not CSS selectors
+    innerDiv.style.cssText = `
+        list-style-type: disc;
+        padding-left: 20px; /* Adjust based on your bullet position preference */
+    `;
+    employeeLanguagesDiv.innerHTML = `
+    ${wrapInStrongEl('Languages:')}
+    `;
+
+    innerDiv.innerHTML = `
+    <div class="bulleted-list">
+        ${employeeLanguages.map(
+            (language) => 
+            `<div>
+                ${language}                            
+            </div>`
+        ).join('')}
+    </div>
+    `;
+
+    employeeLanguagesDiv.appendChild(innerDiv);
+
+    return employeeLanguagesDiv;
+};
+
+const getHobbiesDiv=(employeeHobbies)=>{
+    const employeeHobbiesDiv = createDiv({ id: getNewId() }, '', {marginTop:'10px'}, {});
+
+    const innerDiv = createDiv({ id: getNewId() });
+    // Inline CSS should only include style rules, not CSS selectors
+    innerDiv.style.cssText = `
+        list-style-type: disc;
+        padding-left: 20px; /* Adjust based on your bullet position preference */
+    `;
+    employeeHobbiesDiv.innerHTML = `
+    ${wrapInStrongEl('Hobbies:')}
+    `;
+
+    innerDiv.innerHTML = `
+    <div class="bulleted-list">
+        ${employeeHobbies.map(
+            (hobby) => 
+            `<div>
+                ${hobby}                            
+            </div>`
+        ).join('')}
+    </div>
+    `;
+
+    employeeHobbiesDiv.appendChild(innerDiv);
+
+    return employeeHobbiesDiv;
+}
+
 
 const getMainInfoDiv = (resumedata) => {
     const {        
         expertises: employeeKeySkills,
+        certifications: employeeCertifications,
+        languagesKnown: employeeLanguages,
+        hobbies: employeeHobbies,
     } = resumedata.getResume.processedDetails.metadata;
 
     const mainInfoDiv = createDiv({ id: getNewId() }, "", {
@@ -249,7 +339,7 @@ const getMainInfoDiv = (resumedata) => {
         border: "1px solid #ccc",
         marginTop: "10px",
         borderRadius: "8px",
-        gap: "250px", // Add gap between divs
+        gap: "50px", // Add gap between divs
     });
 
     // Create the first child div with text "div1"
@@ -265,13 +355,17 @@ const getMainInfoDiv = (resumedata) => {
     );
 
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getKeySkillsDiv(employeeKeySkills));
+    keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getCertificationsDiv(employeeCertifications));
+    keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getLanguagesDiv(employeeLanguages));
+    keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getHobbiesDiv(employeeHobbies));
+
 
     // Create the second child div with text "div2"
     const profileSummayWorkExperienceEducationAndProjectsDivEl = createDiv(
         { id: getNewId() },
         "Profile Summay, Work Experience, Education, Projects",
         {
-            flex: "1",
+            flex: "3",
             padding: "10px",
             border: "1px solid #ccc",
             borderRadius: "8px",
@@ -291,6 +385,27 @@ const getMainInfoDiv = (resumedata) => {
 // -- 1st div contains divs for Key Skills, Certifications, Languages and Hobbies, vertically
 // -- 2nd div contains divs for Profile Summay, Work Experience, Education, Projects
 const renderResume = (resumeData) => {
+    // Adding styles via a class instead of inline styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .bulleted-list {
+            list-style-type: disc;
+            padding-left: 20px; /* Adjust based on your bullet position preference */
+        }
+
+        .bulleted-list > div {
+            position: relative;
+            padding-top: 10px;
+            margin-left: 10px; /* Adjust based on your bullet position preference */
+        }
+
+        .bulleted-list > div::before {
+            content: "•"; /* Bullet character */
+            position: absolute;
+            left: -10px; /* Adjust based on your bullet position preference */
+        }
+    `;
+    document.head.appendChild(style);
     const container = createDiv({ id: getNewId() }, "Container Div", {
         border: "1px solid #ccc",
         display: "flex",
