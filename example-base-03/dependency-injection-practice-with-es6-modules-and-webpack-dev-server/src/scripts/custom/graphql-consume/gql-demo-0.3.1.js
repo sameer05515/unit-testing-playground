@@ -216,11 +216,11 @@ const getWorkExperienceDiv = (employeeWorkExperiences) => {
     const items = employeeWorkExperiences
         .filter(player => !Boolean(player.processedDetails?.metadata?.shouldHide))
         .map(
-            ({ name, 
+            ({ name,
                 processedDetails: { metadata: {
-                     overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack 
-                    } 
-                } 
+                    overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
+                }
+                }
             }) =>
                 `<div style="margin-bottom: 5px; margin-top: 10px">
                     <div>${wrapInItalicEl(wrapInStrongEl(lastDesignation.toUpperCase()))} - ${overAllTenure}</div>
@@ -244,6 +244,24 @@ const getWorkExperienceDiv = (employeeWorkExperiences) => {
     return createBulletedDiv('Work Experience:', items);
 }
 
+const getEducationseDiv = (employeeEducations) => {
+    const items = employeeEducations.map(
+        ({ name, processedDetails: { metadata: {
+            session, institution, university, grade
+        }
+        } }) => `
+       <div style="margin-bottom: 5px; margin-top: 10px">
+            <div>${wrapInStrongEl(name)}</div>
+            <div>${wrapInStrongEl('Institution:')} -${institution}</div>
+            <div>${wrapInStrongEl('Session:')} -${session}</div>
+            <div>${wrapInStrongEl('University:')} -${university}</div>
+            <div>${wrapInStrongEl('Grade:')} -${grade}</div>            
+       </div>`
+    );
+
+    return createBulletedDiv('Education:', items);
+}
+
 
 const getMainInfoDiv = (resumedata) => {
     const {
@@ -254,7 +272,7 @@ const getMainInfoDiv = (resumedata) => {
         summarizedIntroduction: employeeProfileSummary
     } = resumedata.getResume.processedDetails.metadata;
 
-    const { companies: employeeWorkExperiences } = resumedata.getResume;
+    const { companies: employeeWorkExperiences, educations: employeeEducations } = resumedata.getResume;
 
     const mainInfoDiv = createDiv({ id: getNewId() }, "", {
         display: "flex",
@@ -280,6 +298,7 @@ const getMainInfoDiv = (resumedata) => {
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getCertificationsDiv(employeeCertifications));
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getLanguagesDiv(employeeLanguages));
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getHobbiesDiv(employeeHobbies));
+    keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getEducationseDiv(employeeEducations));
 
     const profileSummayWorkExperienceEducationAndProjectsDivEl = createDiv(
         { id: getNewId() },
@@ -294,6 +313,8 @@ const getMainInfoDiv = (resumedata) => {
 
     profileSummayWorkExperienceEducationAndProjectsDivEl.appendChild(getProfileSummaryDiv(employeeProfileSummary));
     profileSummayWorkExperienceEducationAndProjectsDivEl.appendChild(getWorkExperienceDiv(employeeWorkExperiences));
+
+
 
     mainInfoDiv.appendChild(keySkillsCertificationsLanguagesAndHobbiesDivEl);
     mainInfoDiv.appendChild(profileSummayWorkExperienceEducationAndProjectsDivEl);
