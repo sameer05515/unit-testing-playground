@@ -3,24 +3,29 @@ import { idUtility } from "../../../js/utils/global/globalHelperUtility";
 
 // GraphQL Fetch Function
 const fetchGraphQL = async (query, variables = {}) => {
-    const response = await fetch("http://localhost:4000/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ query, variables }),
-    });
+    try {
+        const response = await fetch("http://localhost:4000/graphql", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query, variables }),
+        });
 
-    const responseBody = await response.json();
+        const responseBody = await response.json();
 
-    if (!response.ok || responseBody.errors) {
-        const errorMessage = responseBody.errors
-            ? responseBody.errors.map((error) => error.message).join(", ")
-            : response.statusText;
-        throw new Error(`GraphQL error: ${errorMessage}`);
+        if (!response.ok || responseBody.errors) {
+            const errorMessage = responseBody.errors
+                ? responseBody.errors.map((error) => error.message).join(", ")
+                : response.statusText;
+            throw new Error(`GraphQL error: ${errorMessage}`);
+        }
+
+        return responseBody.data;
+    } catch (error) {
+        console.error("GraphQL error:", error);
+        throw error;
     }
-
-    return responseBody.data;
 };
 
 const query = `
@@ -74,15 +79,31 @@ const createStyledAnchor = (href, text) => {
     anchor.innerText = text;
 
     const styles = {
-        'text-decoration': 'none',
-        'color': 'black',
-        'cursor': 'pointer'
+        textDecoration: 'none',
+        color: 'black',
+        cursor: 'pointer',
     };
 
     Object.assign(anchor.style, styles);
 
     return anchor;
 }
+
+const createBulletedDiv = (title, items) => {
+    const div = createDiv({ id: getNewId() }, '', { marginTop: '10px' });
+    const innerDiv = createDiv({ id: getNewId() });
+
+    innerDiv.style.cssText = `
+        list-style-type: disc;
+        padding-left: 20px;
+    `;
+
+    div.innerHTML = wrapInStrongEl(title);
+    innerDiv.innerHTML = items.map(item => `<div>${item}</div>`).join('');
+    div.appendChild(innerDiv);
+
+    return div;
+};
 
 const getGeneralInfoDiv = (resumedata) => {
     const {
@@ -98,7 +119,6 @@ const getGeneralInfoDiv = (resumedata) => {
     const generalInfo = createDiv({ id: getNewId() }, "", {
         display: "flex",
         justifyContent: "space-between",
-        // border: "1px solid #ccc",
         marginTop: "10px",
         borderRadius: "8px",
         gap: "250px",
@@ -131,40 +151,20 @@ const getGeneralInfoDiv = (resumedata) => {
 
     phoneEmailAndTotalExperienceDiv.innerHTML = `
     <p>${wrapInStrongEl("Phone:")} ${wrapInItalicEl(
-        employeeContactNumbers
-            .map((contact) => `<span>${contact}</span>`)
-            .join(", ")
+        employeeContactNumbers.map(contact => `<span>${contact}</span>`).join(", ")
     )}</p>
 
     <p>${wrapInStrongEl("Email:")} ${wrapInItalicEl(
-        employeeEmails.map((contact) => `<span>${contact}</span>`).join(", ")
+        employeeEmails.map(contact => `<span>${contact}</span>`).join(", ")
     )}</p>
 
-    <p>${wrapInStrongEl("Total Experience:")} ${wrapInItalicEl(
-        totalExperience
-    )}</p>
+    <p>${wrapInStrongEl("Total Experience:")} ${wrapInItalicEl(totalExperience)}</p>
     `;
 
     generalInfo.appendChild(nameAndLastDesignationDivEl);
     generalInfo.appendChild(phoneEmailAndTotalExperienceDiv);
 
     return generalInfo;
-};
-
-const createBulletedDiv = (title, items) => {
-    const div = createDiv({ id: getNewId() }, '', { marginTop: '10px' }, {});
-    const innerDiv = createDiv({ id: getNewId() });
-
-    innerDiv.style.cssText = `
-        list-style-type: disc;
-        padding-left: 20px;
-    `;
-
-    div.innerHTML = wrapInStrongEl(title);
-    innerDiv.innerHTML = items.map(item => `<div>${item}</div>`).join('');
-    div.appendChild(innerDiv);
-
-    return div;
 };
 
 const getKeySkillsDiv = (employeeKeySkills) => {
@@ -202,8 +202,6 @@ const getHobbiesDiv = (employeeHobbies) => {
     return createBulletedDiv('Hobbies:', items);
 };
 
-// ---------------------
-
 const getProfileSummaryDiv = (employeeProfileSummary) => {
     const items = employeeProfileSummary.map(
         (summaryPoint) => `- ${summaryPoint}`
@@ -216,26 +214,23 @@ const getWorkExperienceDiv = (employeeWorkExperiences) => {
     const items = employeeWorkExperiences
         .filter(player => !Boolean(player.processedDetails?.metadata?.shouldHide))
         .map(
-            ({ name,
-                processedDetails: { metadata: {
-                    overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
-                }
-                }
-            }) =>
+            ({ name, processedDetails: { metadata: {
+                overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
+            }} }) =>
                 `<div style="margin-bottom: 5px; margin-top: 10px">
                     <div>${wrapInItalicEl(wrapInStrongEl(lastDesignation.toUpperCase()))} - ${overAllTenure}</div>
                     <div>${wrapInItalicEl(name)}</div> 
-                    <div>${wrapInStrongEl('Domain:')} - ${domainOfCompany?.map(d => d).join(', ')}</div>
+                    <div>${wrapInStrongEl('Domain:')} - ${domainOfCompany?.join(', ')}</div>
                     <div>${wrapInStrongEl('Last CTC:')} - INR. ${lastCTC}</div> 
-                    <div>${wrapInStrongEl('Projects:')} - ${projects?.map(p => p).join(', ')}</div>
+                    <div>${wrapInStrongEl('Projects:')} - ${projects?.join(', ')}</div>
                     <div>${wrapInStrongEl('Tech Stack used by myself:')} 
-                        <ul style="margin-top: 0; margin-bottom: 0; padding-left: 20px;">
-                            ${techStack?.map(h => `<li style="margin-top: 0; margin-bottom: 0;">${h}</li>`).join('')}
+                        <ul style="margin: 0; padding-left: 20px;">
+                            ${techStack?.map(h => `<li>${h}</li>`).join('')}
                         </ul>
                     </div>
                     <div>${wrapInStrongEl('Roles and Responsibilities:')} 
-                        <ul style="margin-top: 0; margin-bottom: 0; padding-left: 20px;">
-                            ${highlights?.map(h => `<li style="margin-top: 0; margin-bottom: 0;">${h}</li>`).join('')}
+                        <ul style="margin: 0; padding-left: 20px;">
+                            ${highlights?.map(h => `<li>${h}</li>`).join('')}
                         </ul>
                     </div>     
                 </div>`
@@ -244,24 +239,22 @@ const getWorkExperienceDiv = (employeeWorkExperiences) => {
     return createBulletedDiv('Work Experience:', items);
 }
 
-const getEducationseDiv = (employeeEducations) => {
+const getEducationDiv = (employeeEducations) => {
     const items = employeeEducations.map(
         ({ name, processedDetails: { metadata: {
             session, institution, university, grade
-        }
-        } }) => `
+        }}}) => `
        <div style="margin-bottom: 5px; margin-top: 10px">
             <div>${wrapInStrongEl(name)}</div>
-            <div>${wrapInStrongEl('Institution:')} -${institution}</div>
-            <div>${wrapInStrongEl('Session:')} -${session}</div>
-            <div>${wrapInStrongEl('University:')} -${university}</div>
-            <div>${wrapInStrongEl('Grade:')} -${grade}</div>            
+            <div>${wrapInStrongEl('Institution:')} - ${institution}</div>
+            <div>${wrapInStrongEl('Session:')} - ${session}</div>
+            <div>${wrapInStrongEl('University:')} - ${university}</div>
+            <div>${wrapInStrongEl('Grade:')} - ${grade}</div>            
        </div>`
     );
 
     return createBulletedDiv('Education:', items);
 }
-
 
 const getMainInfoDiv = (resumedata) => {
     const {
@@ -277,7 +270,6 @@ const getMainInfoDiv = (resumedata) => {
     const mainInfoDiv = createDiv({ id: getNewId() }, "", {
         display: "flex",
         justifyContent: "space-between",
-        // border: "1px solid #ccc",
         marginTop: "10px",
         borderRadius: "8px",
         gap: "50px",
@@ -285,11 +277,10 @@ const getMainInfoDiv = (resumedata) => {
 
     const keySkillsCertificationsLanguagesAndHobbiesDivEl = createDiv(
         { id: getNewId() },
-        "", //"Key Skills, Certifications, Languages and Hobbies, vertically",
+        "",
         {
             flex: "1",
             padding: "10px",
-            // border: "1px solid #ccc",
             borderRadius: "8px",
         }
     );
@@ -298,26 +289,23 @@ const getMainInfoDiv = (resumedata) => {
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getCertificationsDiv(employeeCertifications));
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getLanguagesDiv(employeeLanguages));
     keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getHobbiesDiv(employeeHobbies));
-    keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getEducationseDiv(employeeEducations));
+    keySkillsCertificationsLanguagesAndHobbiesDivEl.appendChild(getEducationDiv(employeeEducations));
 
-    const profileSummayWorkExperienceEducationAndProjectsDivEl = createDiv(
+    const profileSummaryWorkExperienceDivEl = createDiv(
         { id: getNewId() },
-        "Profile Summay, Work Experience, Education, Projects",
+        "Profile Summary, Work Experience",
         {
             flex: "3",
             padding: "10px",
-            // border: "1px solid #ccc",
             borderRadius: "8px",
         }
     );
 
-    profileSummayWorkExperienceEducationAndProjectsDivEl.appendChild(getProfileSummaryDiv(employeeProfileSummary));
-    profileSummayWorkExperienceEducationAndProjectsDivEl.appendChild(getWorkExperienceDiv(employeeWorkExperiences));
-
-
+    profileSummaryWorkExperienceDivEl.appendChild(getProfileSummaryDiv(employeeProfileSummary));
+    profileSummaryWorkExperienceDivEl.appendChild(getWorkExperienceDiv(employeeWorkExperiences));
 
     mainInfoDiv.appendChild(keySkillsCertificationsLanguagesAndHobbiesDivEl);
-    mainInfoDiv.appendChild(profileSummayWorkExperienceEducationAndProjectsDivEl);
+    mainInfoDiv.appendChild(profileSummaryWorkExperienceDivEl);
 
     return mainInfoDiv;
 };
@@ -345,7 +333,6 @@ const renderResume = (resumeData) => {
     document.head.appendChild(style);
 
     const container = createDiv({ id: getNewId() }, "Container Div", {
-        // border: "1px solid #ccc",
         display: "flex",
         flexDirection: "column",
         padding: "10px",
