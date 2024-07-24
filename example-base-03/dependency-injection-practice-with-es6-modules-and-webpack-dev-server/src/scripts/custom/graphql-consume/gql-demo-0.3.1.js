@@ -72,6 +72,8 @@ const getNewId = () => idUtility.generateId({ length: 20, prefix: "" });
 
 const wrapInStrongEl = (text) => `<strong>${text}</strong>`;
 const wrapInItalicEl = (text) => `<i>${text}</i>`;
+const wrapInStrongAndSetFontSizeEl = (text, fontSize=20) => `<strong style="font-size: ${fontSize}px;">${text}</strong>`;
+
 
 const createStyledAnchor = (href, text) => {
     const anchor = document.createElement('a');
@@ -264,7 +266,7 @@ const getHobbiesDiv = (employeeHobbies) => {
 const getProfileSummaryDiv = (employeeProfileSummary) => {
     const outerDiv = createDiv({ id: getNewId() }, '', {paddingTop:'10px'});
     outerDiv.innerHTML = `
-    <div>${wrapInStrongEl('Profile Summary:')} 
+    <div>${wrapInStrongAndSetFontSizeEl('Profile Summary:')} 
         <ul style="margin: 0; padding-left: 20px;">
             ${employeeProfileSummary?.map((summaryPoint) =>
             `<li>
@@ -391,7 +393,7 @@ const getMainInfoDiv = (resumedata) => {
         { id: getNewId() },
         "",
         {
-            flex: "3",
+            flex: "5",
             padding: "10px",
             borderRadius: "8px",
         }
