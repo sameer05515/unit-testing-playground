@@ -293,7 +293,7 @@ const getWorkExperienceDiv = (employeeWorkExperiences) => {
             ({ name, processedDetails: { metadata: {
                 overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
             } } }) =>
-                `<div style="margin-bottom: 5px; margin-top: 10px">
+                `<div class="cornered-div" style="margin-bottom: 5px; margin-top: 10px">
                     <div>${wrapInItalicEl(wrapInStrongEl(lastDesignation.toUpperCase()))} - ${overAllTenure}</div>
                     <div>${wrapInItalicEl(name)}</div> 
                     <!--
@@ -426,6 +426,23 @@ const renderResume = (resumeData) => {
             content: "•";
             position: absolute;
             left: -10px;
+        }
+
+        .cornered-div {
+            position: relative;
+            padding: 20px;
+            border: 1px solid #fff;
+            
+        }
+
+        .cornered-div::before {
+            content: '';
+            position: absolute;
+            top: 10;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            background-color: blue;
         }
     `;
     document.head.appendChild(style);

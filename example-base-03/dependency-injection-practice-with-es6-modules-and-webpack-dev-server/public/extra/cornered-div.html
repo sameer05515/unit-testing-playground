@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cornered Div</title>
+    <style>
+        .cornered-div {
+            position: relative;
+            padding: 20px;
+            border: 1px solid #fff;
+            width: 200px; /* Adjust width as needed */
+            height: 100px; /* Adjust height as needed */
+        }
+
+        .cornered-div::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 20px;
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="cornered-div">
+        <!-- Your content here -->
+    </div>
+</body>
+</html>
