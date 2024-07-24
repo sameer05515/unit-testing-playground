@@ -161,6 +161,8 @@ const getGeneralInfoDiv = (resumedata) => {
     )}</p>
 
     <p>${wrapInStrongEl("Total Experience:")} ${wrapInItalicEl(totalExperience)}</p>
+
+    <p>${wrapInStrongEl("Location:")} Faridabad, INDIA</p>
     `;
 
     generalInfo.appendChild(nameAndLastDesignationDivEl);
@@ -266,7 +268,7 @@ const getHobbiesDiv = (employeeHobbies) => {
 const getProfileSummaryDiv = (employeeProfileSummary) => {
     const outerDiv = createDiv({ id: getNewId() }, '', {paddingTop:'10px'});
     outerDiv.innerHTML = `
-    <div>${wrapInStrongEl('Profile Summary:')} 
+    <div>${wrapInStrongAndSetFontSizeEl('Profile Summary:')} 
         <ul style="margin: 0; padding-left: 20px;">
             ${employeeProfileSummary?.map((summaryPoint) =>
             `<li>
@@ -286,14 +288,20 @@ const getProfileSummaryDiv = (employeeProfileSummary) => {
 }
 
 const getWorkExperienceDiv = (employeeWorkExperiences) => {
-    const items = employeeWorkExperiences
-        .filter(player => !Boolean(player.processedDetails?.metadata?.shouldHide))
-        .sort((a, b) => b.processedDetails?.metadata?.order - a.processedDetails?.metadata?.order)
-        .map(
-            ({ name, processedDetails: { metadata: {
-                overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
-            } } }) =>
-                `<div class="cornered-div" style="margin-bottom: 5px; margin-top: 10px">
+
+    const outerDiv = createDiv({ id: getNewId() }, '', {paddingTop:'20px'});
+    outerDiv.innerHTML = `
+    <div>${wrapInStrongAndSetFontSizeEl('Work Experience:')} 
+        <ul style="margin: 0; padding-left: 20px; list-style: none;">
+            ${employeeWorkExperiences
+                .filter(player => !Boolean(player.processedDetails?.metadata?.shouldHide))
+                .sort((a, b) => b.processedDetails?.metadata?.order - a.processedDetails?.metadata?.order)
+                .map(
+                    ({ name, processedDetails: { metadata: {
+                        overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
+                    } } }) =>
+            `<li>
+               <div class="cornered-div" style="margin-bottom: 5px; margin-top: 10px">
                     <div>${wrapInItalicEl(wrapInStrongEl(lastDesignation.toUpperCase()))} - ${overAllTenure}</div>
                     <div>${wrapInItalicEl(name)}</div> 
                     <!--
@@ -311,10 +319,44 @@ const getWorkExperienceDiv = (employeeWorkExperiences) => {
                             ${highlights?.map(h => `<li>${h}</li>`).join('')}
                         </ul>
                     </div>     
-                </div>`
-        );
+                </div>
+            </li>`)
+            .join('')
+        }
+        </ul>
+    </div>
+    `;
+    return outerDiv;
 
-    return createBulletedDiv('Work Experience:', items);
+    // const items = employeeWorkExperiences
+    //     .filter(player => !Boolean(player.processedDetails?.metadata?.shouldHide))
+    //     .sort((a, b) => b.processedDetails?.metadata?.order - a.processedDetails?.metadata?.order)
+    //     .map(
+    //         ({ name, processedDetails: { metadata: {
+    //             overAllTenure, lastDesignation, domainOfCompany, lastCTC, projects, highlights, techStack
+    //         } } }) =>
+    //             `<div class="cornered-div" style="margin-bottom: 5px; margin-top: 10px">
+    //                 <div>${wrapInItalicEl(wrapInStrongEl(lastDesignation.toUpperCase()))} - ${overAllTenure}</div>
+    //                 <div>${wrapInItalicEl(name)}</div> 
+    //                 <!--
+    //                 <div>${wrapInStrongEl('Domain:')} - ${domainOfCompany?.join(', ')}</div>
+    //                 <div>${wrapInStrongEl('Last CTC:')} - INR. ${lastCTC}</div>
+    //                 -->
+    //                 <div>${wrapInStrongEl('Projects:')} - ${projects?.join(', ')}</div>
+    //                 <div>${wrapInStrongEl('Tech Stack used by myself:')} 
+    //                     <ul style="margin: 0; padding-left: 20px;">
+    //                         ${techStack?.map(h => `<li>${h}</li>`).join('')}
+    //                     </ul>
+    //                 </div>
+    //                 <div>${wrapInStrongEl('Roles and Responsibilities:')} 
+    //                     <ul style="margin: 0; padding-left: 20px;">
+    //                         ${highlights?.map(h => `<li>${h}</li>`).join('')}
+    //                     </ul>
+    //                 </div>     
+    //             </div>`
+    //     );
+
+    // return createBulletedDiv('Work Experience:', items);
 }
 
 const getEducationDiv = (employeeEducations) => {
@@ -411,6 +453,12 @@ const getMainInfoDiv = (resumedata) => {
 const renderResume = (resumeData) => {
     const style = document.createElement('style');
     style.textContent = `
+        /* Set default font size and font family */
+        body {
+            font-size: 16px; /* Default font size */
+            font-family: Arial, sans-serif; /* Default font family */
+        }
+
         .bulleted-list {
             list-style-type: disc;
             padding-left: 20px;
