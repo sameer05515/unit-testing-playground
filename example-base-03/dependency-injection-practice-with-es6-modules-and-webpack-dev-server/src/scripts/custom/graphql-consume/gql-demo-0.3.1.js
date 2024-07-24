@@ -266,7 +266,7 @@ const getHobbiesDiv = (employeeHobbies) => {
 const getProfileSummaryDiv = (employeeProfileSummary) => {
     const outerDiv = createDiv({ id: getNewId() }, '', {paddingTop:'10px'});
     outerDiv.innerHTML = `
-    <div>${wrapInStrongAndSetFontSizeEl('Profile Summary:')} 
+    <div>${wrapInStrongEl('Profile Summary:')} 
         <ul style="margin: 0; padding-left: 20px;">
             ${employeeProfileSummary?.map((summaryPoint) =>
             `<li>
