@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const SERVER_VERSION='1.0.0';
+
 const express = require("express");
 const app = express();
 const jwt = require("jsonwebtoken");
@@ -19,6 +21,8 @@ const posts = [
 
 const ACCESS_TOKEN_SECRET =
   process.env.ACCESS_TOKEN_SECRET || "matru-ki-bijli-ka-hindola";
+const PORT =
+  process.env.PORT_1_0_0 || 3000;
 
 app.get("/posts", authenticateToken, (req, res) => {
   const p = posts.filter((post) => post.username === req.user.name);
@@ -53,4 +57,5 @@ function generateAccessToken(user) {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15h" });
 }
 
-app.listen(3000);
+console.log(`Starting server with version '${SERVER_VERSION}' on http://localhost:${PORT}`);
+app.listen(PORT);

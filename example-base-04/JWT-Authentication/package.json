@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "devStart:v1": "nodemon src/server.v1.js",
+    "devStart:v1.0.0": "nodemon src/versions/1.0.0/server.v1.0.0.js",
+    "devStart:v1.0.1": "nodemon src/versions/1.0.1/server.v1.0.1.js",
     "devStartAuth": "nodemon src/authServer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
