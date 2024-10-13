@@ -1,22 +1,43 @@
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN_SECRET } = require("../config/version-config");
 
-function authenticateToken(req, res, next) {
+const {
+  sendStandardResponse,
+  ResponseStatus,
+} = require("../../../common/server-responses/StandardResponse");
+const { StatusCodes, ReasonPhrases } = require("http-status-codes");
+
+const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) {
-    return res.status(401).json({ error: "Authorization header is missing" });
+    sendStandardResponse(
+      res,
+      ResponseStatus.Error,
+      ["Authorization Error"],
+      null,
+      StatusCodes.UNAUTHORIZED,
+      { message: "Authorization header is missing" }
+    );
+    return;
   }
 
   jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) {
-      console.log(err);
-      return res.status(403).json({ error: "Invalid access token: " + err });
+      sendStandardResponse(
+        res,
+        ResponseStatus.Error,
+        ["Authorization Error"],
+        null,
+        StatusCodes.FORBIDDEN,
+        { message: "Invalid access token: " + err }
+      );
+      return;
     }
 
-    req.user = user?.username || '';
+    req.user = user?.username || "";
     next();
   });
-}
+};
 
 module.exports = authenticateToken;

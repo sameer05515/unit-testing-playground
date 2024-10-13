@@ -2,10 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { loginUser } = require("./login.service");
 
-// const { SuccessCongratulations } = require('../common/server-responses/customResponseTypes');
+
 const { SuccessCongratulations } = require('../../../common/server-responses/customResponseTypes');
-const errorHandler = require('../../../common/middlewares/routerResponseHandler');
-const { StatusCodes, ReasonPhrases } = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 router.post("/login", (req, res, next) => {
     try {
@@ -17,6 +16,6 @@ router.post("/login", (req, res, next) => {
 });
 
 // Apply centralized error handler to all routes
-router.use(errorHandler);
+// router.use(errorHandler);
 
 module.exports = router;

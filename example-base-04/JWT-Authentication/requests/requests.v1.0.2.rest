@@ -19,7 +19,23 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3067/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlByZW1lbmRyYSBLdW1hciIsInVzZXJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgzNTEzNSwiZXhwIjoxNzI4ODg5MTM1fQ.IFiSvw9juw_rZmLkplMntEGW8HynYgRHaDQioZxJeXA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlByZW1lbmRyYSBLdW1hciIsInVzZXJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgzOTk5NywiZXhwIjoxNzI4ODkzOTk3fQ.79jNuBRQl_c79IVuBMBvmNkxIV1lxWTkHfziGe7xLvo
+
+
+###
+
+GET http://localhost:3067/sample1
+
+###
+
+GET http://localhost:3067/sample2
+
+###
+
+GET http://localhost:3067/sample3
+
+
+
 
 ###
 
