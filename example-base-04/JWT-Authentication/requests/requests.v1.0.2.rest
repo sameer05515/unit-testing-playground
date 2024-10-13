@@ -25,16 +25,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6I
 ###
 
 GET http://localhost:3067/sample1
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
 ###
 
 GET http://localhost:3067/sample2
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
 ###
 
 GET http://localhost:3067/sample3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
 
 
+
+###
+
+GET http://localhost:3067/roles/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+###
+
+GET http://localhost:3067/roles/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+###
+
+GET http://localhost:3067/roles/public
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
 
 
 ###
