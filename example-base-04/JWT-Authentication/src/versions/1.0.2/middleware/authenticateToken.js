@@ -5,7 +5,7 @@ const {
   sendStandardResponse,
   ResponseStatus,
 } = require("../../../common/server-responses/StandardResponse");
-const { StatusCodes, ReasonPhrases } = require("http-status-codes");
+const { StatusCodes } = require("http-status-codes");
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
