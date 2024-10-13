@@ -62,10 +62,14 @@ const versionDetails = [
     ABOUT
         - Enhancement of version 1.0.1
 
-    Target:                
-        - [Planned] Code review and fix current issues in this version 1.0.2.
-            - issues
-              - [Planned] - send error response for invalid user-name
+    Target:      
+        - [Planned]: [Konwledge-Gain] : 
+          - How to save a value, in a *.rest file, so that it could be re-used in multiple places
+            - for example, token response coming from server   
+          - Also it would be nice if we can send multiple requests, synchronously     
+        
+        - [Planned]: [Issues] Code review and fix current issues in this version 1.0.2. 
+            - [Planned] - send error response for invalid user-name
 
     ##############################
         `,
@@ -100,6 +104,7 @@ const getPurposeByVersion = (version) => {
 module.exports = {
     PORT_1_0_0: process.env.PORT_1_0_0 || 3000,
     PORT_1_0_1: process.env.PORT_1_0_1 || 3001,
+    PORT_1_0_2: process.env.PORT_1_0_2 || 3067,
     ACCESS_TOKEN_SECRET:
         process.env.ACCESS_TOKEN_SECRET || "matru-ki-bijli-ka-hindola",
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || "chutiyon-ki-toli",

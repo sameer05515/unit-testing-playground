@@ -1,6 +1,6 @@
 const {
     ACCESS_TOKEN_SECRET_V1: ACCESS_TOKEN_SECRET,
-    PORT_1_0_1: PORT,
+    PORT_1_0_2: PORT,
     getPurposeByVersion
 } = require("../../../common/config/config");
 
