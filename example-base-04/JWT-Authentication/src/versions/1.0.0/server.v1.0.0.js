@@ -1,6 +1,29 @@
 require("dotenv").config();
 
-const SERVER_VERSION='1.0.0';
+const SERVER_VERSION = "1.0.0";
+
+const {
+  OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE,
+  // ACCESS_TOKEN_SECRET,
+  // PORT_1_0_0: PORT,
+} = require("../../common/config/config");
+
+const purpose = `
+#########################
+=== SERVER VERSION: ${SERVER_VERSION} =================
+This is initial version of server.
+
+${OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE}
+
+Things acheived in this version:
+1. a single file server, having 
+    - one protected resource '/posts'
+    - one public resource '/login'
+
+
+
+##############################
+`;
 
 const express = require("express");
 const app = express();
@@ -57,5 +80,7 @@ function generateAccessToken(user) {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15h" });
 }
 
-console.log(`Starting server with version '${SERVER_VERSION}' on http://localhost:${PORT}`);
+console.log(
+  `${purpose} \n [${new Date().toString()}]: Starting server with version '${SERVER_VERSION}' on http://localhost:${PORT}`
+);
 app.listen(PORT);
