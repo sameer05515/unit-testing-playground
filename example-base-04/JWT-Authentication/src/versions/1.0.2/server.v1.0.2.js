@@ -3,8 +3,8 @@ const app = express();
 const { PORT, SERVER_VERSION, purpose } = require("./config/version-config");
 
 // Import route modules
-const postRoutes = require("./routes/postRoutes");
-const loginRoutes = require("./routes/loginRoutes");
+const postRoutes = require("./routes/post.routes");
+const loginRoutes = require("./routes/login.routes");
 
 app.use(express.json());
 

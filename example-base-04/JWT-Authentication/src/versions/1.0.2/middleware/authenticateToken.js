@@ -13,7 +13,8 @@ function authenticateToken(req, res, next) {
       console.log(err);
       return res.status(403).json({ error: "Invalid access token: " + err });
     }
-    req.user = user;
+
+    req.user = user?.username || '';
     next();
   });
 }
