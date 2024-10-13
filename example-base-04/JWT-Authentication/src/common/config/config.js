@@ -15,39 +15,59 @@ const versionDetails = [
     {
         version: "1.0.0",
         purpose: `
-            #########################
-            ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
-            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    #########################
+    ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
+    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-            === SERVER VERSION: 1.0.0 =================
+    === SERVER VERSION: 1.0.0 =================
 
-            This is the initial version of the server.
+    This is the initial version of the server.
 
-            Achievements in this version:
-            1. Single-file server setup with:
-                - One protected resource ('/posts')
-                - One public resource ('/login')
+    Achievements in this version:
+    1. Single-file server setup with:
+        - One protected resource ('/posts')
+        - One public resource ('/login')
 
-            ##############################
+    ##############################
         `,
     },
     {
         version: "1.0.1",
         purpose: `
-            #########################
-            ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
-            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    #########################
+    ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
+    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-            === SERVER VERSION: 1.0.1 =================
+    === SERVER VERSION: 1.0.1 =================
 
-            ABOUT
-              - Enhancement of version 1.0.0
+    ABOUT
+        - Enhancement of version 1.0.0
 
-            Target:
-                - [Completed] Segregated 'src/versions/1.0.0/server.v1.0.0.js' into meaningful files.
-                - [Planned] Code review and fix current issues.
+    Target:
+        - [Completed] Segregated 'src/versions/1.0.0/server.v1.0.0.js' into meaningful files.
+        - [Planned] Code review and fix current issues in next version 1.0.2.
 
-            ##############################
+    ##############################
+        `,
+    },
+    {
+        version: "1.0.2",
+        purpose: `
+    #########################
+    ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
+    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+    === SERVER VERSION: 1.0.2 =================
+
+    ABOUT
+        - Enhancement of version 1.0.1
+
+    Target:                
+        - [Planned] Code review and fix current issues in this version 1.0.2.
+            - issues
+              - [Planned] - send error response for invalid user-name
+
+    ##############################
         `,
     },
 ];
