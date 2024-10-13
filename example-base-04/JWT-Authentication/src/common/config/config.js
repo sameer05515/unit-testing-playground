@@ -1,69 +1,80 @@
 require("dotenv").config();
 
 const OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE_V_1_1_0 = `
-        Overall Target to achieve in next major release version v1.1.0
-        - Uniform response in case of success, failure, exception, validation exception
-          - make use of below files to acheive this target
-            - 'src/common/server-responses/StandardResponse.js' , and 
-            - 'src/common/middlewares/routerResponseHandler.js' 
-    `;
+    Overall Target to achieve in next major release (v1.1.0):
+    - Uniform response structure for success, failure, exceptions, and validation errors.
+    - Utilize the following files to achieve this target:
+        - 'src/common/server-responses/StandardResponse.js'
+        - 'src/common/middlewares/routerResponseHandler.js'
+`;
 
-const version_arr = [
+const OVERALL_TARGET_NEXT_MAJOR_RELEASE =
+    OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE_V_1_1_0;
+
+const versionDetails = [
     {
         version: "1.0.0",
         purpose: `
-        #########################
-        ${OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE_V_1_1_0}
-        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+            #########################
+            ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
+            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-        === SERVER VERSION: 1.0.0 =================
+            === SERVER VERSION: 1.0.0 =================
 
-        This is initial version of server.       
+            This is the initial version of the server.
 
-        Things acheived in this version:
-        1. a single file server, having 
-            - one protected resource '/posts'
-            - one public resource '/login'
-        ##############################
+            Achievements in this version:
+            1. Single-file server setup with:
+                - One protected resource ('/posts')
+                - One public resource ('/login')
+
+            ##############################
         `,
     },
     {
         version: "1.0.1",
         purpose: `
-        #########################
-        ${OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE_V_1_1_0}
-        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+            #########################
+            ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
+            $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-        === SERVER VERSION: 1.0.1 =================
+            === SERVER VERSION: 1.0.1 =================
 
-        ABOUT
-          - Enhancement for version 1.0.0
+            ABOUT
+              - Enhancement of version 1.0.0
 
-        Target
-            - [Completed]- Seggregated 'src/versions/1.0.0/server.v1.0.0.js' into meaningful files
-            - [Planned]- review current code and fix 
+            Target:
+                - [Completed] Segregated 'src/versions/1.0.0/server.v1.0.0.js' into meaningful files.
+                - [Planned] Code review and fix current issues.
 
-        ##############################
+            ##############################
         `,
     },
 ];
 
+/**
+ * Retrieves the purpose and details for a specific server version.
+ * @param {string} version - The server version to look up.
+ * @returns {string} - The purpose statement for the specified version, or a default message for unknown versions.
+ */
 const getPurposeByVersion = (version) => {
-    const purpose =
-        version_arr.find((vObj) => vObj.version === version)?.purpose ||
+    const versionInfo = versionDetails.find((vObj) => vObj.version === version);
+
+    return (
+        versionInfo?.purpose ||
         `
         #########################
-        ${OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE_V_1_1_0}
+        ${OVERALL_TARGET_NEXT_MAJOR_RELEASE}
         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
         === SERVER VERSION: unknown =================
-        This server version '${version}' not known to configuraraion. 
-        Please contact admin team to populate data for this version.
+
+        The server version '${version}' is not known to the configuration. 
+        Please contact the admin team to populate data for this version.
 
         ##############################
-    `;
-
-    return purpose;
+    `
+    );
 };
 
 module.exports = {
@@ -76,7 +87,6 @@ module.exports = {
         process.env.ACCESS_TOKEN_SECRET || "matru-ki-bijli-ka-hindola",
     REFRESH_TOKEN_SECRET_V1:
         process.env.REFRESH_TOKEN_SECRET || "chutiyon-ki-toli",
-    OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE:
-        OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE_V_1_1_0,
+    OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE: OVERALL_TARGET_NEXT_MAJOR_RELEASE,
     getPurposeByVersion: getPurposeByVersion,
 };
