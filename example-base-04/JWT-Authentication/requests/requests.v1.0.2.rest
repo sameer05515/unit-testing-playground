@@ -3,7 +3,7 @@ POST http://localhost:3067/login
 Content-Type: application/json
 
 {
-  "username": "Prem"
+  "username": "Alice"
 }
 
 ###
@@ -19,7 +19,7 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3067/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlByZW1lbmRyYSBLdW1hciIsInVzZXJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgzOTk5NywiZXhwIjoxNzI4ODkzOTk3fQ.79jNuBRQl_c79IVuBMBvmNkxIV1lxWTkHfziGe7xLvo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
 
 
 ###
