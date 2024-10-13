@@ -4,26 +4,12 @@ const SERVER_VERSION = "1.0.0";
 
 const {
   OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE,
+  getPurposeByVersion
   // ACCESS_TOKEN_SECRET,
   // PORT_1_0_0: PORT,
 } = require("../../common/config/config");
 
-const purpose = `
-#########################
-=== SERVER VERSION: ${SERVER_VERSION} =================
-This is initial version of server.
-
-${OVERALL_TARGET_IN_NEXT_MAJOR_RELEASE}
-
-Things acheived in this version:
-1. a single file server, having 
-    - one protected resource '/posts'
-    - one public resource '/login'
-
-
-
-##############################
-`;
+const purpose = getPurposeByVersion(SERVER_VERSION);
 
 const express = require("express");
 const app = express();
