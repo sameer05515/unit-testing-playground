@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  oracle-db:
+    image: container-registry.oracle.com/database/enterprise:21.3.0.0
+    container_name: oracle-db
+    ports:
+      - "1521:1521" # Database port
+      - "5500:5500" # EM Express port
+    environment:
+      ORACLE_SID: ORCLCDB          # Container Database name
+      ORACLE_PDB: ORCLPDB1         # Pluggable Database name
+      ORACLE_PWD: admin@123    # Database password
+    volumes:
+      - D:\docker-volumes\oracle-data:/opt/oracle/oradata # Persist data on Windows
+    restart: always

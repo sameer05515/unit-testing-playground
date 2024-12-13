@@ -1,0 +1,107 @@
+
+POST http://localhost:3067/login
+Content-Type: application/json
+
+{
+  "username": "Alice"
+}
+
+###
+
+
+POST http://localhost:3067/login
+Content-Type: application/json
+
+{
+  "username": "Non-existing-user"
+}
+
+###
+
+GET http://localhost:3067/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+
+###
+
+GET http://localhost:3067/sample1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+###
+
+GET http://localhost:3067/sample2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+###
+
+GET http://localhost:3067/sample3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+
+
+###
+
+GET http://localhost:3067/roles/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+###
+
+GET http://localhost:3067/roles/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+###
+
+GET http://localhost:3067/roles/public
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkFsaWNlIEpvaG5zb24iLCJ1c2VybmFtZSI6IkFsaWNlIiwiaWF0IjoxNzI4ODQyOTA2LCJleHAiOjE3Mjg4OTY5MDZ9.uIn1pC_iOzLw7tJkYTFPGulzU-6Gua_fsjWrLNtMerQ
+
+
+###
+
+
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+  "username": "Prem"
+}
+
+###
+
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+  "username": "Non-existing-user"
+}
+
+###
+
+GET http://localhost:3001/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgyMDcyMCwiZXhwIjoxNzI4ODc0NzIwfQ.K7zwQ2d2DAxaoTNQZJifr_iUvRMJUOwsOFUQBFVc9HM
+
+###
+
+# DELETE http://localhost:4000/logout
+# Content-Type: application/json
+
+# {
+#   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgwMzkwOSwiZXhwIjoxNzI4ODAzOTI0fQ.j0pMejtaJL6Vav86vqatFTb3qOz586B2YbKndoYtPSE",
+#   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgwMzkwOX0.bzNq4UMF8ed17rk_zLPYRlwXRS9S4guqtK29bcoy8Cg"
+# }
+
+# ###
+
+# POST http://localhost:4000/token
+# Content-Type: application/json
+
+# {
+#   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgwMzkwOSwiZXhwIjoxNzI4ODAzOTI0fQ.j0pMejtaJL6Vav86vqatFTb3qOz586B2YbKndoYtPSE",
+#   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUHJlbSIsImlhdCI6MTcyODgwMzkwOX0.bzNq4UMF8ed17rk_zLPYRlwXRS9S4guqtK29bcoy8Cg"
+# }
+
+# ###
+
+# POST http://localhost:4000/login
+# Content-Type: application/json
+
+# {
+#   "username": "Prem"
+# }

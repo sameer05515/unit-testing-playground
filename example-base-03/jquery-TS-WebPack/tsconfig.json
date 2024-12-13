@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",                  // Set a suitable target
+    "module": "es6",                  // Use ES6 modules for Webpack
+    "strict": true,                   // Enable strict type checking
+    "esModuleInterop": true,          // Required for jQuery import
+    "skipLibCheck": true,             // Skip type checking on declaration files
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],            // Include your source code
+  "exclude": ["node_modules"]
+}

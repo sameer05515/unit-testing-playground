@@ -1,0 +1,20 @@
+{
+  "name": "combined-observer-jpg-to-pdf",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "observe":"node ./src/observe-directory/index.js",
+    "convert-to-pdf":"node ./src/convert-jpg-to-pdf/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "chokidar": "^4.0.1",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
