@@ -9,6 +9,7 @@
 - [**as now it is installed and python is also installed in my system, can i use a .py file directly**](#ques9--as-now-it-is-installed-and-python-is-also-installed-in-my-system-can-i-use-a-py-file-directly)
 - [**As i have first time used python, can you please write a required .gitignore file content for the python project, discussed above**](#ques10--as-i-have-first-time-used-python-can-you-please-write-a-required-gitignore-file-content-for-the-python-project-discussed-above)
 - [**Summary for python program setup**](#ques11--summary-for-python-program-setup)
+- [**Re-start program**](#re-run-venv-and-program)
 
 ---
 
@@ -1055,3 +1056,69 @@ If needed, integrate the Python script with a Node.js application using the `chi
 ---
 
 This setup provides a simple, reusable Python program for downloading YouTube videos. Let me know if you need further assistance! 😊
+
+
+---
+
+# Re-run venv and program
+
+> i have restarted laptop. and now exited from venv. please share steps to re-run above python program saved
+
+After restarting your laptop, follow these steps to re-run the Python program:
+
+---
+
+### **1. Navigate to the Project Directory**
+Open a terminal or command prompt and navigate to your project directory where the Python program is saved.
+
+```bash
+cd path/to/your/youtube-video-downloader
+```
+
+---
+
+### **2. Activate the Virtual Environment**
+You need to reactivate the virtual environment to use the installed dependencies (`yt-dlp`).
+
+- **On Windows**:
+  ```bash
+  .\venv\Scripts\activate
+  ```
+
+- **On macOS/Linux**:
+  ```bash
+  source venv/bin/activate
+  ```
+
+---
+
+### **3. Run the Python Script**
+Use the `python` command to run your script with the required arguments:
+
+```bash
+python download_video.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" "./downloads" "video.mp4"
+```
+
+---
+
+### **4. Verify Output**
+- If the virtual environment is correctly activated, the program should execute and download the video.
+- The video will be saved to the specified folder (e.g., `./downloads/video.mp4`).
+
+---
+
+### **5. (Optional) If Virtual Environment Fails**
+If you encounter issues with the virtual environment (e.g., missing dependencies), reinstall them:
+1. Reactivate the virtual environment.
+2. Reinstall dependencies using:
+   ```bash
+   pip install yt-dlp
+   ```
+
+---
+
+This ensures the program works seamlessly after a system restart. Let me know if you face any issues! 😊
+
+---
+
+# 
