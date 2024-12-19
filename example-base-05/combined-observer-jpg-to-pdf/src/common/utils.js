@@ -76,7 +76,7 @@ const folder_names = [
     // "hawaldar-bahadur-aur-kubda-pret",
     // "raj-comics-multi-starer-zalzala",
     // "raj-comics-multi-starer-nishachar",
-    
+    // "fighter-toads-rap-star"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
