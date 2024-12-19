@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRUD with EJS + Tailwind + Alpine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+  <%- include("partials/header") %>
+
+  <div class="max-w-2xl mx-auto bg-white shadow-lg p-6 rounded-md" 
+       x-data="{ showForm: false, editMode: false, form: { uniqueId: '', name: '', description: '' } }">
+    
+    <h1 class="text-xl font-bold mb-4">CRUD Operations</h1>
+
+    <!-- Add New Item Button -->
+    <button @click="showForm = true; editMode = false; form = { uniqueId: '', name: '', description: '' }"
+      class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4">+ Add Item</button>
+
+    <!-- Form (Add / Update) -->
+    <form action="/crud-demo/" method="POST" class="bg-gray-200 p-4 rounded-md mb-4" x-show="showForm">
+      <input type="hidden" name="uniqueId" x-model="form.uniqueId">
+      <label class="block mb-2">Name:</label>
+      <input type="text" name="name" x-model="form.name" class="w-full border p-2 mb-2" required>
+      
+      <label class="block mb-2">Description:</label>
+      <textarea name="description" x-model="form.description" class="w-full border p-2 mb-2" required></textarea>
+
+      <button type="submit" formaction="/crud-demo/add" x-show="!editMode"
+        class="bg-green-500 text-white px-4 py-2 rounded-md">Save</button>
+      
+      <button type="submit" formaction="/crud-demo/update" x-show="editMode"
+        class="bg-yellow-500 text-white px-4 py-2 rounded-md">Update</button>
+      
+      <button type="button" @click="showForm = false"
+        class="bg-gray-500 text-white px-4 py-2 rounded-md">Cancel</button>
+    </form>
+
+    <!-- Item List -->
+    <ul>
+      <% items.forEach(item => { %>
+        <li class="border-b p-2 flex justify-between items-center">
+          <div>
+            <strong><%= item.name %></strong>
+            <p class="text-sm text-gray-600"><%= item.description %></p>
+          </div>
+
+          <div class="space-x-2">
+            <button @click="showForm = true; editMode = true; form = { uniqueId: '<%= item.uniqueId %>', name: '<%= item.name %>', description: '<%= item.description %>' }"
+              class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</button>
+
+            <form action="/crud-demo/delete" method="POST" class="inline">
+              <input type="hidden" name="uniqueId" value="<%= item.uniqueId %>">
+              <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+            </form>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+
+  <%- include("partials/footer") %>
+
+</body>
+</html>

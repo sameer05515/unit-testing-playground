@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holi Dynamic Content</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen w-screen flex flex-col bg-gray-100">
+
+    <!-- Header -->
+    <header class="h-[10%] w-full bg-red-500 text-white text-center flex items-center justify-center text-2xl font-bold">
+        🎭🥁 JOGIRA SA RA RA RA!! 🔥
+    </header>
+
+    <!-- Main Section (Scrollable) -->
+    <main class="h-[75%] w-full overflow-y-auto bg-white p-4" id="main">
+        <div id="root" class="space-y-2"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="h-[10%] w-full bg-blue-500 text-white text-center flex items-center justify-center text-lg font-semibold">
+        बुरा ना मानो... AI है! 🤖🎨😂
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const root = document.getElementById("root");
+            let data = Array.from({ length: 50 }, (_, idx) => ({
+                id: idx + 1,
+                content: `#${idx + 1} - ${"Lorem ipsum ".repeat(idx + 1)}`
+            }));
+
+            let i = 0;
+            function addContent() {
+                if (i < data.length) {
+                    let div = document.createElement("div");
+                    div.className = "p-2 border-b border-gray-300 bg-gray-50";
+                    div.textContent = data[i].content;
+                    root.appendChild(div);
+                    root.parentElement.scrollTop = root.parentElement.scrollHeight;
+                    i++;
+                }
+            }
+
+            setInterval(addContent, 500);
+        });
+    </script>
+
+</body>
+</html>

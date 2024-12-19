@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3 shadow">
+    <a class="navbar-brand fw-bold" href="/">📂 My App</a>
+  
+    <div class="d-flex flex-grow-1 justify-content-center">
+      <% if (details) { %>
+        <span class="badge bg-light text-dark p-2 rounded">
+          <strong><%= slug %></strong> &middot; <%= details.currentIndex + 1 %> / <%= files.length %> 
+          <br>
+          <small class="text-muted">Path: <code><%= details.fileAbsolutePath %></code></small>
+        </span>
+      <% } %>
+    </div>
+  
+    <div class="d-flex gap-2">
+      <button id="toggleBtn" class="btn btn-light" onclick="toggleList()">📂 Toggle List</button>
+      <% if (details) { %>
+        <a href="/?slug=<%= details.prevSlug %>" class="btn btn-outline-light">⏪ Prev</a>
+        <a href="/?slug=<%= details.nextSlug %>" class="btn btn-outline-light">⏩ Next</a>
+      <% } %>
+    </div>
+  </nav>
+  

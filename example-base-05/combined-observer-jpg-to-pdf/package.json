@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "observe":"node ./src/observe-directory/index.js",
-    "convert-to-pdf":"node ./src/convert-jpg-to-pdf/index.js"
+    "observe": "node ./src/observe-directory/index.js",
+    "convert-to-pdf": "node ./src/convert-jpg-to-pdf/index.js"
   },
   "keywords": [],
   "author": "",

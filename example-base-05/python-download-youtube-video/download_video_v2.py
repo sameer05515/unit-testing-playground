@@ -63,7 +63,31 @@ videos = [
     {
         "video_url":"https://www.youtube.com/watch?v=JaC2crfwXK8",
         "file_name":"Sampurn-SunderKand.mp4"
-    }
+    },
+    {
+        "video_url":"https://www.youtube.com/watch?v=MeaVRC453M0",
+        "file_name":"Hanuman-Ashtak.mp4"
+    },
+    {
+        "video_url":"https://www.youtube.com/watch?v=mHhkgwZi8rk",
+        "file_name":"Apna-Kam-Hai-Charno-Mein-Pahadawali-Maa-Sheranwaliye--by-Sonu Nigam.mp4"
+    },
+    {
+        "video_url":"https://www.youtube.com/watch?v=gGxMm_1w9Sc",
+        "file_name":"16Feb2025.mann-ki-mat-pe--full-song--rahat-fateh-ali-khan--aakrosh--2010.mp4"
+    },
+    {
+     "video_url":"https://www.youtube.com/watch?v=z0-ESqMjrXI",
+        "file_name":"17Feb2025.tum-basi-ho-kan-kan-andar-maa.mp4"   
+    },    
+    {
+     "video_url":"https://www.youtube.com/watch?v=QvUF4LkmwKo",
+        "file_name":"26Feb2025.shiv-tandav-stotram---with-sanskrit-lyrics.mp4"   
+    },
+    {
+     "video_url":"https://www.youtube.com/watch?v=ATLp0u_3OMQ",
+        "file_name":"26Feb2025.namo-namo-mahadev---bhakti-songs---maha-shivratri.mp4"   
+    },
 ]
 
 if __name__ == '__main__':

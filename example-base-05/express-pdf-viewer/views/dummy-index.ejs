@@ -1,0 +1,8 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Ensure that EJS data is properly embedded as a valid JS object
+    const pages = <%- JSON.stringify(pages) %>;
+
+    console.log("Pages data:", pages);
+  });
+</script>

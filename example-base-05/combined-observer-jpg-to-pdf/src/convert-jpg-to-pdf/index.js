@@ -9,9 +9,9 @@ const { outputFolderNames } = require("../common/utils");
  * @param {string} dirPath - The directory path to check or create.
  */
 const ensureDirectoryExists = (dirPath) => {
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
 };
 
 /**
@@ -20,10 +20,10 @@ const ensureDirectoryExists = (dirPath) => {
  * @returns {string[]} Sorted list of image file names.
  */
 const getImageFiles = (folderPath) => {
-    return fs
-        .readdirSync(folderPath)
-        .filter((file) => file.endsWith(".jpg"))
-        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+  return fs
+    .readdirSync(folderPath)
+    .filter((file) => file.endsWith(".jpg"))
+    .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
 };
 
 /**
@@ -32,46 +32,39 @@ const getImageFiles = (folderPath) => {
  * @param {string} outputFolder - The folder to save the generated PDF.
  * @param {string} outputFileName - The name of the output PDF file.
  */
-const createPdfFromImages = async (
-    inputFolder,
-    outputFolder,
-    outputFileName
-) => {
-    try {
-        ensureDirectoryExists(outputFolder);
+const createPdfFromImages = async (inputFolder, outputFolder, outputFileName) => {
+  try {
+    ensureDirectoryExists(outputFolder);
 
-        const imageFiles = getImageFiles(inputFolder);
-        if (imageFiles.length === 0) {
-            console.error(`No JPG files found in the folder: ${inputFolder}`);
-            return;
-        }
-
-        const pdfDoc = await PDFDocument.create();
-        for (const file of imageFiles) {
-            const filePath = path.join(inputFolder, file);
-            const imageBytes = fs.readFileSync(filePath);
-            const image = await pdfDoc.embedJpg(imageBytes);
-
-            const page = pdfDoc.addPage([image.width, image.height]);
-            page.drawImage(image, {
-                x: 0,
-                y: 0,
-                width: image.width,
-                height: image.height,
-            });
-        }
-
-        const pdfBytes = await pdfDoc.save();
-        const outputFilePath = path.join(outputFolder, outputFileName);
-        fs.writeFileSync(outputFilePath, pdfBytes);
-
-        console.log(`PDF created successfully: ${outputFilePath}`);
-    } catch (error) {
-        console.error(
-            `Error creating PDF from images in folder: ${inputFolder}`,
-            error
-        );
+    const imageFiles = getImageFiles(inputFolder);
+    if (imageFiles.length === 0) {
+      console.error(`No JPG files found in the folder: ${inputFolder}`);
+      return;
     }
+
+    const pdfDoc = await PDFDocument.create();
+    for (const file of imageFiles) {
+      const filePath = path.join(inputFolder, file);
+      const imageBytes = fs.readFileSync(filePath);
+      const image = await pdfDoc.embedJpg(imageBytes);
+
+      const page = pdfDoc.addPage([image.width, image.height]);
+      page.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: image.width,
+        height: image.height,
+      });
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    const outputFilePath = path.join(outputFolder, outputFileName);
+    fs.writeFileSync(outputFilePath, pdfBytes);
+
+    console.log(`PDF created successfully: ${outputFilePath}`);
+  } catch (error) {
+    console.error(`Error creating PDF from images in folder: ${inputFolder}`, error);
+  }
 };
 
 /**
@@ -79,9 +72,10 @@ const createPdfFromImages = async (
  * @param {Array} folderConfigs - Array of folder configuration objects.
  */
 const processFoldersToPdf = (folderConfigs) => {
-    folderConfigs.forEach(async ({ inputFolder, outputFolder, outputFileName }) =>
-        await createPdfFromImages(inputFolder, outputFolder, outputFileName)
-    );
+  folderConfigs.forEach(
+    async ({ inputFolder, outputFolder, outputFileName }) =>
+      await createPdfFromImages(inputFolder, outputFolder, outputFileName)
+  );
 };
 
 // // Input folder configurations
