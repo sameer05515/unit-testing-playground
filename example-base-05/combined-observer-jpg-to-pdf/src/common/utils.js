@@ -77,13 +77,13 @@ const folder_names = [
   // "raj-comics-multi-starer-zalzala",
   // "raj-comics-multi-starer-nishachar",
   // "fighter-toads-rap-star",
-//   "nagraj-mrityudaand",
-//   "nagraj-naaagdweep",
-//   "nagraj-treefana",
-//   "nagraj-mahaayuddh",
-//   "nagraj-aagraz",
-//   "nagraj-naagraj-ka-kahar",
-//   "nagraj-taandav",
+  //   "nagraj-mrityudaand",
+  //   "nagraj-naaagdweep",
+  //   "nagraj-treefana",
+  //   "nagraj-mahaayuddh",
+  //   "nagraj-aagraz",
+  //   "nagraj-naagraj-ka-kahar",
+  //   "nagraj-taandav",
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
