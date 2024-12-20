@@ -84,6 +84,8 @@ const folder_names = [
   //   "nagraj-aagraz",
   //   "nagraj-naagraj-ka-kahar",
   //   "nagraj-taandav",
+  // "scd-nagraj-sangraam",
+  // "fighter-toads-toad-khor",
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
