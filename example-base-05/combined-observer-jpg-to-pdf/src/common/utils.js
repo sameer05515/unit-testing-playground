@@ -90,6 +90,18 @@ const folder_names = [
   // "nagraj-fann",
   // "nagraj-baambi",
   // "nagraj-jahriley",
+  // "nagraj-snake-park",
+  // "nagraj-vish-kanya",
+  // "nagraj-shakura-ka-chakravyuh",
+  // "nagraj-nagraj-ka-ant",
+  // "nagraj-zahar",
+  // "nagraj-nagpaasha",
+  // "nagraj-khajaana",
+  // "nagraj-ikchhadhaari",
+  // "nagraj-kaliyug",
+  // "scd-nagraj-vartmaan",
+  // "scd-nagraj-samraat",
+  // "scd-nagraj-saudaangi",
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
