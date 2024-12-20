@@ -102,6 +102,17 @@ const folder_names = [
   // "scd-nagraj-vartmaan",
   // "scd-nagraj-samraat",
   // "scd-nagraj-saudaangi",
+  // "parmaanu-zero-g",
+  // "scd-master-blaster",
+  // "gamraj-kauwa-g",
+  // "scd-nagraj-nagadheesh",
+  // "nagraj-aur-paapraj",
+  // "nagraj-raj-ka-raj",
+  // "nagraj-naagin",
+  // "gamraj-aur-ustad-gulgula",
+  // "scd-shadyantra",
+  // "fighter-toads-lov-in-gutter",
+  // "scd-nagraj-rajnagar-ki-tabaahi"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
