@@ -1,14 +1,19 @@
+# Introduction
 Myself Premendra Kumar. I did my B.Tech(CSE) from BCE Bhagalpur in 2009. I have 15 years of full-stack development with java and reactjs.
 
 I have 8+ years of experience for development with Spring Boot and ReactJS.
 
 I have 3 years of ChatGPT Prompt engineering.
 
+# Last company and Project
+
 My last company was **Zycus Infotech**. Here I have worked in **ESG Lythouse** project. Here I have worked for fullstack development for various modules to develop APIs and GUIs , like GMI (Goal, Metric, Initiative). 
 
 Also I have created multi-step-form GUI and its REST endpoint to save/update data for "EUTaxonomy" module.
 
 I have also worked to configure SQS message queue in AWS. Also I have created AWS step function to run SQS. Also written utility to read SQS topic programmatically.
+
+# Achievements
 
 worked as Team Lead for 3 years and successfully delivered new functionality for implementation of NSDL/CDSL Edis 3rd party Resful web services in shubhweb application.  
 
@@ -20,6 +25,8 @@ Good exposure of cloud services with AWS
 
 
 ---
+
+# Company and Projects
 
 Below is my companies and projects where I have worked so far.
 
@@ -42,6 +49,8 @@ Below is my companies and projects where I have worked so far.
 
 ---
 
+# Educational Qualifications
+
 My educational qualifications
 1. B. Tech. CSE
 2. I.Sc
@@ -49,7 +58,7 @@ My educational qualifications
 
 ---
 
-Technical competency  
+# Technical Competency  
 - Spring Boot - 8+ years
 - ReactJs - 8+ years
 - AWS - 8+ years
@@ -59,7 +68,7 @@ Technical competency
 - MongoDB query - 5+ years
 
 ---
-Achievements
+# Achievements
 - Delivered APIs and GUIs for GMI module within tight schedule. For this I have recieved Reward and Recognision too.
 - Delivered 
 
