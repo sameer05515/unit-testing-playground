@@ -50,6 +50,7 @@ export function bootstrap() {
   apiRequest("/analyse-cgpt/api/itr2/snapshots", { headers: { accept: "application/json" } })
     .then((data) => {
       // const messageDiv = document.getElementById("messageDiv");
+      console.log("DATA: ",data)
       const tableContainer = document.getElementById("table-container");
 
       // messageDiv.textContent = JSON.stringify(data, null, 2);
