@@ -18,7 +18,15 @@ router.get("/s/:sVer", async (req, res) => {
     const filePath = `${testDir}\\itr1\\${sVer}.json`;
     const data = await FileOps.readJsonFile(filePath);
 
-    res.json(data);
+    // res.json(data);
+
+    if (req.accepts("html")) {
+      res.render(`chat-renderer/v5.1.conv.ejs`, {
+        data: data.conversations.map((c) => ({ id: c.id, title: c.title, msgCount: c.msgCount })),
+      });
+    } else {
+      res.json(data.conversations.map((c) => ({ id: c.id, title: c.title, msgCount: c.msgCount })));
+    }
   } catch (err) {
     const errorMessage = prepareErrorMessage(err);
     res.status(500).json({ error: errorMessage });
