@@ -6,20 +6,16 @@ export function renderTable(dataArray) {
     return null;
   }
 
-  // Create the table container div
   const container = document.createElement("div");
   container.className = "overflow-x-auto p-4";
 
-  // Create the table element
   const table = document.createElement("table");
   table.className = "w-full border-collapse border border-gray-300 bg-white shadow-md rounded-lg text-xs";
 
-  // Create the table header
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
   headerRow.className = "bg-gray-200 text-gray-700";
 
-  // Extract keys from first object for headers
   const headers = Object.keys(dataArray[0]);
   headers.forEach((header) => {
     const th = document.createElement("th");
@@ -30,7 +26,6 @@ export function renderTable(dataArray) {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // Create the table body
   const tbody = document.createElement("tbody");
   dataArray.forEach((item, index) => {
     const row = document.createElement("tr");
@@ -51,18 +46,27 @@ export function renderTable(dataArray) {
   return container;
 }
 
-export function bootstrap(message = []) {
+export function bootstrap() {
   apiRequest("/analyse-cgpt/api/itr2/snapshots", { headers: { accept: "application/json" } })
     .then((data) => {
-      document.getElementById("messageDiv").innerText = JSON.stringify(data, null, 2);
+      // const messageDiv = document.getElementById("messageDiv");
       const tableContainer = document.getElementById("table-container");
-      const tableElement = renderTable(data); // Call function from ui.js
+
+      // messageDiv.textContent = JSON.stringify(data, null, 2);
+
+      // Clear previous table if any
+      tableContainer.innerHTML = "";
+
+      const tableElement = renderTable(data);
       if (tableElement) {
         tableContainer.appendChild(tableElement);
+      } else {
+        tableContainer.textContent = "No data to display.";
       }
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      document.getElementById("messageDiv").innerText = JSON.stringify(error, null, 2);
+      // const messageDiv = document.getElementById("messageDiv");
+      // messageDiv.textContent = "Error: " + JSON.stringify(error, null, 2);
     });
 }
