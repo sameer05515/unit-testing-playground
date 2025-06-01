@@ -30,11 +30,6 @@ router.get("/", async (req, res) => {
       });
     }
 
-    // res.json({
-    //   step0: BaseData,
-    //   step1: resultList,
-    // });
-
     res.json(resultList);
   } catch (err) {
     const errorMessage = prepareErrorMessage(err);

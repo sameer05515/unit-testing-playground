@@ -28,6 +28,6 @@ router.use("/api/step-1-fetch-all-snapshot-names/itr1", require("./step-1-fetch-
 router.use("/api/step-1-fetch-all-snapshot-names/itr2", require("./step-1-fetch-all-snapshot-names/v2"));
 router.use("/api/step-2-fetch-count-of-conversation/itr1", require("./step-1-fetch-all-snapshot-names/v2"));
 
-router.use("/api/itr2/snapshot-details",require("./itr2/index.js"))
+router.use("/api/itr2/01-snapshot-details",require("./itr2/index.js"))
 
 module.exports = router;
