@@ -30,7 +30,11 @@ router.get("/", async (req, res) => {
       });
     }
 
-    res.json(resultList);
+    if (req.accepts("html")) {
+      res.render(`chat-renderer/v5.1.ejs`, { message: resultList });
+    } else {
+      res.json(resultList);
+    }
   } catch (err) {
     const errorMessage = prepareErrorMessage(err);
     res.status(500).json({ error: errorMessage });
