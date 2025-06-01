@@ -35,7 +35,7 @@ export function renderTable(dataArray) {
       const td = document.createElement("td");
       //
       if (header === "slug") {
-        td.innerHTML = `<a href="/analyse-cgpt/api/itr2/snapshots/${item.slug}">${item[header]}</a>`;
+        td.innerHTML = `<a href="/analyse-cgpt/api/itr2/snapshots/s/${item.slug}">${item[header]}</a>`;
       } else {
         td.textContent = item[header];
       }

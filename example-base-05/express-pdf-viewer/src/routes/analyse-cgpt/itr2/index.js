@@ -12,6 +12,19 @@ const FileOps = require("../../../common/FileRelatedOperations.services.v2");
 // Constants
 const testDir = "D:\\v-dir";
 
+router.get("/s/:sVer", async (req, res) => {
+  try {
+    const { sVer } = req.params;
+    const filePath = `${testDir}\\itr1\\${sVer}.json`;
+    const data = await FileOps.readJsonFile(filePath);
+
+    res.json(data);
+  } catch (err) {
+    const errorMessage = prepareErrorMessage(err);
+    res.status(500).json({ error: errorMessage });
+  }
+});
+
 // Route: GET /
 router.get("/", async (req, res) => {
   try {
@@ -40,7 +53,5 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: errorMessage });
   }
 });
-
-
 
 module.exports = router;
