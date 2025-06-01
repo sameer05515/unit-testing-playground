@@ -1,8 +1,7 @@
 import { jsonData, getCurrentConversation, currentConversationIndex } from "./dataLoader.mjs";
 import { formatUnixTimestamp, getConversationMessages } from "./utils.mjs";
 import { getCurrentPage, messagesPerPage } from "./pagination.mjs";
-// import {  } from "./dataLoader.mjs";
-// import { marked } from "marked";
+
 
 const highlightCode = () => hljs.highlightAll();
 marked.setOptions({
