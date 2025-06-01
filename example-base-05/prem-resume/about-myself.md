@@ -10,6 +10,14 @@ Also I have created multi-step-form GUI and its REST endpoint to save/update dat
 
 I have also worked to configure SQS message queue in AWS. Also I have created AWS step function to run SQS. Also written utility to read SQS topic programmatically.
 
+worked as Team Lead for 3 years and successfully delivered new functionality for implementation of NSDL/CDSL Edis 3rd party Resful web services in shubhweb application.  
+
+Worked in more than 16 projects having different technology stacks.  
+
+Worked for development of api to migrate data from legacy database to target database using java concurrent API in minimum time.  
+
+Good exposure of cloud services with AWS  
+
 
 ---
 
