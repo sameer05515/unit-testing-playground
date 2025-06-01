@@ -52,14 +52,7 @@ export function renderTable(dataArray) {
 }
 
 export function bootstrap(message = []) {
-  // console.log("Bootstrap me hain.", message)
-  // const tableContainer = document.getElementById("table-container");
-  // const tableElement = renderTable(message); // Call function from ui.js
-  // if (tableElement) {
-  //   tableContainer.appendChild(tableElement);
-  // }
-
-  apiRequest("/analyse-cgpt/api/itr2/snapshots")
+  apiRequest("/analyse-cgpt/api/itr2/snapshots", { headers: { accept: "application/json" } })
     .then((data) => {
       document.getElementById("messageDiv").innerText = JSON.stringify(data, null, 2);
       const tableContainer = document.getElementById("table-container");
