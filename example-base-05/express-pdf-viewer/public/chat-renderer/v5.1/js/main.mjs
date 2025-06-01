@@ -33,8 +33,13 @@ export function renderTable(dataArray) {
 
     headers.forEach((header) => {
       const td = document.createElement("td");
-      // td.textContent = item[header];
-      td.innerHTML=`<a href="/analyse-cgpt/api/itr2/snapshots/${item.slug}">${item[header]}</a>`
+      //
+      if (header === "slug") {
+        td.innerHTML = `<a href="/analyse-cgpt/api/itr2/snapshots/${item.slug}">${item[header]}</a>`;
+      } else {
+        td.textContent = item[header];
+      }
+
       td.className = "border border-gray-300 px-2 py-1";
       row.appendChild(td);
     });
@@ -51,7 +56,7 @@ export function bootstrap() {
   apiRequest("/analyse-cgpt/api/itr2/snapshots", { headers: { accept: "application/json" } })
     .then((data) => {
       // const messageDiv = document.getElementById("messageDiv");
-      console.log("DATA: ",data)
+      console.log("DATA: ", data);
       const tableContainer = document.getElementById("table-container");
 
       // messageDiv.textContent = JSON.stringify(data, null, 2);
