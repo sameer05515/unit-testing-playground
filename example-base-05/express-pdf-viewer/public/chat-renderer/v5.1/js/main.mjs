@@ -33,7 +33,8 @@ export function renderTable(dataArray) {
 
     headers.forEach((header) => {
       const td = document.createElement("td");
-      td.textContent = item[header];
+      // td.textContent = item[header];
+      td.innerHTML=`<a href="/analyse-cgpt/api/itr2/snapshots/${item.slug}">${item[header]}</a>`
       td.className = "border border-gray-300 px-2 py-1";
       row.appendChild(td);
     });
