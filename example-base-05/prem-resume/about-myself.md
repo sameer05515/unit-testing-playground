@@ -70,5 +70,5 @@ My educational qualifications
 ---
 # Achievements
 - Delivered APIs and GUIs for GMI module within tight schedule. For this I have recieved Reward and Recognision too.
-- Delivered 
+- Experienced software developer with expertise in React.js, Java 8, Kubernetes, and Docker. Demonstrated proficiency through hands-on experience in developing and deploying web applications. Proven track record of leveraging version control systems like BitBucket to manage and showcase personal projects. Certified in React.js and Java 8, with a strong foundation in containerization technologies. Committed to continuous learning and staying updated with industry best practices.
 
