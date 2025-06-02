@@ -12,6 +12,36 @@ const FileOps = require("../../../common/FileRelatedOperations.services.v2");
 // Constants
 const testDir = "D:\\v-dir";
 
+router.get("/s/:sVer/c/:convId", async (req, res) => {
+  try {
+    const { sVer, convId } = req.params;
+    const filePath = `${testDir}\\itr2\\${sVer}\\message.json`;
+    const data = await FileOps.readJsonFile(filePath);
+
+    // res.json(data);
+
+    if (req.accepts("html")) {
+      res.render(`chat-renderer/v5.1.conv.message.ejs`, {
+        // data: data.map((c) => ({
+        //   id: c.id,
+        //   title: c.title,
+        //   msgCount: c.msgCount,
+        //   createdOn: c.createdOn,
+        //   updatedOn: c.updatedOn,
+        // })),
+        sVer,
+        convId,
+      });
+    } else {
+      res.json(data.filter((m) => m.convId === convId));
+      // res.json(data);
+    }
+  } catch (err) {
+    const errorMessage = prepareErrorMessage(err);
+    res.status(500).json({ error: errorMessage });
+  }
+});
+
 router.get("/s/:sVer", async (req, res) => {
   try {
     const { sVer } = req.params;
@@ -28,6 +58,7 @@ router.get("/s/:sVer", async (req, res) => {
           msgCount: c.msgCount,
           createdOn: c.createdOn,
           updatedOn: c.updatedOn,
+          slug: sVer,
         })),
         sVer,
       });
@@ -39,6 +70,7 @@ router.get("/s/:sVer", async (req, res) => {
           msgCount: c.msgCount,
           createdOn: c.createdOn,
           updatedOn: c.updatedOn,
+          slug: sVer,
         }))
       );
       // res.json(data);

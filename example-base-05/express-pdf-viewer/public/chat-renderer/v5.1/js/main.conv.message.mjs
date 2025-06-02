@@ -34,8 +34,8 @@ export function renderTable(dataArray) {
     headers.forEach((header) => {
       const td = document.createElement("td");
       //
-      if (header === "title") {
-        td.innerHTML = `<a href="/analyse-cgpt/api/itr2/snapshots/s/${item.slug}/c/${item.id}">${item[header]}</a>`;
+      if (header === "slug") {
+        td.innerHTML = `<a href="/analyse-cgpt/api/itr2/snapshots/s/${item.slug}">${item[header]}</a>`;
       } else {
         td.textContent = item[header];
       }
@@ -52,9 +52,9 @@ export function renderTable(dataArray) {
   return container;
 }
 
-export function bootstrap(sVer = "v3") {
-  console.log("sVer : ", sVer);
-  apiRequest("/analyse-cgpt/api/itr2/snapshots/s/" + sVer, { headers: { accept: "application/json" } })
+export function bootstrap(sVer = "v3", convId) {
+  console.log("sVer : ", sVer, " convId : ", convId);
+  apiRequest("/analyse-cgpt/api/itr2/snapshots/s/" + sVer + "/c/" + convId, { headers: { accept: "application/json" } })
     .then((data) => {
       // const messageDiv = document.getElementById("messageDiv");
       console.log("DATA: ", data);

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+  </head>
+  <body class="bg-gray-100 p-6 flex flex-col min-h-screen">
+    <div id="table-container" class="w-full"></div>
+    
+    <!-- Tailwind Typography Plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+    <script type="module">
+      import { bootstrap } from "/chat-renderer/v5.1/js/main.conv.message.mjs";
+      const sVer = "<%-sVer%>";
+      const convId = "<%-convId%>";
+      bootstrap(sVer,convId);
+    </script>
+  </body>
+</html>
