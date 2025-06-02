@@ -22,11 +22,26 @@ router.get("/s/:sVer", async (req, res) => {
 
     if (req.accepts("html")) {
       res.render(`chat-renderer/v5.1.conv.ejs`, {
-        data: data.conversations.map((c) => ({ id: c.id, title: c.title, msgCount: c.msgCount })),
-        sVer
+        data: data.conversations.map((c) => ({
+          id: c.id,
+          title: c.title,
+          msgCount: c.msgCount,
+          createdOn: c.createdOn,
+          updatedOn: c.updatedOn,
+        })),
+        sVer,
       });
     } else {
-      res.json(data.conversations.map((c) => ({ id: c.id, title: c.title, msgCount: c.msgCount })));
+      res.json(
+        data.conversations.map((c) => ({
+          id: c.id,
+          title: c.title,
+          msgCount: c.msgCount,
+          createdOn: c.createdOn,
+          updatedOn: c.updatedOn,
+        }))
+      );
+      // res.json(data);
     }
   } catch (err) {
     const errorMessage = prepareErrorMessage(err);
