@@ -15,8 +15,10 @@ const testDir = "D:\\v-dir";
 router.get("/s/:sVer/c/:convId", async (req, res) => {
   try {
     const { sVer, convId } = req.params;
-    const filePath = `${testDir}\\itr2\\${sVer}\\message.json`;
-    const data = await FileOps.readJsonFile(filePath);
+    const msgJsonFilePath = `${testDir}\\itr2\\${sVer}\\message.json`;
+    const msgContentsJsonFilePath = `${testDir}\\itr2\\${sVer}\\message.contents.json`;
+    const msgJsonData = await FileOps.readJsonFile(msgJsonFilePath);
+    const msgContentJsonData = await FileOps.readJsonFile(msgContentsJsonFilePath);
 
     // res.json(data);
 
@@ -33,7 +35,14 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
         convId,
       });
     } else {
-      res.json(data.filter((m) => m.convId === convId));
+      res.json(
+        msgJsonData
+          .filter((m) => m.convId === convId)
+          .map((m) => ({
+            ...m,
+            content: msgContentJsonData.find((mc) => m.convId === mc.convId)?.content || "",
+          }))
+      );
       // res.json(data);
     }
   } catch (err) {
