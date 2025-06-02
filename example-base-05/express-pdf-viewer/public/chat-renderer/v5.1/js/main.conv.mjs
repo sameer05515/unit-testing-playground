@@ -53,6 +53,7 @@ export function renderTable(dataArray) {
 }
 
 export function bootstrap(sVer = "v3") {
+  console.log("sVer : ", sVer);
   apiRequest("/analyse-cgpt/api/itr2/snapshots/s/" + sVer, { headers: { accept: "application/json" } })
     .then((data) => {
       // const messageDiv = document.getElementById("messageDiv");
