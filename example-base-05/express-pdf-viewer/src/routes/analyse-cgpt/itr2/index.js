@@ -4,7 +4,9 @@ const path = require("path");
 const router = express.Router();
 
 const BaseData = require("../../../common/CgptSnapshot/BaseData");
-const { JsonFileMapWithDetails } = require("../../../common/CgptSnapshot/services");
+const {
+  JsonFileMapWithDetails,
+} = require("../../../common/CgptSnapshot/services");
 const Constants = require("../../../common/constants");
 const prepareErrorMessage = require("../../../common/prepareErrorMessage");
 const FileOps = require("../../../common/FileRelatedOperations.services.v2");
@@ -18,19 +20,14 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
     const msgJsonFilePath = `${testDir}\\itr2\\${sVer}\\message.json`;
     const msgContentsJsonFilePath = `${testDir}\\itr2\\${sVer}\\message.contents.json`;
     const msgJsonData = await FileOps.readJsonFile(msgJsonFilePath);
-    const msgContentJsonData = await FileOps.readJsonFile(msgContentsJsonFilePath);
+    const msgContentJsonData = await FileOps.readJsonFile(
+      msgContentsJsonFilePath
+    );
 
     // res.json(data);
 
     if (req.accepts("html")) {
       res.render(`chat-renderer/v5.1.conv.message.ejs`, {
-        // data: data.map((c) => ({
-        //   id: c.id,
-        //   title: c.title,
-        //   msgCount: c.msgCount,
-        //   createdOn: c.createdOn,
-        //   updatedOn: c.updatedOn,
-        // })),
         sVer,
         convId,
       });
@@ -40,7 +37,10 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
           .filter((m) => m.convId === convId)
           .map((m) => ({
             ...m,
-            text: msgContentJsonData.find((mc) => m.convId === mc.convId && m.id === mc.id)?.content || "",
+            text:
+              msgContentJsonData.find(
+                (mc) => m.convId === mc.convId && m.id === mc.id
+              )?.content || "",
             // text:""
           }))
       );
