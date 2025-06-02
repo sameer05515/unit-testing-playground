@@ -40,7 +40,8 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
           .filter((m) => m.convId === convId)
           .map((m) => ({
             ...m,
-            content: msgContentJsonData.find((mc) => m.convId === mc.convId)?.content || "",
+            text: msgContentJsonData.find((mc) => m.convId === mc.convId && m.id === mc.id)?.content || "",
+            // text:""
           }))
       );
       // res.json(data);
