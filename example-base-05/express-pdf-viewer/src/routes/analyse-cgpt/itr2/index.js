@@ -23,6 +23,7 @@ router.get("/s/:sVer", async (req, res) => {
     if (req.accepts("html")) {
       res.render(`chat-renderer/v5.1.conv.ejs`, {
         data: data.conversations.map((c) => ({ id: c.id, title: c.title, msgCount: c.msgCount })),
+        sVer
       });
     } else {
       res.json(data.conversations.map((c) => ({ id: c.id, title: c.title, msgCount: c.msgCount })));
