@@ -15,14 +15,14 @@ const testDir = "D:\\v-dir";
 router.get("/s/:sVer", async (req, res) => {
   try {
     const { sVer } = req.params;
-    const filePath = `${testDir}\\itr1\\${sVer}.json`;
+    const filePath = `${testDir}\\itr2\\${sVer}\\conversations.json`;
     const data = await FileOps.readJsonFile(filePath);
 
     // res.json(data);
 
     if (req.accepts("html")) {
       res.render(`chat-renderer/v5.1.conv.ejs`, {
-        data: data.conversations.map((c) => ({
+        data: data.map((c) => ({
           id: c.id,
           title: c.title,
           msgCount: c.msgCount,
@@ -33,7 +33,7 @@ router.get("/s/:sVer", async (req, res) => {
       });
     } else {
       res.json(
-        data.conversations.map((c) => ({
+        data.map((c) => ({
           id: c.id,
           title: c.title,
           msgCount: c.msgCount,
