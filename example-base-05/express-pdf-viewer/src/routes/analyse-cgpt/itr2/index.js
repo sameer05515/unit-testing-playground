@@ -4,9 +4,7 @@ const path = require("path");
 const router = express.Router();
 
 const BaseData = require("../../../common/CgptSnapshot/BaseData");
-const {
-  JsonFileMapWithDetails,
-} = require("../../../common/CgptSnapshot/services");
+const { JsonFileMapWithDetails } = require("../../../common/CgptSnapshot/services");
 const Constants = require("../../../common/constants");
 const prepareErrorMessage = require("../../../common/prepareErrorMessage");
 const FileOps = require("../../../common/FileRelatedOperations.services.v2");
@@ -19,10 +17,26 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
     const { sVer, convId } = req.params;
     const msgJsonFilePath = `${testDir}\\itr2\\${sVer}\\message.json`;
     const msgContentsJsonFilePath = `${testDir}\\itr2\\${sVer}\\message.contents.json`;
+    const conversationsFilePath = `${testDir}\\itr2\\${sVer}\\conversations.json`;
     const msgJsonData = await FileOps.readJsonFile(msgJsonFilePath);
-    const msgContentJsonData = await FileOps.readJsonFile(
-      msgContentsJsonFilePath
-    );
+    const msgContentJsonData = await FileOps.readJsonFile(msgContentsJsonFilePath);
+    const convos = await FileOps.readJsonFile(conversationsFilePath);
+
+    const selectedIndex = convos.findIndex((c) => c.id === convId);
+
+    console.log("selectedIndex: ", selectedIndex);
+
+    if (selectedIndex < 0) {
+      throw new Error("Invalid convId: " + convId);
+    }
+
+    const nextIdx = (selectedIndex + 1 + convos.length) % convos.length;
+    const prevIdx = (selectedIndex - 1 + convos.length) % convos.length;
+
+    console.log("selectedIndex: ", selectedIndex, "nextIdx: ", nextIdx, "prevIdx: ", prevIdx);
+
+    const nextConvId = convos[nextIdx].id;
+    const prevConvId = convos[prevIdx].id;
 
     // res.json(data);
 
@@ -32,22 +46,21 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
         convId,
       });
     } else {
-      res.json(
-        msgJsonData
+      res.json({
+        messages: msgJsonData
           .filter((m) => m.convId === convId)
           .map((m) => ({
             ...m,
-            text:
-              msgContentJsonData.find(
-                (mc) => m.convId === mc.convId && m.id === mc.id
-              )?.content || "",
-            // text:""
-          }))
-      );
+            text: msgContentJsonData.find((mc) => m.convId === mc.convId && m.id === mc.id)?.content || "",
+          })),
+        nextConvId,
+        prevConvId,
+      });
       // res.json(data);
     }
   } catch (err) {
     const errorMessage = prepareErrorMessage(err);
+    console.error(errorMessage);
     res.status(500).json({ error: errorMessage });
   }
 });

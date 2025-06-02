@@ -52,6 +52,10 @@ export function renderTable(dataArray) {
   return container;
 }
 
+function goToConv(sVer, convId) {
+  window.location.href = `/analyse-cgpt/api/itr2/snapshots/s/${sVer}/c/${convId}`;
+}
+
 //////////////////
 const highlightCode = () => hljs.highlightAll();
 marked.setOptions({
@@ -59,11 +63,13 @@ marked.setOptions({
   breaks: true,
 });
 
-export function displayMessages(messages) {
+export function displayMessages({ messages, nextConvId, prevConvId }, sVer = "v3", convId) {
   let root = document.getElementById("root");
   root.innerHTML = "";
 
   console.log("messages : ", messages);
+  document.getElementById("prevConversationBtn").addEventListener("click", () => goToConv(sVer, prevConvId));
+  document.getElementById("nextConversationBtn").addEventListener("click", () => goToConv(sVer, nextConvId));
 
   // if (jsonData.length === 0) return;
 
@@ -126,9 +132,8 @@ export function bootstrap(sVer = "v3", convId) {
   console.log("sVer : ", sVer, " convId : ", convId);
   apiRequest("/analyse-cgpt/api/itr2/snapshots/s/" + sVer + "/c/" + convId, { headers: { accept: "application/json" } })
     .then((data) => {
-      console.log("DATA: ", data);
-
-      displayMessages(data);
+      // console.log("DATA: ", data);
+      displayMessages(data, sVer, convId);
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
