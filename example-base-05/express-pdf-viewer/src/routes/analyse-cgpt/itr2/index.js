@@ -24,7 +24,7 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
 
     const selectedIndex = convos.findIndex((c) => c.id === convId);
 
-    console.log("selectedIndex: ", selectedIndex);
+    // console.log("selectedIndex: ", selectedIndex);
 
     if (selectedIndex < 0) {
       throw new Error("Invalid convId: " + convId);
@@ -33,7 +33,7 @@ router.get("/s/:sVer/c/:convId", async (req, res) => {
     const nextIdx = (selectedIndex + 1 + convos.length) % convos.length;
     const prevIdx = (selectedIndex - 1 + convos.length) % convos.length;
 
-    console.log("selectedIndex: ", selectedIndex, "nextIdx: ", nextIdx, "prevIdx: ", prevIdx);
+    // console.log("selectedIndex: ", selectedIndex, "nextIdx: ", nextIdx, "prevIdx: ", prevIdx);
 
     const nextConvId = convos[nextIdx].id;
     const prevConvId = convos[prevIdx].id;
