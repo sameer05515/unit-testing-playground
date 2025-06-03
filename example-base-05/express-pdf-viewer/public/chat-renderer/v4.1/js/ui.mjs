@@ -63,7 +63,8 @@ ${marked.parse(msg.text)}
 
   document.getElementById("conversationIndex").innerHTML = `[ ${currentConversationIndex + 1} / ${
     jsonData.length
-  } ] - ${conversation.title} <br/>
+  } ] - ${conversation.title} <br/> 
+  http://localhost:3000/analyse-cgpt/api/itr2/snapshots/s/v35/c/${conversation.id}<br/>
   Total messages: ${messages.length}, Created: ${createdOn}, Last Updated: ${updatedOn}
   `;
   highlightCode();
