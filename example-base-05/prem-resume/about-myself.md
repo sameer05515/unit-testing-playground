@@ -34,7 +34,7 @@ Below is my companies and projects where I have worked so far.
 1.1 ESG Lythouse  
 2. EVC Ventures  
 2.1 IITD Admin  
-3. RSystems
+3. RSystems  
 3.1 Ephesoft
 4. Dhani Stocks (Indiabulls Ventures)  
 4.1 ShubhWeb
