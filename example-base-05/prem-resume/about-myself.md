@@ -1,3 +1,19 @@
+> # 🚀 Self-Introduction Speech:
+> 
+> "Hello, I’m Premendra Kumar — a full-stack developer with over 15 years of industry experience, specializing in Java, Spring Boot, and ReactJS. I bring 8+ years of hands-on expertise building scalable web applications using modern frameworks.
+> 
+> Throughout my career, I’ve embraced a development philosophy that’s simple yet powerful — I believe in building solutions that are affordable, secure, and sustainable. Whether I’m designing microservices architecture, optimizing front-end performance, or managing end-to-end delivery, my approach is structured and impact-driven.
+> 
+> I actively use strategic thinking models like ORE (Observe, Reflect, Execute) and EVTA (Extract, Validate, Transform, Apply) to improve not just how I code, but how I think. Lately, I’ve also been diving deep into the world of AI and prompt engineering, focusing more on meaningful learning than just monetary gain.
+> 
+> My goal is simple — to keep learning, keep solving real-world problems, and build tech that makes a difference. Currently, I'm exploring hybrid architectures using MySQL, MongoDB, and file-based systems for data-fetch-heavy applications.
+> 
+> Beyond code, I’m passionate about mentoring, collaboration, and thoughtful system design. I’m now looking forward to new opportunities where I can contribute as a developer, team leader, or architect, while continuing to grow personally and professionally."
+> 
+
+
+---
+
 # Introduction
 Myself Premendra Kumar. I did my B.Tech(CSE) from BCE Bhagalpur in 2009. I have 15 years of full-stack development experience with java and reactjs.
 
