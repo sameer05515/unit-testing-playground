@@ -1,5 +1,5 @@
 # Introduction
-Myself Premendra Kumar. I did my B.Tech(CSE) from BCE Bhagalpur in 2009. I have 15 years of full-stack development with java and reactjs.
+Myself Premendra Kumar. I did my B.Tech(CSE) from BCE Bhagalpur in 2009. I have 15 years of full-stack development experience with java and reactjs.
 
 I have 8+ years of experience for development with Spring Boot and ReactJS.
 
