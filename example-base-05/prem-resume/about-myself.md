@@ -7,7 +7,7 @@ I have 3 years of ChatGPT Prompt engineering.
 
 # Last company and Project
 
-My last company was **Zycus Infotech**. Here I have worked in **ESG Lythouse** project. Here I have worked for fullstack development for various modules to develop APIs and GUIs , like GMI (Goal, Metric, Initiative). 
+My last company was **Zycus Infotech**. Here I have worked in **ESG Lythouse** project. Here I have worked for fullstack development for various modules to develop APIs and GUIs , like GMI (Goal, Metric, Initiative), EUTaxonomy. 
 
 Also I have created multi-step-form GUI and its REST endpoint to save/update data for "EUTaxonomy" module.
 
