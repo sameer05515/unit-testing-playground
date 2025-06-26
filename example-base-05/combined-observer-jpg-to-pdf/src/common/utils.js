@@ -209,7 +209,8 @@ const folder_names = [
   // "bankelal-kaato-kaato",
   // "gamraj-chal-khali",
   //  "scd-ruhon-ka-shikanja",
-  // "parmanu-hahakaar"
+  // "parmanu-hahakaar",
+  // "crookbond-ka-naya-hungamar",
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
