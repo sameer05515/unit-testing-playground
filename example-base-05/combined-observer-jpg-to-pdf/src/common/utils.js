@@ -211,6 +211,7 @@ const folder_names = [
   //  "scd-ruhon-ka-shikanja",
   // "parmanu-hahakaar",
   // "crookbond-ka-naya-hungamar",
+  // "crookbond-ka-yamlok-yatra",
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
