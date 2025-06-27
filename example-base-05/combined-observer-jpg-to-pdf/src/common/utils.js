@@ -212,6 +212,7 @@ const folder_names = [
   // "parmanu-hahakaar",
   // "crookbond-ka-naya-hungamar",
   // "crookbond-ka-yamlok-yatra",
+  // "crookbond-aur-fatmara-ka-ott",
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
