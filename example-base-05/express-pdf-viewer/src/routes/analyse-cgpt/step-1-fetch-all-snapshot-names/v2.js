@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
     if (jj?.createdBy !== "PREMENDRA") {
       continue;
     }
-    const data = await FileRelatedOperations.readJsonFile(`${testDir}\\itr1\\${jj.slug}.json`);
+    const data = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${jj.slug}\\index.json`);
     kh.push({ ...jj, convCount: data.convCount, totalMsgCount: data.totalMsgCount });
   }
 
