@@ -26,7 +26,7 @@ router.use("/api/step-1-fetch-all-snapshot-names/itr1", require("./step-1-fetch-
 
 // Some better approach. Good-to-go 👍
 router.use("/api/step-1-fetch-all-snapshot-names/itr2", require("./step-1-fetch-all-snapshot-names/v2"));
-router.use("/api/step-2-fetch-count-of-conversation/itr1", require("./step-1-fetch-all-snapshot-names/v2"));
+router.use("/api/step-2-fetch-count-of-conversation/itr1", require("./step-2-fetch-count-of-conversation/itr1"));
 
 router.use("/api/itr2/snapshots",require("./itr2/index.js"))
 
