@@ -29,6 +29,8 @@ router.use("/api/step-1-fetch-all-snapshot-names/itr2", require("./step-1-fetch-
 router.use("/api/step-2-fetch-count-of-conversation/itr1", require("./step-2-fetch-count-of-conversation/itr1"));
 router.use("/api/step-3-fetch-messages-of-conversation/itr1", require("./step-3-fetch-messages-of-conversation/itr1"));
 
+router.use("/api/step-4-fetch-datewise-msg-count/itr1", require("./step-4-fetch-datewise-msg-count/itr1"));
+
 router.use("/api/itr2/snapshots",require("./itr2/index.js"))
 
 module.exports = router;
