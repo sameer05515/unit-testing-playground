@@ -8,15 +8,17 @@ const router = express.Router();
 const testDir = "D:\\v-dir";
 
 const getDatewiseCount = (messages) => {
-  return messages.reduce((acc, msg) => {
-    // Extract only date part (dd-MMM-yyyy)
-    const date = msg.createdOn.split(" ")[0];
-    if (!acc[date]) {
-      acc[date] = 0;
-    }
-    acc[date] += 1;
-    return acc;
-  }, {});
+  return messages
+    .filter((msg) => msg.isUserMessage)
+    .reduce((acc, msg) => {
+      // Extract only date part (dd-MMM-yyyy)
+      const date = msg.createdOn.split(" ")[0];
+      if (!acc[date]) {
+        acc[date] = 0;
+      }
+      acc[date] += 1;
+      return acc;
+    }, {});
 };
 
 router.get("/:slug", async (req, res) => {
