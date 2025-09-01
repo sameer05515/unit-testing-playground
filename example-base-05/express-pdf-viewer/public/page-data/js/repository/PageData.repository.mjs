@@ -246,6 +246,10 @@ Prayog asafal raha😭😭😭
           Page.fromData({
             name:"Chat-renderer me js wale data ko json me transfer kar diye. Ab ESM aur CJS dono projects khush hain.",
             link:"/analyse-cgpt/pages/v2",
+          }),
+          Page.fromData({
+            name:"date-wise-messages-chart",
+            link:"/analyse-cgpt/pages/date-wise-messages-chart/v39"
           })
         ],
       }),
