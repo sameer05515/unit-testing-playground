@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Monthwise Message Count</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h2 style="text-align:center;">📊 Monthwise Message Count</h2>
+  <canvas id="msgChart" width="600" height="400"></canvas>
+
+  <script>
+    async function fetchData(sVer) {
+      try {
+        const response = await fetch(`/analyse-cgpt/api/step-4-fetch-datewise-msg-count/itr1/${sVer}`);
+        const data = await response.json();
+
+        // Group into month-year totals
+        let monthMap = {};
+        Object.entries(data).forEach(([date, count]) => {
+          const d = new Date(date);
+          const monthKey = d.toLocaleString("en-US", { month: "short", year: "numeric" }); 
+          monthMap[monthKey] = (monthMap[monthKey] || 0) + count;
+        });
+
+        // Convert to sorted array
+        let entries = Object.entries(monthMap).map(([month, count]) => ({ month, count }));
+
+        // Sort ascending by date
+        entries.sort((a, b) => new Date(a.month) - new Date(b.month));
+
+        // Labels & values
+        const labels = entries.map(e => e.month);
+        const values = entries.map(e => e.count);
+
+        // Render chart
+        const ctx = document.getElementById("msgChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",  // you can change to "line"
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Messages Count",
+                data: values,
+                backgroundColor: "rgba(255, 99, 132, 0.6)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
+
+    const sVer = "<%-sVer%>";
+
+      fetchData(sVer || "v2");
+  </script>
+</body>
+</html>

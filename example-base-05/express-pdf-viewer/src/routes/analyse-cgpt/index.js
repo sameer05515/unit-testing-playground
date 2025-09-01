@@ -27,6 +27,12 @@ router.get("/pages/date-wise-messages-chart/:version", (req, res) => {
   res.render(`analyse-cgpt/date-wise-messages-chart.ejs`, { sVer: version });
 });
 
+router.get("/pages/month-wise-messages-chart/:version", (req, res) => {
+  const { version } = req.params;
+
+  res.render(`analyse-cgpt/month-wise-messages-chart.ejs`, { sVer: version });
+});
+
 //Hacky approach, not recommended
 router.use("/api/step-1-fetch-all-snapshot-names/itr1", require("./step-1-fetch-all-snapshot-names/v1"));
 

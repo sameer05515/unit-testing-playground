@@ -250,6 +250,10 @@ Prayog asafal raha😭😭😭
           Page.fromData({
             name:"date-wise-messages-chart",
             link:"/analyse-cgpt/pages/date-wise-messages-chart/v39"
+          }),
+          Page.fromData({
+            name:"month-wise-messages-chart",
+            link:"/analyse-cgpt/pages/month-wise-messages-chart/v39"
           })
         ],
       }),
