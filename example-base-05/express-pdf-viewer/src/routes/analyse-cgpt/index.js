@@ -21,6 +21,12 @@ router.get("/pages/:version", (req, res) => {
   }
 });
 
+router.get("/pages/date-wise-messages-chart/:version", (req, res) => {
+  const { version } = req.params;
+
+  res.render(`analyse-cgpt/date-wise-messages-chart.ejs`, { sVer: version });
+});
+
 //Hacky approach, not recommended
 router.use("/api/step-1-fetch-all-snapshot-names/itr1", require("./step-1-fetch-all-snapshot-names/v1"));
 
@@ -31,6 +37,6 @@ router.use("/api/step-3-fetch-messages-of-conversation/itr1", require("./step-3-
 
 router.use("/api/step-4-fetch-datewise-msg-count/itr1", require("./step-4-fetch-datewise-msg-count/itr1"));
 
-router.use("/api/itr2/snapshots",require("./itr2/index.js"))
+router.use("/api/itr2/snapshots", require("./itr2/index.js"));
 
 module.exports = router;

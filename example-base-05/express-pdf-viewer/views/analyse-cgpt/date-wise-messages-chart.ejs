@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Datewise Message Count</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h2 style="text-align: center">📊 Datewise Message Count</h2>
+    <canvas id="msgChart" width="600" height="400"></canvas>
+
+    <script>
+      async function fetchData(sVer) {
+        try {
+          const response = await fetch(`/analyse-cgpt/api/step-4-fetch-datewise-msg-count/itr1/${sVer}`);
+          const data = await response.json();
+
+          // Convert { "19-Jun-2025": 4, "20-Jun-2025": 6 } → [ {date, count} ]
+          let entries = Object.entries(data).map(([date, count]) => ({
+            date,
+            count,
+          }));
+
+          // Sort ascending by date
+          entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+          // Extract labels and values
+          const labels = entries.map((e) => e.date);
+          const values = entries.map((e) => e.count);
+
+          // Render chart
+          const ctx = document.getElementById("msgChart").getContext("2d");
+          new Chart(ctx, {
+            type: "bar", // can change to "line"
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "Messages Count",
+                  data: values,
+                  backgroundColor: "rgba(54, 162, 235, 0.6)",
+                  borderColor: "rgba(54, 162, 235, 1)",
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        } catch (err) {
+          console.error("Error fetching data:", err);
+        }
+      }
+
+      const sVer = "<%-sVer%>";
+
+      fetchData(sVer || "v2");
+    </script>
+  </body>
+</html>
