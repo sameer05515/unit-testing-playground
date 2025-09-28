@@ -14,15 +14,17 @@ router.get("/:slug/:convId/:qId", async (req, res) => {
   try {
     // const conversations = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\conversations.json`);
     const qNas = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\qNa.json`);
-    const messages = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\message.json`);
+    // const messages = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\message.json`);
 
-    const messageContents = await FileRelatedOperations.readJsonFile(
-      `${testDir}\\itr2\\${slug}\\message.contents.json`
-    );
-    const messageContentsMap = {};
-    messageContents.forEach((mc) => {
-      messageContentsMap[mc.id] = { ...mc, ...messages.find((msg) => msg.id === mc.id) };
-    });
+    // const messageContents = await FileRelatedOperations.readJsonFile(
+    //   `${testDir}\\itr2\\${slug}\\message.contents.json`
+    // );
+    // const messageContentsMap = {};
+    // messageContents.forEach((mc) => {
+    //   messageContentsMap[mc.id] = { ...mc, ...messages.find((msg) => msg.id === mc.id) };
+    // });
+
+    const messageContentsMap = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\messageContentsMap.json`);
 
     // const conv = conversations.find((c) => c.id === convId);
     // conv.messages = conv.messages.map((m) => ({
