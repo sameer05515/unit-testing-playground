@@ -76,6 +76,14 @@ const processSnapshots = async () => {
       FileRelatedOperations.writeFileContentSync(`${outDir}\\conversations.json`, JSON.stringify(conversations));
       FileRelatedOperations.writeFileContentSync(`${outDir}\\message.json`, JSON.stringify(messagesWdoutContent));
       FileRelatedOperations.writeFileContentSync(`${outDir}\\message.contents.json`, JSON.stringify(msgContents));
+
+      const messageContentsMap = {};
+      msgContents.forEach((mc) => {
+      messageContentsMap[mc.id] = { ...mc, ...messagesWdoutContent.find((msg) => msg.id === mc.id) };
+
+      FileRelatedOperations.writeFileContentSync(`${outDir}\\messageContentsMap.json`, JSON.stringify(messageContentsMap));
+    });
+
     } catch (error) {
       console.error("Snapshot Error:", error);
     }
