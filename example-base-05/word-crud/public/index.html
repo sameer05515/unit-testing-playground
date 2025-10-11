@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Word CRUD (Node + Alpine + Tailwind)</title>
+  <title>Word CRUD (Server Pagination)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
 
-  <div x-data="wordCrud()" x-init="init()" class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md relative">
+  <div x-data="wordCrud()" x-init="loadWords()" class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md relative">
     <h1 class="text-2xl font-bold text-center mb-4 text-blue-700">Word CRUD App</h1>
 
-    <!-- Search Filter -->
+    <!-- Search -->
     <div class="flex mb-4">
-      <input type="text" x-model="searchQuery" placeholder="Search words..."
+      <input type="text" x-model.debounce.300ms="searchQuery" placeholder="Search words..."
+             @input="page = 1; loadWords();"
              class="border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
 
     <!-- Add Button -->
     <div class="text-right mb-4">
-      <button @click="openAddPopup()"
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+      <button @click="openAddPopup()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
         + Add Word
       </button>
     </div>
 
     <!-- Word List -->
     <ul>
-      <template x-for="(word, index) in filteredWords()" :key="index">
+      <template x-for="(word, index) in words" :key="index">
         <li class="flex justify-between items-center border-b py-2">
           <span x-text="word" class="text-gray-800"></span>
           <div class="space-x-2">
@@ -39,7 +39,24 @@
       </template>
     </ul>
 
-    <p x-show="filteredWords().length === 0" class="text-gray-500 text-center mt-4">No matching words.</p>
+    <p x-show="words.length === 0" class="text-gray-500 text-center mt-4">No words found.</p>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center mt-4 space-x-2" x-show="totalPages > 1">
+      <button @click="prevPage()" :disabled="page === 1"
+              class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Prev</button>
+
+      <template x-for="p in totalPages" :key="p">
+        <button @click="page = p; loadWords();"
+                class="px-3 py-1 rounded"
+                :class="page === p ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'">
+          <span x-text="p"></span>
+        </button>
+      </template>
+
+      <button @click="nextPage()" :disabled="page === totalPages"
+              class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50">Next</button>
+    </div>
 
     <!-- Add / Update Popup -->
     <div x-show="showForm" x-transition
@@ -59,7 +76,7 @@
       </div>
     </div>
 
-    <!-- Delete Confirmation Popup -->
+    <!-- Delete Popup -->
     <div x-show="showDelete" x-transition
          class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
       <div class="bg-white rounded-lg shadow-lg w-80 p-6">
@@ -82,13 +99,34 @@
         newWord: '',
         editIndex: null,
         deleteIndex: null,
-        searchQuery: '',
         showForm: false,
         showDelete: false,
+        page: 1,
+        limit: 5,
+        totalPages: 1,
+        total: 0,
+        searchQuery: '',
 
-        async init() {
-          const res = await fetch("/api/words");
-          this.words = await res.json();
+        async loadWords() {
+          const res = await fetch(`/api/words?page=${this.page}&limit=${this.limit}&search=${this.searchQuery}`);
+          const data = await res.json();
+          this.words = data.words;
+          this.totalPages = data.totalPages;
+          this.total = data.total;
+        },
+
+        nextPage() {
+          if (this.page < this.totalPages) {
+            this.page++;
+            this.loadWords();
+          }
+        },
+
+        prevPage() {
+          if (this.page > 1) {
+            this.page--;
+            this.loadWords();
+          }
         },
 
         openAddPopup() {
@@ -120,33 +158,27 @@
           if (!this.newWord.trim()) return;
 
           if (this.editIndex === null) {
-            const res = await fetch("/api/words", {
+            await fetch("/api/words", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ word: this.newWord })
             });
-            this.words = await res.json();
           } else {
-            const res = await fetch(`/api/words/${this.editIndex}`, {
+            await fetch(`/api/words/${this.editIndex}`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ word: this.newWord })
             });
-            this.words = await res.json();
           }
+
           this.closePopup();
+          this.loadWords();
         },
 
         async deleteWord(index) {
-          const res = await fetch(`/api/words/${index}`, { method: "DELETE" });
-          this.words = await res.json();
+          await fetch(`/api/words/${index}`, { method: "DELETE" });
           this.closePopup();
-        },
-
-        filteredWords() {
-          if (!this.searchQuery.trim()) return this.words;
-          const query = this.searchQuery.toLowerCase();
-          return this.words.filter(w => w.toLowerCase().includes(query));
+          this.loadWords();
         }
       }
     }

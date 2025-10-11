@@ -3,8 +3,33 @@ const router = express.Router();
 const { readData, writeData } = require("../utils/data");
 
 // Get all words
+// router.get("/", (req, res) => {
+//   res.json(readData());
+// });
+
+// ✅ Get paginated words
 router.get("/", (req, res) => {
-  res.json(readData());
+  let { page = 1, limit = 5, search = "" } = req.query;
+  page = parseInt(page);
+  limit = parseInt(limit);
+
+  let data = readData();
+
+  // Optional search filter
+  if (search.trim()) {
+    data = data.filter((w) => w.toLowerCase().includes(search.toLowerCase()));
+  }
+
+  const total = data.length;
+  const start = (page - 1) * limit;
+  const paginated = data.slice(start, start + limit);
+
+  res.json({
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    words: paginated,
+  });
 });
 
 // Add new word
