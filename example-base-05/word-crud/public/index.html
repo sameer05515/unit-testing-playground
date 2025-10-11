@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word CRUD (Node + Alpine + Tailwind)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  </head>
+  <body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div x-data="wordCrud()" class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md">
+      <h1 class="text-2xl font-bold text-center mb-4 text-blue-700">Word CRUD App</h1>
+
+      <div class="flex mb-4">
+        <input
+          type="text"
+          x-model="newWord"
+          placeholder="Enter word"
+          class="border rounded-l-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button @click="addOrUpdate()" class="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700 transition">
+          <span x-text="editIndex === null ? 'Add' : 'Update'"></span>
+        </button>
+      </div>
+
+      <ul>
+        <template x-for="(word, index) in words" :key="index">
+          <li class="flex justify-between items-center border-b py-2">
+            <span x-text="word" class="text-gray-800"></span>
+            <div class="space-x-2">
+              <button @click="editWord(index)" class="text-yellow-600 hover:text-yellow-800">Edit</button>
+              <button @click="deleteWord(index)" class="text-red-600 hover:text-red-800">Delete</button>
+            </div>
+          </li>
+        </template>
+      </ul>
+
+      <p x-show="words.length === 0" class="text-gray-500 text-center mt-4">No words added yet.</p>
+    </div>
+
+    <script>
+      function wordCrud() {
+        return {
+          words: [],
+          newWord: "",
+          editIndex: null,
+
+          async init() {
+            const res = await fetch("/api/words");
+            this.words = await res.json();
+          },
+
+          async addOrUpdate() {
+            if (!this.newWord.trim()) return;
+
+            if (this.editIndex === null) {
+              const res = await fetch("/api/words", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ word: this.newWord }),
+              });
+              this.words = await res.json();
+            } else {
+              const res = await fetch(`/api/words/${this.editIndex}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ word: this.newWord }),
+              });
+              this.words = await res.json();
+              this.editIndex = null;
+            }
+            this.newWord = "";
+          },
+
+          editWord(index) {
+            this.newWord = this.words[index];
+            this.editIndex = index;
+          },
+
+          async deleteWord(index) {
+            const res = await fetch(`/api/words/${index}`, { method: "DELETE" });
+            this.words = await res.json();
+            this.newWord = "";
+            this.editIndex = null;
+          },
+        };
+      }
+    </script>
+  </body>
+</html>
