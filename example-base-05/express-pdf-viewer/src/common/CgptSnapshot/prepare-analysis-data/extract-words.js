@@ -14,7 +14,7 @@ const extractWordsFromSnapshots = async (snapshotPath) => {
   return Array.from(allWords);
 };
 
-extractWordsFromSnapshots("D:\\v-dir\\itr2\\v1\\message.contents.json").then(async (words) => {
+extractWordsFromSnapshots("D:\\v-dir\\itr2\\v42\\message.contents.json").then(async (words) => {
   //   console.log("Extracted Words:", words);
 
   const res = await fetch("http://localhost:3030/api/words/multiple", {

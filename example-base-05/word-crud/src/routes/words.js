@@ -39,11 +39,19 @@ router.put("/:index", (req, res) => {
 
 // Delete word
 router.delete("/:index", (req, res) => {
-  const { index } = req.params;
-  const data = readData();
-  if (data[index] === undefined) return res.status(404).json({ error: "Not found" });
+  let { index } = req.params;
+  index = parseInt(index, 10);
+  let data = readData();
+  if (isNaN(index) || index < 0 || index >= data.length) {
+    return res.status(404).json({ error: "Not found" });
+  }
+  // Remove the word at the given index
   data.splice(index, 1);
-  writeData(data);
+  // Write the updated array as a full replacement
+  fs = require("fs");
+  path = require("path");
+  const DATA_FILE = path.join(__dirname, "../data.json");
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data));
   res.json(data);
 });
 
