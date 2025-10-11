@@ -15,7 +15,7 @@ function writeData(newData) {
     existing = JSON.parse(fs.readFileSync(DATA_FILE, "utf8") || "[]");
   }
   // Convert all to lowercase
-  const allWords = [...existing, ...newData].map(w => typeof w === 'string' ? w.toLowerCase() : w);
+  const allWords = [...existing, ...newData].map((w) => (typeof w === "string" ? w.toLowerCase() : w));
   // Deduplicate based on lowercase, filter falsy, sort
   const unique = Array.from(new Set(allWords))
     .filter(Boolean)
