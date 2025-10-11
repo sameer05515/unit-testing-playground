@@ -17,6 +17,15 @@ router.post("/", (req, res) => {
   res.json(data);
 });
 
+router.post("/multiple", (req, res) => {
+  const { words } = req.body;
+  if (!Array.isArray(words)) return res.status(400).json({ error: "Words should be an array" });
+  const data = readData();
+  data.push(...words);
+  writeData(data);
+  res.json(data);
+});
+
 // Update word
 router.put("/:index", (req, res) => {
   const { index } = req.params;
