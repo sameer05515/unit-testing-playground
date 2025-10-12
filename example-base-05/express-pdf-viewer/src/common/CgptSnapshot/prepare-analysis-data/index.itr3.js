@@ -1,3 +1,4 @@
+const path = require("path");
 const FileRelatedOperations = require("../../FileRelatedOperations.services.v2");
 const { JsonFileMapWithDetails } = require("../services");
 const Contants = require("../../constants");
@@ -136,13 +137,79 @@ const prepareQAMap = async () => {
   }
 };
 
+// ✅ Convert "22-Apr-2024 06:39:43" → "2024-04-22"
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  if (isNaN(date)) {
+    const [day, mon, year] = dateString.split(" ")[0].split("-");
+    const months = {
+      Jan: 0,
+      Feb: 1,
+      Mar: 2,
+      Apr: 3,
+      May: 4,
+      Jun: 5,
+      Jul: 6,
+      Aug: 7,
+      Sep: 8,
+      Oct: 9,
+      Nov: 10,
+      Dec: 11,
+    };
+    return new Date(year, months[mon], day).toISOString().split("T")[0];
+  }
+  return date.toISOString().split("T")[0];
+};
+
+const prepareDatewiseMessages = async () => {
+  try {
+    const snapshotData = await FileRelatedOperations.readJsonFile(baseProcessedJsonPath);
+
+    // ✅ Run all snapshots concurrently
+    await Promise.all(
+      snapshotData.map(async (snapshot) => {
+        const outDir = path.join(testDir, "itr2", snapshot.slug);
+        const messages = await FileRelatedOperations.readJsonFile(path.join(outDir, "message.json"));
+
+        const datewiseMessages = messages.filter((msg) => msg.isUserMessage).reduce((acc, msg) => {
+          const date = formatDate(msg.createdOn);
+          acc[date] = acc[date] || [];
+          acc[date].push(msg.id);
+          return acc;
+        }, {});
+
+        // ✅ Sort messages by timestamp within each date
+        Object.keys(datewiseMessages).forEach((date) => {
+          datewiseMessages[date].sort((a, b) => new Date(a.createdOn) - new Date(b.createdOn));
+        });
+
+        FileRelatedOperations.writeFileContentSync(
+          path.join(outDir, "datewiseMessages.json"),
+          JSON.stringify(datewiseMessages)
+        );
+      })
+    );
+
+    console.log("✅ All snapshots processed successfully!");
+  } catch (error) {
+    console.error("❌ Error preparing datewise messages:", error);
+  }
+};
+
 // Bootstrap
 const bootstrap = async () => {
+  const start = performance.now();
+
   step0();
   step1();
   step2();
   await processSnapshots();
   await prepareQAMap();
+  await prepareDatewiseMessages();
+  console.log(HoliSpecialColors.CYAN, "All tasks completed successfully!");
+
+  const end = performance.now();
+  console.log(`Time taken: ${end - start} ms`);
 };
 
 bootstrap();
