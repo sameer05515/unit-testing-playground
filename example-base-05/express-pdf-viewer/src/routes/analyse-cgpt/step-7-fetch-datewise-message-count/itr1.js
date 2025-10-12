@@ -20,6 +20,8 @@ router.get("/:slug", async (req, res) => {
     Object.keys(datewiseMessagesMap).forEach((date) => {
       result.push({ date: date, msgCount: datewiseMessagesMap[date].length || 0 });
     });
+    // ✅ Sort by date descending
+    const sorted = result.sort((a, b) => new Date(b.date) - new Date(a.date));
     res.json(result);
   } catch (error) {
     const errorMessage = prepareErrorMessage(error);
