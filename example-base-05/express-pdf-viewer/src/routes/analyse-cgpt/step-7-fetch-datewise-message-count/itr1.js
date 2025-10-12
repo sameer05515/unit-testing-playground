@@ -13,8 +13,14 @@ router.get("/:slug", async (req, res) => {
   const { slug } = req.params;
 
   try {
-    const datewiseMessagesMap = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\datewiseMessages.json`);
-    res.json(datewiseMessagesMap);
+    const datewiseMessagesMap = await FileRelatedOperations.readJsonFile(
+      `${testDir}\\itr2\\${slug}\\datewiseMessages.json`
+    );
+    const result = [];
+    Object.keys(datewiseMessagesMap).forEach((date) => {
+      result.push({ date: date, msgCount: datewiseMessagesMap[date].length || 0 });
+    });
+    res.json(result);
   } catch (error) {
     const errorMessage = prepareErrorMessage(error);
     res.status(500).json({ error: errorMessage });
