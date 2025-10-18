@@ -213,6 +213,7 @@ const folder_names = [
   // "crookbond-ka-naya-hungamar",
   // "crookbond-ka-yamlok-yatra",
   // "crookbond-aur-fatmara-ka-ott",
+  "gamraj-inspector-steel-satelite-boss"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];

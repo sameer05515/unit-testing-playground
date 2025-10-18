@@ -22,7 +22,7 @@ router.get("/:slug", async (req, res) => {
     });
     // ✅ Sort by date descending
     const sorted = result.sort((a, b) => new Date(b.date) - new Date(a.date));
-    res.json(result);
+    res.json(sorted);
   } catch (error) {
     const errorMessage = prepareErrorMessage(error);
     res.status(500).json({ error: errorMessage });
