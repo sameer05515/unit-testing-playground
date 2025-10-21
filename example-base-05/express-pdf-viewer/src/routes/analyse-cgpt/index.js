@@ -45,6 +45,7 @@ router.use("/api/step-4-fetch-datewise-msg-count/itr1", require("./step-4-fetch-
 router.use("/api/step-5-fetch-qNa-for-given-qid/itr1", require("./step-5-fetch-qNa-for-given-qid/itr1"));
 router.use("/api/step-6-fetch-message-for-given-mid/itr1", require("./step-6-fetch-message-for-given-mid/itr1"));
 router.use("/api/step-7-fetch-datewise-message-count/itr1", require("./step-7-fetch-datewise-message-count/itr1"));
+router.use("/api/step-8-fetch-messages-for-date/itr1", require("./step-8-fetch-messages-for-date/itr1"));
 
 router.use("/api/itr2/snapshots", require("./itr2/index.js"));
 
