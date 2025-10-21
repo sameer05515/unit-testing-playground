@@ -27,6 +27,7 @@ const extractDateMetadata = (dateArray, selectedDate) => {
     selectedDate,
     nextDate: dateArray[nextPrev.next]?.id || dateArray[nextPrev.next]?.conversation_id || null,
     prevDate: dateArray[nextPrev.prev]?.id || dateArray[nextPrev.prev]?.conversation_id || null,
+    totalDates: dateArray.length,
   };
 };
 
@@ -58,6 +59,7 @@ router.get("/:slug/:date", async (req, res) => {
 
     res.json({
       messages: result,
+      msgCount: messageIdsForDate.length,
       ...metadata,
     });
   } catch (error) {
