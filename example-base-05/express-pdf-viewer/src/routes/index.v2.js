@@ -99,6 +99,16 @@ router.get("/holi-dynamic-loader", (req, res) => {
 router.use("/code-highlighting", codeHighlightViewerRoutes);
 router.use("/analyse-cgpt", analyseCgptRoutes);
 
+router.get("/date-range/v1", (req, res) => {
+  res.render("date-range/v1.ejs");
+});
+router.get("/date-range/v2", (req, res) => {
+  res.render("date-range/v2.ejs");
+});
+router.get("/date-range/v3", (req, res) => {
+  res.render("date-range/v3.ejs");
+});
+
 router.get("/", (req, res) => {
   // res.render("index", { pages: Pages });
   res.render("index");
