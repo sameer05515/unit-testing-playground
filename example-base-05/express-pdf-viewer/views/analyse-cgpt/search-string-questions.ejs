@@ -111,7 +111,7 @@
             this.loading = true;
             try {
               const res = await fetch(
-                `/search?q=${encodeURIComponent(this.query)}&page=${this.page}&offset=${this.offset}`
+                `/analyse-cgpt/api/step-9-search-string-questions/itr1/v39?q=${encodeURIComponent(this.query)}&page=${this.page}&offset=${this.offset}`
               );
               const data = await res.json();
               this.results = [];

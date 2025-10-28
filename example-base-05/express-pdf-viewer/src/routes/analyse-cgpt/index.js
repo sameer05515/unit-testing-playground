@@ -53,6 +53,8 @@ router.use("/api/step-6-fetch-message-for-given-mid/itr1", require("./step-6-fet
 router.use("/api/step-7-fetch-datewise-message-count/itr1", require("./step-7-fetch-datewise-message-count/itr1"));
 router.use("/api/step-8-fetch-messages-for-date/itr1", require("./step-8-fetch-messages-for-date/itr1"));
 
+router.use("/api/step-9-search-string-questions/itr1", require("./step-9-search-string-questions/itr1"));
+
 router.use("/api/itr2/snapshots", require("./itr2/index.js"));
 
 module.exports = router;
