@@ -8,7 +8,7 @@ const router = express.Router();
 const testDir = "D:\\v-dir";
 
 const searchInJson = async (data, q, p = 1, o = 10) => (
-  (d = data.filter((x) => !x.isUserMessage && x.content.toLowerCase().includes(q.toLowerCase()))),
+  (d = data.filter((x) => x.isUserMessage && x.content.toLowerCase().includes(q.toLowerCase()))),
   { total: d.length, page: +p, offset: +o, results: d.slice((p - 1) * o, p * o) }
 );
 
