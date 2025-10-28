@@ -255,6 +255,10 @@ Prayog asafal raha😭😭😭
             name:"month-wise-messages-chart",
             link:"/analyse-cgpt/pages/month-wise-messages-chart/v39"
           }),
+          Page.fromData({
+            name:"search-string-questions.ejs",
+            link:"/analyse-cgpt/pages/search-string-questions/v1"
+          }),
 
           Page.fromData({
             name:"date-range-v1",

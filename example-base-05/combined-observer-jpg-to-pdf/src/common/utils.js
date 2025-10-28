@@ -215,7 +215,8 @@ const folder_names = [
   // "crookbond-aur-fatmara-ka-ott",
   // "gamraj-inspector-steel-satelite-boss",
   // "bankelal-aur-fiki-khichdi",
-  // "bankelal-aur-ghoonghroo"
+  // "bankelal-aur-ghoonghroo",
+  "bankelal-main-nhi-chhorunga"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];

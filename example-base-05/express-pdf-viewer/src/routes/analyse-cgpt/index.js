@@ -33,6 +33,12 @@ router.get("/pages/month-wise-messages-chart/:version", (req, res) => {
   res.render(`analyse-cgpt/month-wise-messages-chart.ejs`, { sVer: version });
 });
 
+router.get("/pages/search-string-questions/v1", (req, res) => {
+  res.render("analyse-cgpt/search-string-questions.ejs", {
+    sVer: "v1",
+  });
+});
+
 //Hacky approach, not recommended
 router.use("/api/step-1-fetch-all-snapshot-names/itr1", require("./step-1-fetch-all-snapshot-names/v1"));
 
