@@ -59,9 +59,8 @@ function trackError() {
   requestMetrics.errorCount++;
 }
 
-// Export for use in middleware
-module.exports.updateMetrics = updateMetrics;
-module.exports.trackError = trackError;
+// Attach functions to router for use in middleware
+// These will be available when the router is imported
 
 /**
  * @swagger
@@ -197,6 +196,10 @@ router.post('/reset', (req, res) => {
   
   res.json({ message: 'Metrics reset' });
 });
+
+// Attach metrics functions to router for use in middleware
+router.updateMetrics = updateMetrics;
+router.trackError = trackError;
 
 module.exports = router;
 

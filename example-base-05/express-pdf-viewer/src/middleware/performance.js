@@ -3,7 +3,7 @@
  * Tracks request timing and provides performance metrics
  */
 
-const { updateMetrics, trackError } = require('../routes/metrics');
+const metrics = require('../routes/metrics');
 
 const performanceMiddleware = (req, res, next) => {
   const startTime = process.hrtime.bigint();
@@ -23,11 +23,11 @@ const performanceMiddleware = (req, res, next) => {
     const memoryDelta = (endMemory - startMemory) / 1024 / 1024; // MB
 
     // Update metrics
-    updateMetrics(req, res, duration);
+    metrics.updateMetrics(req, res, duration);
     
     // Track errors
     if (res.statusCode >= 400) {
-      trackError();
+      metrics.trackError();
     }
 
     // Log slow requests (>1000ms)
