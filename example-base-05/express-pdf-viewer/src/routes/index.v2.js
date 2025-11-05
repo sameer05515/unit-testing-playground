@@ -103,6 +103,14 @@ router.use("/analyse-cgpt", analyseCgptRoutes);
 const chatDataApiRoutes = require("./api/chat-data");
 router.use("/api/chat-data", chatDataApiRoutes);
 
+// Health check routes
+const healthRoutes = require("./health");
+router.use("/health", healthRoutes);
+
+// Metrics routes
+const metricsRoutes = require("./metrics");
+router.use("/metrics", metricsRoutes);
+
 router.get("/date-range/v1", (req, res) => {
   res.render("date-range/v1.ejs");
 });

@@ -10,6 +10,9 @@ const rateLimit = require("express-rate-limit");
 
 const { PORT, NODE_ENV, ALLOWED_ORIGINS, MAX_REQUEST_SIZE, RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_REQUESTS } = require("./common/constants");
 const errorHandler = require("./middleware/errorHandler");
+const performanceMiddleware = require("./middleware/performance");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 
 const app = express();
 
@@ -94,6 +97,9 @@ app.use(helmet(helmetConfig));
 // Compression middleware
 app.use(compression());
 
+// Performance monitoring middleware
+app.use(performanceMiddleware);
+
 // Request logging
 if (NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -131,6 +137,12 @@ app.use(express.static(path.join(__dirname, "../public")));
 // Set EJS as view engine and views folder
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
+
+// Swagger API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Express PDF Viewer API Documentation',
+}));
 
 // Routes
 const v2Routes = require("./routes/index.v2");
