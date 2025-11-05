@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
+const { PDF_DIRECTORY_PATH } = require("../../common/constants");
 
-const DIRECTORY_PATH = "D:\\prem\\comics"; // Change this path if needed
+const DIRECTORY_PATH = PDF_DIRECTORY_PATH || "D:\\prem\\comics"; // Change this path if needed
 
 /**
  * Converts a file path to a slug:

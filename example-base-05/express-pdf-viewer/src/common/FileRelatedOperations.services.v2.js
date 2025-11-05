@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const prepareErrorMessage = require("./prepareErrorMessage");
+const fileCache = require("./FileCache");
 
 class FileRelatedOperations {
   static getFileExtension(filePath) {
@@ -71,11 +72,24 @@ class FileRelatedOperations {
     }
   }
 
-  static async readJsonFile(filePath) {
+  static async readJsonFile(filePath, useCache = true) {
     try {
       if (this.getFileExtension(filePath) !== "json") {
         throw new Error(`Invalid JSON file: ${filePath}`);
       }
+      
+      // Use cache if enabled
+      if (useCache) {
+        return await fileCache.getOrSet(
+          `json:${filePath}`,
+          async () => {
+            const content = await this.readFileContent(filePath);
+            return JSON.parse(content);
+          }
+        );
+      }
+      
+      // Direct read without cache
       const content = await this.readFileContent(filePath);
       return JSON.parse(content);
     } catch (error) {

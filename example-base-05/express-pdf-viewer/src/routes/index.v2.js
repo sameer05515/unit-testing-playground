@@ -99,6 +99,10 @@ router.get("/holi-dynamic-loader", (req, res) => {
 router.use("/code-highlighting", codeHighlightViewerRoutes);
 router.use("/analyse-cgpt", analyseCgptRoutes);
 
+// API routes for paginated data
+const chatDataApiRoutes = require("./api/chat-data");
+router.use("/api/chat-data", chatDataApiRoutes);
+
 router.get("/date-range/v1", (req, res) => {
   res.render("date-range/v1.ejs");
 });
