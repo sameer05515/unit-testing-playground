@@ -261,9 +261,15 @@ Prayog asafal raha😭😭😭
           }),
 
           Page.fromData({
+            name:"sip-calculator-v1",
+            link:"/sip-calculator/v1"
+          }),
+
+          Page.fromData({
             name:"date-range-v1",
             link:"/date-range/v1"
           }),
+
           Page.fromData({
             name:"date-range-v2",
             link:"/date-range/v2"

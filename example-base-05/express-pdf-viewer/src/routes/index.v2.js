@@ -109,6 +109,10 @@ router.get("/date-range/v3", (req, res) => {
   res.render("date-range/v3.ejs");
 });
 
+router.get("/sip-calculator/v1", (req, res) => {
+  res.render("sip-calculator/v1.ejs");
+});
+
 router.get("/", (req, res) => {
   // res.render("index", { pages: Pages });
   res.render("index");
