@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocab Khajana XHTML</title>
+    <style type="text/css">
+      html {
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+      }
+      header {
+        background: linear-gradient(120deg, #1d4ed8, #0ea5e9);
+        color: #fff;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2.4rem;
+        letter-spacing: 0.04em;
+      }
+      header p {
+        margin: 0.75rem auto 0;
+        max-width: 40rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      main {
+        padding: 2rem clamp(1rem, 4vw, 2.5rem);
+        max-width: 72rem;
+        margin: 0 auto;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .search-box,
+      .type-filter {
+        flex: 1 1 16rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #334155;
+      }
+      input[type="search"],
+      select {
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5f5;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        background: #fff;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      input[type="search"]:focus,
+      select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+      #word-container {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+      }
+      article.word-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+      article.word-card:hover,
+      article.word-card:focus-within {
+        transform: translateY(-4px);
+        border-color: #2563eb;
+        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.18);
+      }
+      .word-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .word-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+      }
+      .word-type {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.12);
+        color: #1d4ed8;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .meanings,
+      .examples {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .meanings li {
+        position: relative;
+        padding-left: 1rem;
+        margin-bottom: 0.5rem;
+        color: #334155;
+        line-height: 1.6;
+      }
+      .meanings li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #2563eb;
+      }
+      .examples-section {
+        margin-top: 1.5rem;
+      }
+      .examples-section h3 {
+        margin: 0 0 0.75rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #6366f1;
+        text-transform: uppercase;
+      }
+      .examples li {
+        margin-bottom: 0.75rem;
+        color: #475569;
+        line-height: 1.6;
+      }
+      .badge {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+      }
+      .loading,
+      .error {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #1d4ed8;
+        font-size: 1.05rem;
+      }
+      .error {
+        color: #dc2626;
+      }
+      @media (max-width: 720px) {
+        header h1 {
+          font-size: 2rem;
+        }
+        #word-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="badge">Vocabulary Collection</span>
+      <h1>Vocab Khajana</h1>
+      <p>
+        Explore curated word meanings and example sentences sourced from
+        <code>khajana.xml</code>. Use the search and filters to quickly find the
+        words you want to revise.
+      </p>
+    </header>
+    <main>
+      <section class="controls" aria-label="Word filters">
+        <div class="search-box">
+          <label for="search-input">Search word or meaning</label>
+          <input id="search-input" type="search" name="search" placeholder="Start typing to filter…" />
+        </div>
+        <div class="type-filter">
+          <label for="type-select">Filter by word type</label>
+          <select id="type-select" name="type">
+            <option value="">All types</option>
+          </select>
+        </div>
+      </section>
+      <section id="status" class="loading" aria-live="polite">
+        Loading word list…
+      </section>
+      <section id="word-container" aria-live="polite"></section>
+    </main>
+    <template id="word-card-template">
+      <article class="word-card" tabindex="0">
+        <div class="word-header">
+          <h2 class="word-title"></h2>
+          <span class="word-type" style="display: none;"></span>
+        </div>
+        <ul class="meanings" aria-label="Meanings"></ul>
+        <div class="examples-section" style="display: none;">
+          <h3>Examples</h3>
+          <ul class="examples"></ul>
+        </div>
+      </article>
+    </template>
+    <script type="application/javascript">
+      //<![CDATA[
+      (function () {
+        var xmlPath = "khajana.xml";
+        var words = [];
+        var searchInput = document.getElementById("search-input");
+        var typeSelect = document.getElementById("type-select");
+        var wordContainer = document.getElementById("word-container");
+        var statusEl = document.getElementById("status");
+        var template = document.getElementById("word-card-template");
+
+        function normalizeText(value) {
+          if (value === null || value === undefined) {
+            return "";
+          }
+          return String(value).replace(/\s+/g, " ").trim();
+        }
+
+        function extractTexts(nodeList) {
+          var result = [];
+          for (var i = 0; i < nodeList.length; i += 1) {
+            var text = normalizeText(nodeList[i].textContent);
+            if (text) {
+              result.push(text);
+            }
+          }
+          return result;
+        }
+
+        function renderTypeOptions(entries) {
+          var types = {};
+          for (var i = 0; i < entries.length; i += 1) {
+            var type = entries[i].type;
+            if (type) {
+              types[type] = true;
+            }
+          }
+          var sortedTypes = Object.keys(types).sort(function (a, b) {
+            return a.localeCompare(b);
+          });
+          for (var j = 0; j < sortedTypes.length; j += 1) {
+            var option = document.createElement("option");
+            option.value = sortedTypes[j];
+            option.appendChild(document.createTextNode(sortedTypes[j]));
+            typeSelect.appendChild(option);
+          }
+        }
+
+        function renderWords() {
+          while (wordContainer.firstChild) {
+            wordContainer.removeChild(wordContainer.firstChild);
+          }
+
+          var query = normalizeText(searchInput.value).toLowerCase();
+          var selectedType = normalizeText(typeSelect.value).toLowerCase();
+
+          var filtered = words.filter(function (entry) {
+            var matchesType = !selectedType || normalizeText(entry.type).toLowerCase() === selectedType;
+            if (!matchesType) {
+              return false;
+            }
+
+            if (!query) {
+              return true;
+            }
+
+            var haystack = [
+              entry.word,
+              entry.type || "",
+              entry.meanings.join(" "),
+              entry.examples.join(" ")
+            ]
+              .join(" ")
+              .toLowerCase();
+
+            return haystack.indexOf(query) !== -1;
+          });
+
+          if (filtered.length === 0) {
+            statusEl.className = "error";
+            statusEl.textContent = "No matching words. Try adjusting your search.";
+            statusEl.style.display = "block";
+            return;
+          }
+
+          statusEl.style.display = "none";
+
+          for (var i = 0; i < filtered.length; i += 1) {
+            var entry = filtered[i];
+            var clone = document.importNode(template.content || template, true);
+            var card = clone.querySelector ? clone.querySelector(".word-card") : clone.firstElementChild;
+
+            var titleEl = card.querySelector(".word-title");
+            titleEl.textContent = entry.word;
+
+            var typeEl = card.querySelector(".word-type");
+            if (entry.type) {
+              typeEl.textContent = entry.type;
+              typeEl.style.display = "inline-flex";
+            } else {
+              typeEl.style.display = "none";
+            }
+
+            var meaningsList = card.querySelector(".meanings");
+            for (var m = 0; m < entry.meanings.length; m += 1) {
+              var li = document.createElement("li");
+              li.textContent = entry.meanings[m];
+              meaningsList.appendChild(li);
+            }
+
+            var examplesSection = card.querySelector(".examples-section");
+            var examplesList = card.querySelector(".examples");
+            if (entry.examples.length > 0) {
+              examplesSection.style.display = "block";
+              for (var e = 0; e < entry.examples.length; e += 1) {
+                var exampleItem = document.createElement("li");
+                exampleItem.textContent = entry.examples[e];
+                examplesList.appendChild(exampleItem);
+              }
+            } else {
+              examplesSection.style.display = "none";
+            }
+
+            wordContainer.appendChild(card);
+          }
+        }
+
+        function attachEvents() {
+          searchInput.addEventListener("input", renderWords, false);
+          typeSelect.addEventListener("change", renderWords, false);
+        }
+
+        function handleError(message) {
+          statusEl.className = "error";
+          statusEl.textContent = message;
+          statusEl.style.display = "block";
+        }
+
+        function parseXml(xmlString) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(xmlString, "application/xml");
+          var parseError = doc.getElementsByTagName("parsererror")[0];
+          if (parseError) {
+            throw new Error("Unable to parse XML data.");
+          }
+          return doc;
+        }
+
+        function loadWords() {
+          statusEl.style.display = "block";
+          statusEl.className = "loading";
+          statusEl.textContent = "Loading word list…";
+
+          fetch(xmlPath)
+            .then(function (response) {
+              if (!response.ok) {
+                throw new Error("Failed to load khajana.xml (" + response.status + ").");
+              }
+              return response.text();
+            })
+            .then(function (xmlString) {
+              var doc = parseXml(xmlString);
+              var entries = doc.getElementsByTagName("myword");
+              var parsedWords = [];
+
+              for (var i = 0; i < entries.length; i += 1) {
+                var wordEl = entries[i].getElementsByTagName("word")[0];
+                if (!wordEl) {
+                  continue;
+                }
+
+                var wordText = normalizeText(wordEl.textContent);
+                if (!wordText) {
+                  continue;
+                }
+
+                var type = normalizeText(wordEl.getAttribute("type"));
+                var meaningsEl = entries[i].getElementsByTagName("meanings")[0];
+                var examplesEl = entries[i].getElementsByTagName("examples")[0];
+
+                var meaningItems = meaningsEl ?
+                  meaningsEl.getElementsByTagName("meaning") :
+                  [];
+                var exampleItems = examplesEl ?
+                  examplesEl.getElementsByTagName("example") :
+                  [];
+
+                parsedWords.push({
+                  word: wordText,
+                  type: type || "",
+                  meanings: extractTexts(meaningItems),
+                  examples: extractTexts(exampleItems)
+                });
+              }
+
+              words = parsedWords;
+              renderTypeOptions(words);
+              renderWords();
+              attachEvents();
+            })
+            .catch(function (error) {
+              handleError(error.message || "Unknown error while loading XML.");
+            });
+        }
+
+        if (!window.fetch) {
+          handleError("Your browser does not support the Fetch API required to load the XML file.");
+          return;
+        }
+
+        loadWords();
+      })();
+      //]]>
+    </script>
+  </body>
+</html>
+
