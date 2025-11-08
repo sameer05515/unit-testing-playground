@@ -9,6 +9,7 @@ import {
   VerseDetail,
   WordMeaningDetail,
 } from '../models/gita.models';
+import { LANGUAGE_STORAGE_KEY, SupportedLocale } from './language.service';
 
 const SUMMARY_FILE = 'chapter-summary.json';
 const CHAPTER_DETAIL_FILE = 'chapter-verse-detail-temp.json';
@@ -140,10 +141,10 @@ export class GitaDataService {
     );
   }
 
-  private resolveLocale(): 'en' | 'hi' {
-    const langAttr = this.documentRef?.documentElement?.lang?.toLowerCase() ?? '';
-    if (langAttr.startsWith('hi')) {
-      return 'hi';
+  private resolveLocale(): SupportedLocale {
+    const stored = this.getStoredLocale();
+    if (stored) {
+      return stored;
     }
 
     const injectedLocale = (inject(LOCALE_ID) ?? 'en').toLowerCase();
@@ -151,7 +152,24 @@ export class GitaDataService {
       return 'hi';
     }
 
+    const langAttr = this.documentRef?.documentElement?.lang?.toLowerCase() ?? '';
+    if (langAttr.startsWith('hi')) {
+      return 'hi';
+    }
+
     return 'en';
+  }
+
+  private getStoredLocale(): SupportedLocale | null {
+    if (typeof localStorage === 'undefined') {
+      return null;
+    }
+    try {
+      const value = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      return value === 'hi' ? 'hi' : value === 'en' ? 'en' : null;
+    } catch {
+      return null;
+    }
   }
 }
 

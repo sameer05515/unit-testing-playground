@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject, signal } from '@angular/core';
 
-type SupportedLocale = 'en' | 'hi';
+export type SupportedLocale = 'en' | 'hi';
+export const LANGUAGE_STORAGE_KEY = 'smbg-lang';
 
 @Injectable({
   providedIn: 'root',
@@ -21,27 +22,19 @@ export class LanguageService {
       return;
     }
 
-    const { pathname, search, hash } = window.location;
-    let newPathname = pathname || '/';
-
-    if (locale === 'hi') {
-      if (!newPathname.startsWith('/hi')) {
-        newPathname = this.prependLocalePrefix(newPathname, 'hi');
-      }
-    } else {
-      newPathname = this.removeLocalePrefix(newPathname, 'hi');
+    this.persistLocale(locale);
+    this.localeSignal.set(locale);
+    if (this.documentRef?.documentElement) {
+      this.documentRef.documentElement.lang = locale;
     }
 
-    const finalPath = `${newPathname}${search ?? ''}${hash ?? ''}` || '/';
-    window.location.href = finalPath;
+    window.location.reload();
   }
 
   private detectLocale(): SupportedLocale {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname ?? '';
-      if (path === '/hi' || path.startsWith('/hi/')) {
-        return 'hi';
-      }
+    const stored = this.getStoredLocale();
+    if (stored) {
+      return stored;
     }
 
     const localeAttr = this.documentRef?.documentElement?.lang ?? '';
@@ -53,24 +46,27 @@ export class LanguageService {
     return 'en';
   }
 
-  private prependLocalePrefix(pathname: string, locale: SupportedLocale): string {
-    const sanitised = pathname.startsWith('/') ? pathname : `/${pathname}`;
-    if (sanitised === '/' || sanitised === '') {
-      return `/${locale}/`;
+  private persistLocale(locale: SupportedLocale): void {
+    if (typeof localStorage === 'undefined') {
+      return;
     }
-    return `/${locale}${sanitised}`;
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, locale);
+    } catch {
+      // Storage may be unavailable; ignore.
+    }
   }
 
-  private removeLocalePrefix(pathname: string, locale: SupportedLocale): string {
-    const localePrefix = `/${locale}`;
-    if (pathname === localePrefix) {
-      return '/';
+  private getStoredLocale(): SupportedLocale | null {
+    if (typeof localStorage === 'undefined') {
+      return null;
     }
-    if (pathname.startsWith(`${localePrefix}/`)) {
-      const next = pathname.slice(localePrefix.length);
-      return next.startsWith('/') ? next : `/${next}`;
+    try {
+      const value = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      return value === 'hi' ? 'hi' : value === 'en' ? 'en' : null;
+    } catch {
+      return null;
     }
-    return pathname || '/';
   }
 }
 
