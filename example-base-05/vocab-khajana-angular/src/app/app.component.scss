@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.list-group-item {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.list-group-item + .list-group-item {
+  margin-top: 1rem;
+}
+
+.badge {
+  letter-spacing: 0.05em;
+}
