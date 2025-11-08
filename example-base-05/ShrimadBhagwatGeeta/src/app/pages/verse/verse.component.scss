@@ -1,12 +1,13 @@
 .verse-page {
-  background-color: #f8f9fa;
+  background-color: var(--app-surface-bg);
+  transition: background-color 0.2s ease;
 
   .verse-header {
     background: linear-gradient(135deg, #198754, #0d6efd);
   }
 
   .verse-block {
-    background-color: rgba(25, 135, 84, 0.05);
+    background-color: var(--app-verse-block-secondary);
     border-radius: 0.5rem;
     padding: 1rem;
 
@@ -28,9 +29,10 @@
   }
 
   .audio-wrapper {
-    background-color: rgba(13, 110, 253, 0.08);
+    background-color: var(--app-audio-bg);
     padding: 1rem;
     border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
   }
 
   audio {
@@ -38,10 +40,11 @@
   }
 
   .commentary-block {
-    background-color: #fff;
+    background-color: var(--app-commentary-bg);
     border-radius: 0.5rem;
     padding: 1rem;
-    border: 1px solid rgba(13, 110, 253, 0.1);
+    border: 1px solid var(--app-border-color);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
 
   .commentary-highlight {

@@ -26,6 +26,7 @@ Artifacts land in `dist/smbg`. Serve the contents of that folder with any static
 - `src/app/pages/verse` – detailed verse experience with audio playback, translations, and commentary.
 - `src/app/pages/word-meaning` – occurrences table for Sanskrit words with deep links.
 - `src/app/services/gita-data.service.ts` – memoised HTTP service that loads JSON data and normalises legacy hash URLs.
+- `src/app/services/theme.service.ts` – centralised light/dark theme controller that syncs Bootstrap’s `data-bs-theme`, system preference, and local storage.
 - `src/assets/data/json` – canonical JSON data transferred from the AngularJS build.
 - `src/assets/audio` – bundled MP3 recitations referenced by verse detail JSON.
 
@@ -63,6 +64,7 @@ All routes are configured in `src/app/app.routes.ts` and use Angular’s standal
 - Data JSON can be translated with the scaffolded helper: `npm run translate:hi`. The script currently leaves strings untouched; plug in your preferred translation API where indicated before running it at scale.
 - Locale-aware data loading falls back to English automatically when a translated JSON is missing. Start by populating `src/assets/data/json/<locale>/chapter-summary.json` (a sample Hindi file is included) and expand iteratively.
 - Spot-check large translations by temporarily swapping the localized JSON with a hand-curated subset (as done for the first two chapter summaries) and running `npm run start:hi` to confirm the structure renders correctly before processing the full dataset.
+- Theme toggling uses Bootstrap 5.3’s colour tokens. Users can switch modes via the header button; the preference persists in `localStorage` and respects `prefers-color-scheme` when no explicit choice is stored.
 
 ## Next Ideas
 

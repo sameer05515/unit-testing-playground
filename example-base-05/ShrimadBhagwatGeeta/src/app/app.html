@@ -18,7 +18,7 @@
           id="mainNavbar"
           [class.show]="navOpen()"
         >
-          <div class="navbar-nav ms-auto">
+          <div class="navbar-nav ms-auto align-items-lg-center gap-2">
             <a
               class="nav-link"
               routerLink="/"
@@ -29,6 +29,18 @@
             >
               Home
             </a>
+            <button
+              type="button"
+              class="btn btn-outline-light btn-sm theme-toggle"
+              (click)="toggleTheme()"
+            >
+              <ng-container *ngIf="theme() === 'dark'; else darkModeLabel">
+                <span i18n="@@themeToggleLabelLight">Light Mode</span>
+              </ng-container>
+              <ng-template #darkModeLabel>
+                <span i18n="@@themeToggleLabelDark">Dark Mode</span>
+              </ng-template>
+            </button>
           </div>
         </div>
       </div>

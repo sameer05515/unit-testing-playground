@@ -1,8 +1,16 @@
 .app-shell {
-  background-color: #f5f7fa;
+  background-color: var(--app-surface-bg);
+  color: var(--app-text-color);
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle {
+  white-space: nowrap;
 }
 
 footer {
   letter-spacing: 0.02em;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
