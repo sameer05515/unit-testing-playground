@@ -6,7 +6,7 @@
           <div class="chapter-header p-4 rounded text-white">
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
               <div>
-                <p class="text-uppercase small text-white-50 mb-1">
+                <p class="text-uppercase small text-white-50 mb-1" i18n="@@chapterBreadcrumbLabel">
                   Bhagavad Gita
                 </p>
                 <h1 class="h2 mb-2">
@@ -20,6 +20,7 @@
                 <a
                   [routerLink]="['/']"
                   class="btn btn-outline-light btn-sm"
+                  i18n="@@chapterHomeCta"
                 >
                   Home
                 </a>
@@ -27,6 +28,7 @@
                   *ngIf="chapter.previousChapterRoute"
                   [routerLink]="chapter.previousChapterRoute"
                   class="btn btn-light btn-sm"
+                  i18n="@@chapterPreviousCta"
                 >
                   Previous Chapter
                 </a>
@@ -34,6 +36,7 @@
                   *ngIf="chapter.nextChapterRoute"
                   [routerLink]="chapter.nextChapterRoute"
                   class="btn btn-light btn-sm"
+                  i18n="@@chapterNextCta"
                 >
                   Next Chapter
                 </a>
@@ -55,7 +58,7 @@
         </div>
 
         <div class="col-12">
-          <h2 class="h4 text-primary-emphasis mb-3">Verses</h2>
+          <h2 class="h4 text-primary-emphasis mb-3" i18n="@@chapterVersesHeading">Verses</h2>
         </div>
 
         <div class="col-12" *ngFor="let verse of chapter.verses">
@@ -69,6 +72,7 @@
                 <a
                   [routerLink]="['/chapter', chapter.id, 'verse', verse.id]"
                   class="btn btn-sm btn-primary"
+                  i18n="@@chapterViewVerseCta"
                 >
                   View Verse
                 </a>
@@ -76,6 +80,7 @@
                   <a
                     [routerLink]="meaningRoute"
                     class="btn btn-sm btn-outline-primary"
+                    i18n="@@chapterWordMeaningsCta"
                   >
                     Word Meanings
                   </a>
@@ -98,7 +103,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2">
+                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2" i18n="@@chapterTransliterationHeading">
                     Transliteration
                   </h4>
                   <div class="verse-block">
@@ -111,7 +116,7 @@
                   </div>
                 </div>
                 <div class="col-12">
-                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2">
+                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2" i18n="@@chapterTranslationHeading">
                     Translation
                   </h4>
                   <ul class="list-unstyled mb-0">
@@ -140,7 +145,7 @@
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading chapter…</span>
+      <span class="visually-hidden" i18n="@@chapterLoadingLabel">Loading chapter…</span>
     </div>
   </div>
 </ng-template>
@@ -149,8 +154,8 @@
   <section class="py-5">
     <div class="container">
       <div class="alert alert-warning" role="alert">
-        Requested chapter could not be found. Please return to the
-        <a routerLink="/" class="alert-link">home page</a>.
+        <span i18n="@@chapterMissingMessage">Requested chapter could not be found. Please return to the</span>
+        <a routerLink="/" class="alert-link" i18n="@@chapterMissingHomeLink">home page</a>.
       </div>
     </div>
   </section>

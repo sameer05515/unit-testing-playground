@@ -5,17 +5,18 @@
         <div class="col-12">
           <div class="word-header p-4 rounded text-white d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
             <div>
-              <h1 class="h3 mb-1">Occurrences of "{{ detail.id }}"</h1>
-              <p class="mb-0 text-white-75">
+              <h1 class="h3 mb-1" i18n="@@wordHeading">Occurrences of "{{ detail.id }}"</h1>
+              <p class="mb-0 text-white-75" i18n="@@wordSubheading">
                 Explore the Sanskrit word usage across verses and quickly jump to the referenced shloks.
               </p>
             </div>
             <div class="d-flex flex-wrap gap-2">
-              <a routerLink="/" class="btn btn-outline-light btn-sm">Home</a>
+              <a routerLink="/" class="btn btn-outline-light btn-sm" i18n="@@wordHomeCta">Home</a>
               <a
                 *ngIf="detail.previousWMRoute"
                 [routerLink]="detail.previousWMRoute"
                 class="btn btn-light btn-sm"
+                i18n="@@wordPreviousCta"
               >
                 Previous
               </a>
@@ -23,6 +24,7 @@
                 *ngIf="detail.nextWMRoute"
                 [routerLink]="detail.nextWMRoute"
                 class="btn btn-light btn-sm"
+                i18n="@@wordNextCta"
               >
                 Next
               </a>
@@ -36,9 +38,9 @@
               <table class="table table-hover mb-0 align-middle">
                 <thead class="table-light">
                   <tr>
-                    <th scope="col">Word</th>
-                    <th scope="col">Meaning</th>
-                    <th scope="col">Reference</th>
+                    <th scope="col" i18n="@@wordTableHeaderWord">Word</th>
+                    <th scope="col" i18n="@@wordTableHeaderMeaning">Meaning</th>
+                    <th scope="col" i18n="@@wordTableHeaderReference">Reference</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -54,7 +56,7 @@
                         {{ row.referenceHeader }}
                       </a>
                       <ng-template #referenceText>
-                        <span>{{ row.referenceHeader }}</span>
+                        <span i18n="@@wordReferenceFallback">{{ row.referenceHeader }}</span>
                       </ng-template>
                     </td>
                   </tr>
@@ -71,7 +73,7 @@
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">
     <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading word meanings…</span>
+      <span class="visually-hidden" i18n="@@wordLoadingLabel">Loading word meanings…</span>
     </div>
   </div>
 </ng-template>
@@ -80,8 +82,8 @@
   <section class="py-5">
     <div class="container">
       <div class="alert alert-warning" role="alert">
-        Requested word meaning entry was not found. Return to the
-        <a routerLink="/" class="alert-link">home page</a>.
+        <span i18n="@@wordMissingMessage">Requested word meaning entry was not found. Return to the</span>
+        <a routerLink="/" class="alert-link" i18n="@@wordMissingHomeLink">home page</a>.
       </div>
     </div>
   </section>

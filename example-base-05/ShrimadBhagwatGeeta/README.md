@@ -46,11 +46,20 @@ All routes are configured in `src/app/app.routes.ts` and use Angular’s standal
 
 ## Available NPM Scripts
 
-| Script          | Description                                  |
-|-----------------|----------------------------------------------|
-| `npm start`     | Runs `ng serve` with live reload             |
-| `npm run build` | Production build with optimization           |
-| `npm run test`  | Placeholder (no tests yet)                   |
+| Script             | Description                                         |
+|--------------------|-----------------------------------------------------|
+| `npm start`        | Runs `ng serve` with live reload (English locale)   |
+| `npm run start:hi` | Serves the Hindi-localised build at `http://localhost:4200/hi/` |
+| `npm run build`    | Production build with optimization (English locale) |
+| `npm run build:hi` | Emits a Hindi-localised production build            |
+| `npm run test`     | Placeholder (no tests yet)                          |
+
+## Localization
+
+- Source strings use Angular i18n markers (`i18n="@@key"`) and live under `src/app`.
+- Hindi translations reside in `src/locales/messages.hi.json`.
+- CLI builds place the Hindi variant at `dist/smbg/hi/`; static hosting should rewrite `/hi/` to that folder or serve it under that prefix.
+- To add more locales, create another translation JSON alongside the Hindi file and register it under the `i18n.locales` block in `angular.json`.
 
 ## Next Ideas
 

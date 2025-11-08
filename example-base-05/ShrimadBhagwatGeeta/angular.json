@@ -4,6 +4,18 @@
   "newProjectRoot": "projects",
   "projects": {
     "smbg": {
+      "i18n": {
+        "sourceLocale": {
+          "code": "en-US",
+          "baseHref": "/"
+        },
+        "locales": {
+          "hi": {
+            "translation": "src/locales/messages.hi.json",
+            "baseHref": "/hi/"
+          }
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -19,7 +31,8 @@
           "options": {
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -58,6 +71,11 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "hi": {
+              "localize": [
+                "hi"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -70,6 +88,9 @@
             },
             "development": {
               "buildTarget": "smbg:build:development"
+            },
+            "hi": {
+              "buildTarget": "smbg:build:hi"
             }
           },
           "defaultConfiguration": "development"
@@ -82,7 +103,8 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
