@@ -60,6 +60,9 @@ All routes are configured in `src/app/app.routes.ts` and use Angular’s standal
 - Hindi translations reside in `src/locales/messages.hi.json`.
 - CLI builds place the Hindi variant at `dist/smbg/hi/`; static hosting should rewrite `/hi/` to that folder or serve it under that prefix.
 - To add more locales, create another translation JSON alongside the Hindi file and register it under the `i18n.locales` block in `angular.json`.
+- Data JSON can be translated with the scaffolded helper: `npm run translate:hi`. The script currently leaves strings untouched; plug in your preferred translation API where indicated before running it at scale.
+- Locale-aware data loading falls back to English automatically when a translated JSON is missing. Start by populating `src/assets/data/json/<locale>/chapter-summary.json` (a sample Hindi file is included) and expand iteratively.
+- Spot-check large translations by temporarily swapping the localized JSON with a hand-curated subset (as done for the first two chapter summaries) and running `npm run start:hi` to confirm the structure renders correctly before processing the full dataset.
 
 ## Next Ideas
 

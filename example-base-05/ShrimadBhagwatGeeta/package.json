@@ -8,6 +8,7 @@
     "build": "ng build",
     "build:hi": "ng build --configuration=hi",
     "watch": "ng build --watch --configuration development",
+    "translate:hi": "node tools/translate-json.mjs --input src/assets/data/json/chapter-summary.json --output src/assets/data/json/hi/chapter-summary.json --locale hi",
     "test": "ng test"
   },
   "prettier": {
