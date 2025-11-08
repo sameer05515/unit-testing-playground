@@ -40,7 +40,8 @@
                   [disabled]="locale() === 'en'"
                   i18n="@@languageEnglish"
                 >
-                  English
+                  <span class="icon-inline" aria-hidden="true">🌐</span>
+                  <span class="ms-1">English</span>
                 </button>
                 <button
                   type="button"
@@ -51,7 +52,8 @@
                   [disabled]="locale() === 'hi'"
                   i18n="@@languageHindi"
                 >
-                  हिन्दी
+                  <span class="icon-inline" aria-hidden="true">🇮🇳</span>
+                  <span class="ms-1">हिन्दी</span>
                 </button>
               </div>
             </ng-container>
@@ -61,10 +63,12 @@
               (click)="toggleTheme()"
             >
               <ng-container *ngIf="theme() === 'dark'; else darkModeLabel">
-                <span i18n="@@themeToggleLabelLight">Light Mode</span>
+                <span class="icon-inline" aria-hidden="true">🌞</span>
+                <span class="ms-1" i18n="@@themeToggleLabelLight">Light Mode</span>
               </ng-container>
               <ng-template #darkModeLabel>
-                <span i18n="@@themeToggleLabelDark">Dark Mode</span>
+                <span class="icon-inline" aria-hidden="true">🌙</span>
+                <span class="ms-1" i18n="@@themeToggleLabelDark">Dark Mode</span>
               </ng-template>
             </button>
           </div>
