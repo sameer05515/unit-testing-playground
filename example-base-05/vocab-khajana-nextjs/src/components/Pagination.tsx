@@ -45,7 +45,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
     >
       <Link
         aria-disabled={currentPage === 1}
-        className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 aria-disabled:cursor-not-allowed aria-disabled:border-slate-200 aria-disabled:text-slate-300"
+        className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 aria-disabled:cursor-not-allowed aria-disabled:border-slate-200 aria-disabled:text-slate-300 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 dark:aria-disabled:border-slate-800 dark:aria-disabled:text-slate-500"
         href={getLink(Math.max(1, currentPage - 1))}
         scroll
       >
@@ -60,14 +60,16 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
           return (
             <div key={page} className="flex items-center">
               {shouldShowEllipsis ? (
-                <span className="px-2 text-sm text-slate-400">…</span>
+                <span className="px-2 text-sm text-slate-400 dark:text-slate-500">
+                  …
+                </span>
               ) : null}
               <Link
                 aria-current={page === currentPage ? "page" : undefined}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                   page === currentPage
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-600 hover:bg-slate-100"
+                    ? "bg-blue-600 text-white dark:bg-blue-500"
+                    : "text-slate-600 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
                 }`}
                 href={getLink(page)}
                 scroll
@@ -81,7 +83,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
 
       <Link
         aria-disabled={currentPage === totalPages}
-        className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 aria-disabled:cursor-not-allowed aria-disabled:border-slate-200 aria-disabled:text-slate-300"
+        className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 aria-disabled:cursor-not-allowed aria-disabled:border-slate-200 aria-disabled:text-slate-300 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 dark:aria-disabled:border-slate-800 dark:aria-disabled:text-slate-500"
         href={getLink(Math.min(totalPages, currentPage + 1))}
         scroll
       >

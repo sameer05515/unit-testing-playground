@@ -22,7 +22,8 @@ npm run dev
 
 Then open http://localhost:3000 to browse the vocabulary list. Each page
 shows 24 entries; use the pagination controls at the bottom to move between
-pages.
+pages. Use the theme toggle in the header to switch between light and dark
+themes (defaults to your system preference on first load).
 
 ### Project structure
 
