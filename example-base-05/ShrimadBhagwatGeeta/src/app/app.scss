@@ -9,6 +9,22 @@
   white-space: nowrap;
 }
 
+.language-toggle {
+  .btn {
+    white-space: nowrap;
+  }
+
+  .btn.active {
+    color: #0d6efd;
+    background-color: #ffffff;
+    border-color: #ffffff;
+  }
+
+  [data-bs-theme='dark'] & .btn.active {
+    color: #0d6efd;
+  }
+}
+
 footer {
   letter-spacing: 0.02em;
   transition: background-color 0.2s ease, color 0.2s ease;

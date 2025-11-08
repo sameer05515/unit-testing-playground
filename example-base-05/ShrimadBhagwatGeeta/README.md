@@ -65,6 +65,7 @@ All routes are configured in `src/app/app.routes.ts` and use Angular’s standal
 - Locale-aware data loading falls back to English automatically when a translated JSON is missing. Start by populating `src/assets/data/json/<locale>/chapter-summary.json` (a sample Hindi file is included) and expand iteratively.
 - Spot-check large translations by temporarily swapping the localized JSON with a hand-curated subset (as done for the first two chapter summaries) and running `npm run start:hi` to confirm the structure renders correctly before processing the full dataset.
 - Theme toggling uses Bootstrap 5.3’s colour tokens. Users can switch modes via the header button; the preference persists in `localStorage` and respects `prefers-color-scheme` when no explicit choice is stored.
+- The header also exposes an English ↔ Hindi language switcher. Because Angular i18n creates locale-specific builds, the buttons redirect to `/` (English) or `/hi/` (Hindi). Ensure both builds are deployed if you want the switcher to work in production.
 
 ## Next Ideas
 

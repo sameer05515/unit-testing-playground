@@ -18,7 +18,7 @@
           id="mainNavbar"
           [class.show]="navOpen()"
         >
-          <div class="navbar-nav ms-auto align-items-lg-center gap-2">
+          <div class="navbar-nav ms-auto align-items-lg-center gap-2 flex-lg-row flex-column">
             <a
               class="nav-link"
               routerLink="/"
@@ -29,6 +29,30 @@
             >
               Home
             </a>
+            <div class="btn-group language-toggle" role="group" aria-label="Language selector">
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm"
+                [class.active]="locale() === 'en'"
+                [attr.aria-pressed]="locale() === 'en'"
+                (click)="switchLocale('en')"
+                [disabled]="locale() === 'en'"
+                i18n="@@languageEnglish"
+              >
+                English
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm"
+                [class.active]="locale() === 'hi'"
+                [attr.aria-pressed]="locale() === 'hi'"
+                (click)="switchLocale('hi')"
+                [disabled]="locale() === 'hi'"
+                i18n="@@languageHindi"
+              >
+                हिन्दी
+              </button>
+            </div>
             <button
               type="button"
               class="btn btn-outline-light btn-sm theme-toggle"
