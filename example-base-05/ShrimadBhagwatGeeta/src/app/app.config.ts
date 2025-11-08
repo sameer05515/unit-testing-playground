@@ -18,6 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withFetch()),
-    { provide: IS_LANGUAGE_SWITCH_ENABLED, useFactory: () => isDevMode() },
+    { provide: IS_LANGUAGE_SWITCH_ENABLED, useValue: false },
   ],
 };
