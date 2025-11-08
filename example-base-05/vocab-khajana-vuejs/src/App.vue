@@ -184,7 +184,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 import WordCard from '@/components/WordCard.vue';
 import { loadKhajana } from '@/lib/khajana';
@@ -196,31 +196,62 @@ type Theme = 'light' | 'dark';
 const theme = ref<Theme>('light');
 const isDark = computed(() => theme.value === 'dark');
 const themeLabel = computed(() => (isDark.value ? 'Switch to light mode' : 'Switch to dark mode'));
+const hasExplicitPreference = ref(false);
+
+let mediaQuery: MediaQueryList | undefined;
+let mediaListener: ((event: MediaQueryListEvent) => void) | undefined;
+
+function setColorScheme(target: HTMLElement, value: Theme) {
+  target.style.colorScheme = value === 'dark' ? 'dark light' : 'light dark';
+}
 
 function applyTheme(value: Theme, persist = true) {
-  theme.value = value;
   const root = document.documentElement;
+  const body = document.body;
 
-  if (value === 'dark') {
-    root.classList.add('dark');
-  } else {
-    root.classList.remove('dark');
-  }
+  theme.value = value;
+  root.classList.toggle('dark', value === 'dark');
+  body.classList.toggle('dark', value === 'dark');
+  setColorScheme(root, value);
+  setColorScheme(body, value);
 
-  if (!persist) {
-    return;
-  }
-
-  try {
-    localStorage.setItem(THEME_STORAGE_KEY, value);
-  } catch {
-    // Ignore storage errors (e.g., privacy mode)
+  if (persist) {
+    hasExplicitPreference.value = true;
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, value);
+    } catch {
+      // Ignore storage errors (e.g., privacy mode)
+    }
   }
 }
 
-function resolvePreferredTheme(): Theme {
+function installSystemThemeListener() {
+  if (typeof window.matchMedia !== 'function') {
+    return;
+  }
+
+  mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  mediaListener = (event: MediaQueryListEvent) => {
+    if (hasExplicitPreference.value) {
+      return;
+    }
+
+    applyTheme(event.matches ? 'dark' : 'light', false);
+  };
+
+  try {
+    mediaQuery.addEventListener('change', mediaListener);
+  } catch {
+    // Safari < 14 fallback
+    mediaQuery.addListener(mediaListener);
+  }
+
+  applyTheme(mediaQuery.matches ? 'dark' : 'light', false);
+}
+
+function resolvePreferredTheme(): Theme | null {
   if (typeof window === 'undefined') {
-    return 'light';
+    return null;
   }
 
   try {
@@ -232,8 +263,7 @@ function resolvePreferredTheme(): Theme {
     // Ignore storage read errors
   }
 
-  const prefersDark = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  return prefersDark ? 'dark' : 'light';
+  return null;
 }
 
 function toggleTheme() {
@@ -263,7 +293,30 @@ onMounted(async () => {
 });
 
 onMounted(() => {
-  applyTheme(resolvePreferredTheme(), false);
+  const stored = resolvePreferredTheme();
+
+  if (stored) {
+    hasExplicitPreference.value = true;
+    applyTheme(stored, false);
+  } else {
+    installSystemThemeListener();
+  }
+
+  if (!stored && !mediaQuery) {
+    applyTheme('light', false);
+  }
+});
+
+onBeforeUnmount(() => {
+  if (!mediaQuery || !mediaListener) {
+    return;
+  }
+
+  try {
+    mediaQuery.removeEventListener('change', mediaListener);
+  } catch {
+    mediaQuery.removeListener(mediaListener);
+  }
 });
 
 const filteredEntries = computed(() => {
