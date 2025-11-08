@@ -55,8 +55,7 @@ export const getWordEntries = cache(async (): Promise<WordEntry[]> => {
   const root = parsed?.["vocab-config"]?.["word-list"];
   const rawEntries = ensureArray(root?.myword);
 
-  return rawEntries
-    .map((entry) => {
+  return rawEntries.flatMap((entry) => {
       const record = entry as Record<string, unknown>;
       const wordNode = record.word as
         | string
@@ -92,17 +91,18 @@ export const getWordEntries = cache(async (): Promise<WordEntry[]> => {
         .filter(Boolean);
 
       if (!wordText) {
-        return null;
+        return [];
       }
 
-      return {
-        word: wordText,
-        type: wordType,
-        meanings,
-        examples,
-      } satisfies WordEntry;
-    })
-    .filter((item): item is WordEntry => item !== null);
+      return [
+        {
+          word: wordText,
+          type: wordType,
+          meanings,
+          examples,
+        } satisfies WordEntry,
+      ];
+    });
 });
 
 
