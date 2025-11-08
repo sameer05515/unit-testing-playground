@@ -17,28 +17,25 @@
                 </p>
               </div>
               <div class="d-flex flex-wrap gap-2">
-                <a
-                  [routerLink]="['/']"
-                  class="btn btn-outline-light btn-sm"
-                  i18n="@@chapterHomeCta"
-                >
-                  Home
+                <a [routerLink]="['/']" class="btn btn-outline-light btn-sm">
+                  <span class="icon-inline" aria-hidden="true">🏠</span>
+                  <span class="ms-1" i18n="@@chapterHomeCta">Home</span>
                 </a>
                 <a
                   *ngIf="chapter.previousChapterRoute"
                   [routerLink]="chapter.previousChapterRoute"
                   class="btn btn-light btn-sm"
-                  i18n="@@chapterPreviousCta"
                 >
-                  Previous Chapter
+                  <span class="icon-inline" aria-hidden="true">⬅️</span>
+                  <span class="ms-1" i18n="@@chapterPreviousCta">Previous Chapter</span>
                 </a>
                 <a
                   *ngIf="chapter.nextChapterRoute"
                   [routerLink]="chapter.nextChapterRoute"
                   class="btn btn-light btn-sm"
-                  i18n="@@chapterNextCta"
                 >
-                  Next Chapter
+                  <span class="icon-inline" aria-hidden="true">➡️</span>
+                  <span class="ms-1" i18n="@@chapterNextCta">Next Chapter</span>
                 </a>
               </div>
             </div>
@@ -72,17 +69,17 @@
                 <a
                   [routerLink]="['/chapter', chapter.id, 'verse', verse.id]"
                   class="btn btn-sm btn-primary"
-                  i18n="@@chapterViewVerseCta"
                 >
-                  View Verse
+                  <span class="icon-inline" aria-hidden="true">📜</span>
+                  <span class="ms-1" i18n="@@chapterViewVerseCta">View Verse</span>
                 </a>
                 <ng-container *ngIf="verse.meaning[0]?.wordMeaningDetailRoute as meaningRoute">
                   <a
                     [routerLink]="meaningRoute"
                     class="btn btn-sm btn-outline-primary"
-                    i18n="@@chapterWordMeaningsCta"
                   >
-                    Word Meanings
+                    <span class="icon-inline" aria-hidden="true">🧠</span>
+                    <span class="ms-1" i18n="@@chapterWordMeaningsCta">Word Meanings</span>
                   </a>
                 </ng-container>
               </div>
