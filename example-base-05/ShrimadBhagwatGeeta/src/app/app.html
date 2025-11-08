@@ -29,30 +29,32 @@
             >
               Home
             </a>
-            <div class="btn-group language-toggle" role="group" aria-label="Language selector">
-              <button
-                type="button"
-                class="btn btn-outline-light btn-sm"
-                [class.active]="locale() === 'en'"
-                [attr.aria-pressed]="locale() === 'en'"
-                (click)="switchLocale('en')"
-                [disabled]="locale() === 'en'"
-                i18n="@@languageEnglish"
-              >
-                English
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-light btn-sm"
-                [class.active]="locale() === 'hi'"
-                [attr.aria-pressed]="locale() === 'hi'"
-                (click)="switchLocale('hi')"
-                [disabled]="locale() === 'hi'"
-                i18n="@@languageHindi"
-              >
-                हिन्दी
-              </button>
-            </div>
+            <ng-container *ngIf="showLanguageSwitcher">
+              <div class="btn-group language-toggle" role="group" aria-label="Language selector">
+                <button
+                  type="button"
+                  class="btn btn-outline-light btn-sm"
+                  [class.active]="locale() === 'en'"
+                  [attr.aria-pressed]="locale() === 'en'"
+                  (click)="switchLocale('en')"
+                  [disabled]="locale() === 'en'"
+                  i18n="@@languageEnglish"
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-light btn-sm"
+                  [class.active]="locale() === 'hi'"
+                  [attr.aria-pressed]="locale() === 'hi'"
+                  (click)="switchLocale('hi')"
+                  [disabled]="locale() === 'hi'"
+                  i18n="@@languageHindi"
+                >
+                  हिन्दी
+                </button>
+              </div>
+            </ng-container>
             <button
               type="button"
               class="btn btn-outline-light btn-sm theme-toggle"
