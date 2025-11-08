@@ -67,8 +67,8 @@ export default async function Home({ searchParams }: PageProps) {
           aria-label="Word list"
           className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
-          {pageEntries.map((entry) => (
-            <WordCard key={entry.word} entry={entry} />
+          {pageEntries.map((entry, index) => (
+            <WordCard key={`${entry.word}-${start + index}`} entry={entry} />
           ))}
         </section>
 
