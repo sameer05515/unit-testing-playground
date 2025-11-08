@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 import { Injectable, LOCALE_ID, inject } from '@angular/core';
 import { Observable, catchError, map, shareReplay, throwError } from 'rxjs';
 import {
@@ -18,7 +19,8 @@ const WORD_MEANING_FILE = 'chapter-verse-word-meaning-temp.json';
 })
 export class GitaDataService {
   private readonly http = inject(HttpClient);
-  private readonly locale = (inject(LOCALE_ID) ?? 'en').split('-')[0];
+  private readonly documentRef = inject(DOCUMENT, { optional: true });
+  private readonly locale = this.resolveLocale();
 
   private readonly chapterSummaries$ = this.loadJson<ChapterSummary[]>(SUMMARY_FILE).pipe(
     shareReplay({ bufferSize: 1, refCount: false })
@@ -136,6 +138,20 @@ export class GitaDataService {
         return throwError(() => error);
       })
     );
+  }
+
+  private resolveLocale(): 'en' | 'hi' {
+    const langAttr = this.documentRef?.documentElement?.lang?.toLowerCase() ?? '';
+    if (langAttr.startsWith('hi')) {
+      return 'hi';
+    }
+
+    const injectedLocale = (inject(LOCALE_ID) ?? 'en').toLowerCase();
+    if (injectedLocale.startsWith('hi')) {
+      return 'hi';
+    }
+
+    return 'en';
   }
 }
 
