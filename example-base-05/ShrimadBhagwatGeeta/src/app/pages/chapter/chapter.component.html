@@ -1,0 +1,158 @@
+<section class="chapter-page py-4">
+  <div class="container" *ngIf="chapter$ | async as chapter; else loading">
+    <ng-container *ngIf="chapter; else notFound">
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="chapter-header p-4 rounded text-white">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+              <div>
+                <p class="text-uppercase small text-white-50 mb-1">
+                  Bhagavad Gita
+                </p>
+                <h1 class="h2 mb-2">
+                  {{ chapter.chapterTitleForChapterPage }}
+                </h1>
+                <p class="mb-0 text-white-75">
+                  {{ chapter.chapterSubTitleForChapterPage }}
+                </p>
+              </div>
+              <div class="d-flex flex-wrap gap-2">
+                <a
+                  [routerLink]="['/']"
+                  class="btn btn-outline-light btn-sm"
+                >
+                  Home
+                </a>
+                <a
+                  *ngIf="chapter.previousChapterRoute"
+                  [routerLink]="chapter.previousChapterRoute"
+                  class="btn btn-light btn-sm"
+                >
+                  Previous Chapter
+                </a>
+                <a
+                  *ngIf="chapter.nextChapterRoute"
+                  [routerLink]="chapter.nextChapterRoute"
+                  class="btn btn-light btn-sm"
+                >
+                  Next Chapter
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div class="card-body">
+              <div class="chapter-description">
+                <p *ngFor="let paragraph of chapter.description">
+                  {{ paragraph }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <h2 class="h4 text-primary-emphasis mb-3">Verses</h2>
+        </div>
+
+        <div class="col-12" *ngFor="let verse of chapter.verses">
+          <div class="card verse-card border-0 shadow-sm">
+            <div class="card-header bg-transparent d-flex flex-column flex-md-row justify-content-between gap-3">
+              <div>
+                <h3 class="h5 mb-1">{{ verse.verseHeader }}</h3>
+                <p class="mb-0 text-body-secondary">{{ verse.oneLiner }}</p>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <a
+                  [routerLink]="['/chapter', chapter.id, 'verse', verse.id]"
+                  class="btn btn-sm btn-primary"
+                >
+                  View Verse
+                </a>
+                <ng-container *ngIf="verse.meaning[0]?.wordMeaningDetailRoute as meaningRoute">
+                  <a
+                    [routerLink]="meaningRoute"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    Word Meanings
+                  </a>
+                </ng-container>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="verse-content row g-4">
+                <div class="col-md-6">
+                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2">
+                    श्लोक
+                  </h4>
+                  <div class="verse-block">
+                    <div
+                      *ngFor="let line of verse.shlok"
+                      class="sanskrit-line"
+                    >
+                      {{ line.value }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2">
+                    Transliteration
+                  </h4>
+                  <div class="verse-block">
+                    <div
+                      *ngFor="let line of verse.shlokEng"
+                      class="transliteration-line"
+                    >
+                      {{ line.value }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <h4 class="h6 text-uppercase text-primary fw-semibold mb-2">
+                    Translation
+                  </h4>
+                  <ul class="list-unstyled mb-0">
+                    <li
+                      *ngFor="let translation of verse.translation"
+                      class="mb-2"
+                    >
+                      <span class="fw-semibold text-body">{{
+                        translation.header
+                      }}</span>
+                      <span class="text-body-secondary">
+                        — {{ translation.value }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading chapter…</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #notFound>
+  <section class="py-5">
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        Requested chapter could not be found. Please return to the
+        <a routerLink="/" class="alert-link">home page</a>.
+      </div>
+    </div>
+  </section>
+</ng-template>
+

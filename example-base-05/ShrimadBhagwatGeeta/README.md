@@ -1,36 +1,59 @@
-## Shrimad Bhagwat Geeta
+# Shrimad Bhagwat Geeta (Angular + Bootstrap 5)
 
-This project is a single-page AngularJS application that presents summaries, verses, and word meanings from the Shrimad Bhagavad Gita. All content is served from local JSON files and audio assets bundled alongside the app.
+Modern Angular 18 SPA that presents Shrimad Bhagavad Gita content—chapter summaries, detailed verses with audio recitation, and cross-linked Sanskrit word meanings—using locally bundled JSON and media assets.
 
-### Features
-- Chapter summaries rendered from `data/json/chapter-summary.json`.
-- Detailed chapter and verse pages with navigation between chapters/verses.
-- Inline Sanskrit text, translations, and commentary, with supporting audio playback for each verse.
-- Word-meaning explorer that cross-links verse references.
+## Quick Start
 
-### Project Structure
-- `index.html` – entry point that wires the AngularJS app and vendor libraries.
-- `module/script.js` – AngularJS module definition, route configuration, and controllers.
-- `partials/` – HTML partials for the home, chapter, verse, and word-meaning views.
-- `data/json/` – JSON data sources that drive page content.
-- `audio/` – verse audio files referenced by the verse view.
-- `lib/` – locally vendored CSS and JavaScript dependencies (AngularJS, Bootstrap, etc.).
+```bash
+npm install
+npm start            # alias for ng serve
+```
 
-### Prerequisites
-Because the app fetches JSON over HTTP, you must run it behind a static web server. Any lightweight server will do; below are two common options:
+Open `http://localhost:4200/` in your browser. HMR reloads pages as you edit.
 
-- **Node.js**: `npx http-server . -p 8080`
-- **Python 3**: `python -m http.server 8080`
+### Production Build
 
-Run the server from the project root (`example-base-05/ShrimadBhagwatGeeta`) and then open `http://localhost:8080` in your browser.
+```bash
+npm run build
+```
 
-### Development Notes
-- Routes expect data IDs in the JSON files (e.g., chapter IDs) to remain consistent; updating the data structure may require corresponding controller changes.
-- Audio playback URLs in `chapter-verse-detail-temp.json` must point to the bundled files in `audio/`.
-- Vendor libraries are checked into `lib/`; no package manager is required, but be mindful of their versions if you plan upgrades.
+Artifacts land in `dist/smbg`. Serve the contents of that folder with any static web server.
 
-### Suggested Enhancements
-- Add defensive checks in controllers for missing/invalid IDs to avoid runtime errors.
-- Improve the verse audio loop toggle by binding to the DOM attribute with `ng-attr-loop`.
-- Consider migrating to a modern frontend stack or serving data from an API for easier maintenance.
+## Project Structure Highlights
 
+- `src/app/pages/home` – landing page with hero, Hindi introduction, and chapter grid.
+- `src/app/pages/chapter` – chapter view with descriptions and per-verse teasers.
+- `src/app/pages/verse` – detailed verse experience with audio playback, translations, and commentary.
+- `src/app/pages/word-meaning` – occurrences table for Sanskrit words with deep links.
+- `src/app/services/gita-data.service.ts` – memoised HTTP service that loads JSON data and normalises legacy hash URLs.
+- `src/assets/data/json` – canonical JSON data transferred from the AngularJS build.
+- `src/assets/audio` – bundled MP3 recitations referenced by verse detail JSON.
+
+All routes are configured in `src/app/app.routes.ts` and use Angular’s standalone component model.
+
+## Notes on the Migration
+
+- Legacy AngularJS assets were removed; Angular CLI scaffolding is now the source of truth.
+- Bootstrap 5 styling is provided via SCSS imports (`src/styles.scss`); navbar collapse behaviour is handled with a lightweight Angular signal—no Bootstrap JS required.
+- Static JSON still contains hash-based URLs; the data service translates these into Angular router commands.
+- Audio paths are resolved relative to `assets/` to ensure builds serve media correctly.
+
+## Data Integrity & Extensibility
+
+- JSON structure assumptions are encoded in TypeScript interfaces under `src/app/models`.
+- When updating JSON, keep `id` fields stable—they power deep-link routing.
+- New UI features can be added as standalone components and wired in via the router.
+
+## Available NPM Scripts
+
+| Script          | Description                                  |
+|-----------------|----------------------------------------------|
+| `npm start`     | Runs `ng serve` with live reload             |
+| `npm run build` | Production build with optimization           |
+| `npm run test`  | Placeholder (no tests yet)                   |
+
+## Next Ideas
+
+- Add unit tests around `GitaDataService` to catch malformed JSON early.
+- Introduce lazy-loaded feature routes once content grows beyond current scope.
+- Enhance accessibility by expanding ARIA labelling, especially around dynamic verse content.

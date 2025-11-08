@@ -1,0 +1,36 @@
+.chapter-page {
+  background-color: #f8f9fa;
+
+  .chapter-header {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+  }
+
+  .chapter-description p + p {
+    margin-top: 1rem;
+  }
+
+  .verse-card {
+    .verse-block {
+      background-color: rgba(13, 110, 253, 0.05);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sanskrit-line {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .transliteration-line {
+      font-size: 1rem;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .verse-block > * + * {
+      margin-top: 0.5rem;
+    }
+  }
+}
+

@@ -1,0 +1,52 @@
+.verse-page {
+  background-color: #f8f9fa;
+
+  .verse-header {
+    background: linear-gradient(135deg, #198754, #0d6efd);
+  }
+
+  .verse-block {
+    background-color: rgba(25, 135, 84, 0.05);
+    border-radius: 0.5rem;
+    padding: 1rem;
+
+    & > * + * {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .sanskrit-line {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .transliteration-line {
+    font-size: 1rem;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .audio-wrapper {
+    background-color: rgba(13, 110, 253, 0.08);
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  audio {
+    width: 100%;
+  }
+
+  .commentary-block {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+  }
+
+  .commentary-highlight {
+    text-align: center;
+    font-weight: 700;
+  }
+}
+
