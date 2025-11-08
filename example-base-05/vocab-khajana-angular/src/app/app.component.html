@@ -1,7 +1,18 @@
 ﻿<div class="container py-4">
-  <header class="mb-4 text-center text-md-start">
-    <h1 class="display-5 fw-semibold mb-2">Vocab Khajana</h1>
-    <p class="lead text-muted mb-0">Browse the word list sourced from khajana.xml</p>
+  <header class="mb-4">
+    <div class="d-flex flex-wrap align-items-center gap-3 justify-content-between">
+      <div>
+        <h1 class="display-5 fw-semibold mb-1">Vocab Khajana</h1>
+        <p class="lead text-muted mb-0">Browse the word list sourced from khajana.xml</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="toggleTheme()"
+      >
+        {{ isDarkMode() ? 'Switch to Light Theme' : 'Switch to Dark Theme' }}
+      </button>
+    </div>
   </header>
 
   <div class="row g-3 align-items-end mb-4">
