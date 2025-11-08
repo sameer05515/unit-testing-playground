@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT Data Export: v4</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 dark:bg-gray-800 flex flex-col h-screen p-6">
+    <div class="container mx-auto shadow-lg rounded-lg flex flex-col h-full">
+      <!-- Header -->
+      <div class="flex justify-between items-center p-4 h-[10vh] border-b">
+        <!-- <span class="text-2xl text-gray-600 dark:text-gray-100">🏠</span> -->
+        <a class="font-bold text-2xl text-white hover:opacity-80" href="/">🏠</a>
+
+        <h4 class="text-lg font-semibold text-gray-700 dark:text-gray-100">Chat Messages</h4>
+        <div>
+          <button
+            id="prevConversationBtn"
+            title="Prev Conversation"
+            class="px-4 py-2 bg-gray-300 text-gray-100 dark:text-gray-700 rounded-lg disabled:opacity-50"
+          >
+            ⏪
+          </button>
+          <button
+            id="nextConversationBtn"
+            title="Next Conversation"
+            class="px-4 py-2 bg-gray-300 text-gray-100 dark:text-gray-700 rounded-lg disabled:opacity-50"
+          >
+            ⏩
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Content -->
+      <div id="root" class="flex-1 p-4 overflow-auto h-[75vh] space-y-4"></div>
+
+      <!-- Footer -->
+      <div class="flex justify-between items-center p-4 h-[10vh] border-t">
+        <div id="pageNavigationBtnContainer">
+          <button
+            id="prevPageBtn"
+            title="Prev Page"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg disabled:opacity-50"
+          >
+            ⬅️
+          </button>
+
+          <button
+            id="nextPageBtn"
+            title="Next Page"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg disabled:opacity-50"
+          >
+            ➡️
+          </button>
+        </div>
+        <span id="conversationIndex" class="text-xs text-gray-600 dark:text-gray-100"></span>
+        <button
+          id="toggle-theme"
+          class="bg-gray-300 px-3 py-1 rounded-md text-black hover:bg-gray-400 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 focus:outline-none"
+          aria-label="Toggle Dark Mode"
+        >
+          🌙 Dark Mode
+        </button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { bootstrap } from "/chat-renderer/v4/js/main.mjs";
+      const sVer = "<%-sVer%>";
+      const convIdx = "<%-convIdx%>";
+      bootstrap(sVer || "v3", +convIdx || 0);
+    </script>
+  </body>
+</html>

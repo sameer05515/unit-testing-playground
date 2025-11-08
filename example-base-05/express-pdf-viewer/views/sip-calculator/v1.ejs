@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-100">
+<head>
+  <meta charset="UTF-8">
+  <title>💰 SIP Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+
+  <div x-data="sipCalculator()" class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-4xl">
+    <h1 class="text-2xl font-bold text-center mb-6">📆 SIP Calculator</h1>
+
+    <!-- Inputs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <label class="block mb-2 text-sm">Monthly Investment (₹)</label>
+        <input type="number" x-model.number="monthlyInvestment" class="border rounded px-3 py-2 w-full">
+
+        <label class="block mb-2 text-sm mt-4">Expected Annual Return (%)</label>
+        <input type="number" x-model.number="annualReturn" class="border rounded px-3 py-2 w-full">
+
+        <label class="block mb-2 text-sm mt-4">Investment Period (Years)</label>
+        <input type="number" x-model.number="years" class="border rounded px-3 py-2 w-full">
+
+        <button @click="calculate()" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-lg">
+          🔥 Calculate
+        </button>
+      </div>
+
+      <!-- Summary -->
+      <div class="bg-gray-50 rounded-xl p-4">
+        <h2 class="text-lg font-semibold mb-3 text-gray-700 text-center">💹 Summary</h2>
+        <div class="text-center space-y-2">
+          <p><span class="font-semibold">Invested Amount:</span> ₹<span x-text="format(investedAmount)"></span></p>
+          <p><span class="font-semibold">Estimated Returns:</span> ₹<span x-text="format(estimatedReturns)"></span></p>
+          <p><span class="font-semibold text-green-600">Total Value:</span> ₹<span x-text="format(totalValue)"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="bg-gray-50 rounded-lg p-4">
+      <canvas id="sipChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <script>
+    function sipCalculator() {
+      return {
+        monthlyInvestment: 5000,
+        annualReturn: 12,
+        years: 10,
+        investedAmount: 0,
+        estimatedReturns: 0,
+        totalValue: 0,
+        chart: null,
+
+        format(num) {
+          return num.toLocaleString('en-IN', { maximumFractionDigits: 4 });
+        },
+
+        calculate() {
+          const months = this.years * 12;
+          const monthlyRate = this.annualReturn / 12 / 100;
+
+          // SIP Formula: M = P * [(1+r)^n - 1] * (1+r)/r
+          const M = this.monthlyInvestment * ((Math.pow(1 + monthlyRate, months) - 1) * (1 + monthlyRate) / monthlyRate);
+          this.totalValue = M;
+          this.investedAmount = this.monthlyInvestment * months;
+          this.estimatedReturns = this.totalValue - this.investedAmount;
+
+          this.renderChart();
+        },
+
+        renderChart() {
+          const labels = Array.from({ length: this.years + 1 }, (_, i) => `Year ${i}`);
+          const values = labels.map((_, i) => {
+            const months = i * 12;
+            const monthlyRate = this.annualReturn / 12 / 100;
+            return this.monthlyInvestment * ((Math.pow(1 + monthlyRate, months) - 1) * (1 + monthlyRate) / monthlyRate);
+          });
+
+          if (this.chart) this.chart.destroy();
+          const ctx = document.getElementById('sipChart').getContext('2d');
+          this.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [{
+                label: 'Portfolio Growth (₹)',
+                data: values,
+                borderColor: '#3b82f6',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+              }]
+            },
+            options: {
+              responsive: true,
+              animation: { duration: 1200, easing: 'easeOutQuart' },
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { title: { display: true, text: 'Years' } },
+                y: { title: { display: true, text: 'Value (₹)' } }
+              }
+            }
+          });
+        }
+      }
+    }
+  </script>
+</body>
+</html>

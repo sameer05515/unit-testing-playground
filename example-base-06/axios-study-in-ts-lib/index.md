@@ -7,7 +7,7 @@
 ## Axios Crash Course | HTTP Library
 - [**Video Link**](https://www.youtube.com/watch?v=6LyagkoRWYA)
     - [**Instructor code repo**](https://github.com/bradtraversy/axios-crash)
-    - [**Code based on Instructor's code repo**](../axios-crash/)
+    - [**Code based on Instructor's code repo**](../axios-crash)
     - **Video Topics with Timestamps**
         - **Intro** - [0:30](https://www.youtube.com/watch?v=6LyagkoRWYA&t=30s)
         - **Interface & Files Explain** - [2:15](https://www.youtube.com/watch?v=6LyagkoRWYA&t=135s)
@@ -26,10 +26,15 @@
 ## TypeScript and Axios Intro - React Tutorial 54
 - [**Video Link**](https://www.youtube.com/watch?v=_8YaUjcL0sw)
     - [**Instructors code repo**](https://github.com/CalebCurry/ts-axios)
-    - [**Code based on Instructor's code repo**](../react-ts-with-axios/)
+    - [**Code based on Instructor's code repo**](../react-ts-with-axios)
 - Remarks
     - Nothing related to axios error handling
 
 ## How to catch Axios Errors in TypeScript
 - [**Video Link**](https://www.youtube.com/watch?v=NGSck4aHfeQ)
-    - 
+- Remarks
+    - Helpful video
+
+## TypeScript: Type-checking REST API Axios requests
+- [**Video Link**](https://www.youtube.com/watch?v=RVjbzFp668w)
+    - [**Code implemented in**](./src/lib/axios1.ts)

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown with Code Highlighting</title>
+
+    <!-- Highlight.js CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    />
+
+    <!-- Custom Styles -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      pre {
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Markdown Rendered Below</h2>
+    <div>
+      <button id="loadFromAPI">Load API data</button>
+    </div>
+    <div id="content"></div>
+
+    <!-- Marked.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.0/marked.min.js"></script>
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+      // Sample Markdown content to be loaded initially
+      const markdownText = `
+# Welcome to Markdown with Highlight.js 🚀
+
+## Code Example:
+\`\`\`javascript
+function greet(name) {
+    return \`Hello, \${name}!\`;
+}
+console.log(greet("World"));
+\`\`\`
+
+## Another Example (Python):
+\`\`\`python
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("World"))
+\`\`\`
+`;
+
+      // Convert Markdown to HTML
+      document.getElementById("content").innerHTML = marked.parse(markdownText);
+
+      // Apply syntax highlighting
+      hljs.highlightAll();
+
+      // Fetching same content from API
+      document.getElementById("loadFromAPI").addEventListener("click", () => {
+        fetch(`/code-highlighting/questions/file2.md`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json(); // Parsing JSON response
+          })
+          .then((data) => {
+            // console.log("Fetched Data:", data);
+            document.getElementById("content").innerHTML = marked.parse(data.content);
+
+            // 🔥 Reapply syntax highlighting
+            hljs.highlightAll();
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      });
+    </script>
+  </body>
+</html>

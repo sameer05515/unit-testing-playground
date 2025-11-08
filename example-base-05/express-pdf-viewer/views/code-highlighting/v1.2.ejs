@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown with Code Highlighting</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Highlight.js CSS (GitHub Dark Theme) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-all duration-300">
+    <div class="container mx-auto max-w-3xl p-6">
+      <h2 class="text-2xl font-bold text-center mb-6">Markdown Preview</h2>
+
+      <div class="flex justify-center mb-4">
+        <button id="loadFromAPI" class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition">
+          Load API Data
+        </button>
+      </div>
+
+      <div id="content" class="prose bg-white dark:bg-gray-800 p-4 rounded shadow-md overflow-x-auto"></div>
+    </div>
+
+    <!-- Marked.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.0/marked.min.js"></script>
+
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+      marked.setOptions({
+        gfm: true,
+        breaks: true,
+      });
+
+      const markdownText = `
+# Welcome to Markdown with Highlight.js 🚀
+
+## Code Example:
+\`\`\`javascript
+function greet(name) {
+    return \`Hello, \${name}!\`;
+}
+console.log(greet("World"));
+\`\`\`
+
+## Another Example (Python):
+\`\`\`python
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("World"))
+\`\`\`
+`;
+
+      // Render initial markdown
+      const contentDiv = document.getElementById("content");
+      contentDiv.innerHTML = marked.parse(markdownText);
+      hljs.highlightAll();
+
+      // Fetch markdown from API
+      document.getElementById("loadFromAPI").addEventListener("click", () => {
+        fetch(`/code-highlighting/questions/file2.md`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            contentDiv.innerHTML = marked.parse(data.content);
+            hljs.highlightAll();
+          })
+          .catch((error) => console.error("Error fetching data:", error));
+      });
+    </script>
+  </body>
+</html>

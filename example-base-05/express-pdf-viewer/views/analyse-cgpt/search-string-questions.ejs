@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" x-data="searchApp()" x-init="fetchResults()">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Search Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  </head>
+
+  <body class="bg-gray-50 text-gray-800">
+    <div class="max-w-2xl mx-auto py-10 px-4">
+      <h1 class="text-2xl font-bold mb-6 text-center">🔍 CGPT Message Search Viewer</h1>
+
+      <!-- Search Input -->
+      <div class="flex gap-2 mb-6">
+        <input
+          type="text"
+          placeholder="Search content..."
+          x-model="query"
+          @keyup.enter="fetchResults()"
+          class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <button
+          @click="fetchResults()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </div>
+
+       <!-- Pagination -->
+      <div
+        class="flex justify-center items-center mt-8 gap-2 flex-wrap"
+        x-show="total > offset"
+      >
+        <!-- First -->
+        <button
+          @click="goToPage(1)"
+          :disabled="page === 1"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          « First
+        </button>
+
+        <!-- Prev -->
+        <button
+          @click="prevPage()"
+          :disabled="page === 1"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          ‹ Prev
+        </button>
+
+        <!-- Current -->
+        <button
+          class="px-3 py-1 border rounded-lg text-sm bg-blue-600 text-white font-semibold"
+        >
+          <span x-text="page"></span>
+        </button>
+
+        <!-- Next -->
+        <button
+          @click="nextPage()"
+          :disabled="page === totalPages()"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next ›
+        </button>
+
+        <!-- Last -->
+        <button
+          @click="goToPage(totalPages())"
+          :disabled="page === totalPages()"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Last »
+        </button>
+      </div>
+
+      <!-- Results -->
+      <template x-if="results.length === 0 && !loading">
+        <p class="text-center text-gray-500">No results found.</p>
+      </template>
+
+      <div x-show="loading" class="text-center text-gray-500">Loading...</div>
+
+      <div class="space-y-3" x-show="!loading">
+        <template x-for="item in results" :key="item.id">
+          <div
+            class="p-4 border rounded-lg bg-white shadow-sm transition transform hover:scale-[1.02]"
+            x-html="highlight(item.content)"
+            x-transition:enter="transition ease-out duration-500"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          ></div>
+        </template>
+      </div>
+
+      <!-- Pagination -->
+      <div
+        class="flex justify-center items-center mt-8 gap-2 flex-wrap"
+        x-show="total > offset"
+      >
+        <!-- First -->
+        <button
+          @click="goToPage(1)"
+          :disabled="page === 1"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          « First
+        </button>
+
+        <!-- Prev -->
+        <button
+          @click="prevPage()"
+          :disabled="page === 1"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          ‹ Prev
+        </button>
+
+        <!-- Current -->
+        <button
+          class="px-3 py-1 border rounded-lg text-sm bg-blue-600 text-white font-semibold"
+        >
+          <span x-text="page"></span>
+        </button>
+
+        <!-- Next -->
+        <button
+          @click="nextPage()"
+          :disabled="page === totalPages()"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next ›
+        </button>
+
+        <!-- Last -->
+        <button
+          @click="goToPage(totalPages())"
+          :disabled="page === totalPages()"
+          class="px-3 py-1 border rounded-lg text-sm bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Last »
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function searchApp() {
+        return {
+          query: "",
+          page: 1,
+          offset: 10,
+          total: 0,
+          results: [],
+          loading: false,
+
+          async fetchResults() {
+            this.loading = true;
+            try {
+              const res = await fetch(
+                `/analyse-cgpt/api/step-9-search-string-questions/itr1/v39?q=${encodeURIComponent(this.query)}&page=${this.page}&offset=${this.offset}`
+              );
+              const data = await res.json();
+              this.results = [];
+              setTimeout(() => {
+                this.results = data.results || [];
+                this.total = data.total || 0;
+              }, 150);
+            } catch (e) {
+              console.error(e);
+            } finally {
+              this.loading = false;
+            }
+          },
+
+          highlight(text) {
+            if (!this.query) return text;
+            const pattern = new RegExp(`(${this.query})`, "gi");
+            return text.replace(
+              pattern,
+              `<mark class='bg-yellow-200 font-semibold'>$1</mark>`
+            );
+          },
+
+          totalPages() {
+            return Math.ceil(this.total / this.offset);
+          },
+
+          nextPage() {
+            if (this.page < this.totalPages()) {
+              this.page++;
+              this.fetchResults();
+            }
+          },
+
+          prevPage() {
+            if (this.page > 1) {
+              this.page--;
+              this.fetchResults();
+            }
+          },
+
+          goToPage(num) {
+            if (num >= 1 && num <= this.totalPages()) {
+              this.page = num;
+              this.fetchResults();
+            }
+          },
+        };
+      }
+    </script>
+  </body>
+</html>

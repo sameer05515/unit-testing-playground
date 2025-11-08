@@ -1,0 +1,27 @@
+{
+  "name": "multiplication-app-with-params",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run build:css && http-server public -o",
+    "dev": "concurrently \"tailwindcss -i styles/tailwind.css -o public/multiplication-app.css --watch\" \"http-server public -o\"",
+    "build:css": "tailwindcss -i styles/tailwind.css -o public/multiplication-app.css --minify",
+    "format": "prettier --write \"public/**/*.{html,js,css}\" \"test/**/*.js\" \"*.{js,json,md}\"",
+    "test": "karma start --single-run"
+  },
+  "devDependencies": {
+    "angular": "^1.8.3",
+    "angular-mocks": "^1.8.3",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1",
+    "jasmine-core": "^5.1.2",
+    "karma": "^6.4.2",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-jasmine": "^5.1.0",
+    "karma-ng-html2js-preprocessor": "^1.0.0",
+    "postcss": "^8.4.38",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.13"
+  }
+}

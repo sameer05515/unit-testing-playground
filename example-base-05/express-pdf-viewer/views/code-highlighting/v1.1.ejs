@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markdown with Code Highlighting</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+    <!-- Highlight.js CSS (GitHub Dark Theme) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    />
+
+    <style>
+      /* Theme Variables */
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --ul-bg-color: #f8f9fa;
+        --ul-text-color: #000000;
+      }
+
+      /* Dark Mode Variables */
+      .dark-mode {
+        --bg-color: #212529;
+        --text-color: #ffffff;
+        --ul-bg-color: #333;
+        --ul-text-color: #f8f9fa;
+      }
+
+      /* Apply Theme */
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+      }
+
+      /* Theme Toggle Button */
+      .theme-toggle-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        background: transparent;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="themeToggleBtn" class="theme-toggle-btn">🌞</button>
+    <button id="prevBtn" title="Prev" class="btn btn-outline-success">⬅️</button>
+    <button id="nextBtn" title="Next" class="btn btn-outline-success">➡️</button>
+
+    <div class="container mt-5">
+      <h2 class="mb-4 text-center">Markdown Rendered Below</h2>
+
+      <div id="content" class="border p-3 rounded shadow-sm"></div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Marked.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.0/marked.min.js"></script>
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+      marked.setOptions({
+        gfm: true,
+        breaks: true,
+      });
+      // Apply syntax highlighting
+      hljs.highlightAll();
+
+      //Sample md text
+      const markdownText = `
+# Welcome to Markdown with Highlight.js and Bootstrap 5 🚀
+
+## Code Example:
+\`\`\`javascript
+function greet(name) {
+    return \`Hello, \${name}!\`;
+}
+console.log(greet("World"));
+\`\`\`
+
+## Another Example (Python):
+\`\`\`python
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("World"))
+\`\`\`
+`;
+
+      // Render Markdown content
+      document.getElementById("content").innerHTML = marked.parse(markdownText);
+
+      //Dynamic md content display using navigation buttons, slugs and api calls
+      (() => {
+        const slugs = [
+          "16Jan2025.aws-cloud--explain-the-purpose-of-kubernetes-configuration-files-in-application-deployment.md",
+          "16Jan2025.aws-cloud--how-would-you-configure-a-ci-and-cd-pipeline-using-jenkins-for-automated-deployments.md",
+          "16Jan2025.aws-cloud--how-would-you-programmatically-upload-a-file-to-an-s3-bucket-using-aws-sdk.md",
+          "16Jan2025.aws-cloud--what-are-the-key-steps-for-manually-deploying-a-java-application.md",
+          "16Jan2025.aws-cloud--what-are-the-key-steps-to-manage-an-rds-database-in-aws.md",
+          "16Jan2025.aws-cloud--what-is-docker-and-how-does-it-ensure-consistent-deployments.md",
+          "16Jan2025.design-patterns--provide-an-example-of-using-the-singleton-pattern-in-java.md",
+          "16Jan2025.design-patterns--what-are-the-key-benefits-of-using-the-factory-pattern-in-enterprise-applications.md",
+          "16Jan2025.enterprise-application-development--how-do-you-handle-concurrency-in-largescale-applications.md",
+          "16Jan2025.enterprise-application-development--why-is-immutability-important-in-java-provide-a-practical-example.md",
+          "16Jan2025.java--compare-arraylist-and-linkedlist-in-terms-of-usage-and-performance.md",
+          "16Jan2025.java--compare-microservices-and-monolithic-architectures-with-examples.md",
+          "16Jan2025.java--compare-resttemplate-and-webclient-for-consuming-rest-apis.md",
+          "16Jan2025.java--compare-the-criteria-api-and-hql-with-examples.md",
+          "16Jan2025.java--explain-how-to-handle-instance-failures-in-microservices-using-retries-or-circuit-breakers.md",
+          "16Jan2025.java--explain-the-key-differences-between-oauth2-and-jwt-for-securing-apis.md",
+          "16Jan2025.java--explain-the-stream-api-and-provide-an-example-of-filtering-and-sorting-a-collection.md",
+          "16Jan2025.java--how-do-you-ensure-thread-safety-in-a-multithreaded-java-application.md",
+          "16Jan2025.java--how-do-you-implement-jwt-for-authentication-and-authorization-in-spring-boot.md",
+          "16Jan2025.java--how-do-you-secure-microservices-using-oauth2-and-spring-security.md",
+          "16Jan2025.java--how-does-spring-boot-enable-service-registration-and-discovery-in-a-microservices-architecture.md",
+          "16Jan2025.java--how-is-a-restcontroller-different-from-a-controller-in-spring-boot.md",
+          "16Jan2025.java--how-would-you-create-and-handle-a-custom-exception-in-java.md",
+          "16Jan2025.java--how-would-you-implement-a-circuit-breaker-in-a-spring-boot-microservices-application.md",
+          "16Jan2025.java--what-are-lambda-expressions-and-how-do-they-differ-from-anonymous-classes.md",
+          "16Jan2025.java--what-is-the-difference-between-callable-and-runnable-interfaces.md",
+          "16Jan2025.java--what-is-the-difference-between-lazy-and-eager-loading-in-hibernate-provide-examples.md",
+          "16Jan2025.java--what-is-the-purpose-of-controlleradvice-in-spring-boot-applications.md",
+          "16Jan2025.java--write-a-sample-restcontroller-with-getmapping-and-postmapping.md",
+          "16Jan2025.miscellaneous--drivermanager--compare-statement-preparedstatement-and-callablestatement-with-examples.md",
+          "16Jan2025.miscellaneous--jmx-n-mxbeans--what-is-the-role-of-jmx-in-monitoring-java-applications.md",
+          "16Jan2025.miscellaneous--kafka-messaging--how-would-you-troubleshoot-and-handle-failures-in-a-kafka-messaging-system.md",
+          "17Jan2025.java--programs--demonstration-of-the-use-the-of-arraylist-and-linkedlist.md",
+          "17Jan2025.java--programs--to-demonstrate-polymorphism-in-java.md",
+          "17Jan2025.javascript--asynchronous-programming--how-can-you-handle-errors-in-an-async-function-using-trycatch-provide-an-example.md",
+          "17Jan2025.javascript--asynchronous-programming--write-a-code-snippet-to-fetch-data-from-an-api-using-both-fetch-and-axios.md",
+          "17Jan2025.javascript--es6-concepts--explain-the-differences-between-filter-and-map-with-a-practical-use-case.md",
+          "17Jan2025.javascript--es6-concepts--give-an-example-of-using-map-to-transform-an-array.md",
+          "17Jan2025.javascript--es6-concepts--how-do-arrow-functions-differ-from-regular-functions-in-terms-of-syntax-this-binding-and-usage.md",
+          "17Jan2025.javascript--es6-concepts--what-are-the-differences-between-let-const-and-var-in-terms-of-scope-and-reassignability.md",
+          "17Jan2025.javascript--es6-concepts--when-would-you-use-reduce-instead-of-foreach-provide-an-example.md",
+          "17Jan2025.javascript--event-loop--describe-the-event-loop-and-how-it-manages-the-call-stack-and-web-apis.md",
+          "17Jan2025.javascript--event-loop--explain-the-difference-between-callbacks-promises-and-asyncawait-in-javascript-provide-examples.md",
+          "17Jan2025.javascript--event-loop--why-is-javascript-called-a-singlethreaded-language-and-how-does-the-event-loop-manage-asynchronous-tasks.md",
+          "17Jan2025.peer-code-review--how-can-constructive-feedback-improve-code-quality-during-a-code-review.md",
+          "17Jan2025.peer-code-review--what-are-the-key-points-to-consider-when-conducting-a-peer-code-review.md",
+          "17Jan2025.reactjs--basics--differences-between-usememo-and-usecallback--with-examples.md",
+          "17Jan2025.reactjs--basics--key-differences-between-functional-and-class-components.md",
+          "17Jan2025.reactjs--basics--process-to-optimize-performance-in-react-using-reactmemo.md",
+          "17Jan2025.reactjs--basics--usage-of-usestate-and-useeffect-hooks-with-examples.md",
+          "17Jan2025.reactjs--css-in-react--advantages-of-using-styledcomponents-or-material-ui-or-tailwindcss.md",
+          "17Jan2025.reactjs--css-in-react--how-does-the-css-box-model-work--provide-an-example.md",
+          "17Jan2025.reactjs--redux-and-state-management--context-api-and-redux--preference-criteria-to-use-them.md",
+          "17Jan2025.reactjs--redux-and-state-management--integration-of-redux-with-react--with-example-using-useselector-and-usedispatch.md",
+          "17Jan2025.reactjs--redux-and-state-management--role-of-reducers-and-actions-in-redux.md",
+          "file1.md",
+          "file2.md",
+        ];
+
+        const navigations = {
+          selectedIndex: 0,
+          nextIndex: 1,
+        };
+
+        //   const nextBtn = document.getElementById("nextBtn");
+        const updateMDContent = (direction = 1) => {
+          if (!direction) return;
+
+          fetch(`/code-highlighting/questions/${slugs[navigations.nextIndex]}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json(); // Parsing JSON response
+            })
+            .then((data) => {
+              // console.log("Fetched Data:", data);
+              document.getElementById("content").innerHTML = marked.parse(data.content);
+              navigations.nextIndex = (navigations.nextIndex + direction + slugs.length) % slugs.length;
+              // 🔥 Reapply syntax highlighting
+              hljs.highlightAll();
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        };
+
+        document.getElementById("prevBtn").addEventListener("click", () => {
+          updateMDContent(-1);
+        });
+        document.getElementById("nextBtn").addEventListener("click", () => {
+          updateMDContent(1);
+        });
+      })();
+
+      // Theme Toggle Logic
+      (() => {
+        const body = document.body;
+        const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+        function updateTheme() {
+          const isDark = body.classList.contains("dark-mode");
+          themeToggleBtn.textContent = isDark ? "🌞" : "🌙";
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+        }
+
+        themeToggleBtn.addEventListener("click", () => {
+          body.classList.toggle("dark-mode");
+          updateTheme();
+        });
+
+        // Apply saved theme on page load
+        if (localStorage.getItem("theme") === "dark") {
+          body.classList.add("dark-mode");
+        }
+        updateTheme();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Welcome!!!</h1>
+    <h2>'/analyse-cgpt/api/step-1-fetch-all-snapshot-names/itr1' api ka result</h2>
+    <div id="root" style="white-space: pre-wrap"></div>
+    <script>
+      fetch("/analyse-cgpt/api/step-1-fetch-all-snapshot-names/itr1")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          document.getElementById("root").innerText = JSON.stringify(data, null, 2);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          document.getElementById("root").innerText = JSON.stringify(error, null, 2);
+        });
+    </script>
+  </body>
+</html>

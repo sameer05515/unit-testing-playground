@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Express App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+      body {
+        background-color: black;
+      }
+      .file-list {
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+      }
+      .pdf-container {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        background: #222;
+        padding: 10px;
+      }
+      canvas {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #ddd;
+        background: white;
+        margin-bottom: 20px;
+      }
+      .btn-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body x-data="{ showList: window.innerWidth > 768 }">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-2 shadow">
+      <a class="navbar-brand fw-bold" href="/">📂 My App</a>
+
+      <div class="d-flex flex-grow-1 justify-content-center">
+        <% if (details) { %>
+        <span class="badge bg-light text-dark p-2 rounded">
+          <strong><%= slug %></strong> &middot; <span id="currentPage">1</span> / <span id="totalPages">?</span>
+        </span>
+        <% } %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-light" @click="showList = !showList">
+          <span x-text="showList ? '📂 Hide List' : '📂 Show List'"></span>
+        </button>
+        <% if (details) { %>
+        <a href="/pdf-viewer/v3/?slug=<%= details.prevSlug %>" title="Prev" class="btn btn-outline-light">⏪</a>
+        <a href="/pdf-viewer/v3/?slug=<%= details.nextSlug %>" title="Next" class="btn btn-outline-light">⏩</a>
+        <% } %>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid mt-1">
+      <div class="row">
+        <!-- Sidebar (File List) -->
+        <div id="listCol" x-show="showList" x-transition class="col-md-3 col-lg-2 file-list bg-dark text-white p-2">
+          <ul class="list-group">
+            <% files.forEach(file => { %>
+            <li class="text-break list-group-item bg-dark border-light <%= slug === file.slug ? 'active' : '' %>">
+              <a href="/pdf-viewer/v3/?slug=<%= file.slug %>" class="text-decoration-none text-light d-block p-2">
+                <%= file.slug %>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+
+        <!-- PDF Viewer -->
+        <div id="contentCol" :class="showList ? 'col-md-9 col-lg-10' : 'col-12'" class="pdf-container">
+          <% if (details) { %>
+          <div class="btn-container">
+            <button id="prevPageBtn" class="btn btn-secondary">⬅ Prev Page</button>
+            <button id="nextPageBtn" class="btn btn-secondary">Next Page ➡</button>
+          </div>
+
+          <div id="pdfContainer"></div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              const url = "/pdf-viewer/v3/pdf/<%= slug %>"; 
+              let pdfDoc = null;
+              let currentPage = 1;
+              let totalPages = 0;
+              let isRendering = false;
+              const pdfContainer = document.getElementById("pdfContainer");
+              const prevPageBtn = document.getElementById("prevPageBtn");
+              const nextPageBtn = document.getElementById("nextPageBtn");
+              const currentPageSpan = document.getElementById("currentPage");
+              const totalPagesSpan = document.getElementById("totalPages");
+
+              function renderPage(pageNumber) {
+                if (isRendering) return;
+                isRendering = true;
+
+                pdfDoc.getPage(pageNumber).then(page => {
+                  const canvas = document.createElement("canvas");
+                  const ctx = canvas.getContext("2d");
+                  const viewport = page.getViewport({ scale: 1.5 });
+
+                  canvas.width = viewport.width;
+                  canvas.height = viewport.height;
+
+                  pdfContainer.appendChild(canvas);
+                  currentPageSpan.textContent = pageNumber;
+
+                  const renderTask = page.render({ canvasContext: ctx, viewport: viewport });
+                  renderTask.promise.then(() => {
+                    isRendering = false;
+                    observeLastCanvas(); 
+                  });
+                });
+              }
+
+              function observeLastCanvas() {
+                const canvases = document.querySelectorAll("canvas");
+                if (canvases.length === 0) return;
+
+                const lastCanvas = canvases[canvases.length - 1];
+                const observer = new IntersectionObserver(entries => {
+                  if (entries[0].isIntersecting && currentPage < totalPages) {
+                    renderPage(++currentPage);
+                  }
+                }, { threshold: 0.5 });
+
+                observer.observe(lastCanvas);
+              }
+
+              pdfjsLib.getDocument(url).promise.then(pdf => {
+                pdfDoc = pdf;
+                totalPages = pdf.numPages;
+                totalPagesSpan.textContent = totalPages;
+
+                renderPage(currentPage);
+              });
+
+              prevPageBtn.addEventListener("click", () => {
+                if (currentPage > 1) {
+                  currentPage--;
+                  pdfContainer.innerHTML = "";
+                  renderPage(currentPage);
+                }
+              });
+
+              nextPageBtn.addEventListener("click", () => {
+                if (currentPage < totalPages) {
+                  currentPage++;
+                  pdfContainer.innerHTML = "";
+                  renderPage(currentPage);
+                }
+              });
+            });
+          </script>
+          <% } else { %>
+          <p class="text-muted">Select a file to view details.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

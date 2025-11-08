@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zdog Rotating Sphere</title>
+  <script src="https://cdn.jsdelivr.net/npm/zdog@1.1.3/dist/zdog.dist.min.js"></script>
+</head>
+<body>
+    <canvas></canvas>
+  <script>
+    const illo = new Zdog.Illustration({
+      element: 'canvas',
+      dragRotate: true,
+    });
+
+    new Zdog.Shape({
+      addTo: illo,
+      stroke: 80,
+      color: '#636',
+    });
+
+    function animate() {
+      illo.rotate.y += 0.03;
+      illo.updateRenderGraph();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

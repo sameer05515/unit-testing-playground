@@ -1,0 +1,25 @@
+.home-page {
+  background: radial-gradient(circle at top, var(--app-hero-top-gradient), transparent 60%),
+    radial-gradient(circle at bottom, var(--app-hero-bottom-gradient), transparent 55%);
+  transition: background 0.2s ease;
+
+  .hero-image {
+    max-height: 420px;
+    object-fit: cover;
+  }
+
+  .chapter-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--app-card-shadow);
+    }
+  }
+
+  .intro-text {
+    p + p {
+      margin-top: 1rem;
+    }
+  }
+}

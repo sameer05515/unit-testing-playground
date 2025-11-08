@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table Generator</title>
+    <!-- <script type="module" src="/table-generator/script.v2.mjs"></script> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+    <button id="generateBtn" class="px-6 py-2 mb-4 text-white bg-blue-600 rounded hover:bg-blue-700">
+      
+    </button>
+
+    <div id="messageDiv"></div>
+
+    <div id="output" class="w-full max-w-xs p-4 bg-white shadow rounded"></div>
+
+    <script type="module">
+      import { bootstrap } from "/table-generator/script.v2.mjs";
+      const givenNum = "<%-givenNum%>";
+      bootstrap(+givenNum || 0);
+    </script>
+  </body>
+</html>

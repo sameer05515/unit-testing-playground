@@ -1,0 +1,242 @@
+[
+  {
+    "id": "CONVERSATIONS_23_MAY_2023",
+    "order": 1,
+    "location": "/data/sample-conversations1.json",
+    "isLatest": false,
+    "createdOn": "2023-05-22",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_31_MAY_2023",
+    "order": 2,
+    "location": "/data/sample-conversations2.json",
+    "isLatest": false,
+    "createdOn": "2023-05-30",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_15_AUG_2023",
+    "order": 3,
+    "location": "/data/sample-conversations3.json",
+    "isLatest": false,
+    "createdOn": "2023-08-14",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_09_MAY_2024",
+    "order": 4,
+    "location": "/data/conversations-09-May-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-05-08",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_10_MAY_2024",
+    "order": 5,
+    "location": "/data/conversations-10-May-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-05-09",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_12_MAY_2024",
+    "order": 6,
+    "location": "/data/conversations-12-May-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-05-11",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_24_MAY_2024",
+    "order": 7,
+    "location": "/data/conversations-24-May-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-05-23",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_27_MAY_2024",
+    "order": 8,
+    "location": "/data/conversations-27-May-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-05-26",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_17_JUNE_2024",
+    "order": 9,
+    "location": "/data/conversations-17-June-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-06-16",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_12_JULY_2024",
+    "order": 10,
+    "location": "/data/conversations-12-July-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-07-11",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_15_JULY_2024_NANDINI",
+    "order": 11,
+    "location": "/data/conversations_15_July_2024_Nandini.json",
+    "isLatest": false,
+    "createdOn": "2024-07-14",
+    "createdBy": "NANDINI"
+  },
+  {
+    "id": "CONVERSATIONS_20_JULY_2024",
+    "order": 12,
+    "location": "/data/conversations-20-July-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-07-19",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_15_Aug_2024",
+    "order": 13,
+    "location": "/data/conversations-15-Aug-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-08-14",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_18_Aug_2024",
+    "order": 14,
+    "location": "/data/conversations-18-Aug-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-08-17",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_19_Aug_2024",
+    "order": 15,
+    "location": "/data/conversations-19-Aug-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-08-18",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_25_Aug_2024",
+    "order": 16,
+    "location": "/data/conversations-25-Aug-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-08-24",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_30_Aug_2024",
+    "order": 17,
+    "location": "/data/conversations-30-Aug-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-08-29",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_06_SEP_2024",
+    "order": 18,
+    "location": "/data/conversations-06-Sep-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-09-05",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_24_SEP_2024",
+    "order": 19,
+    "location": "/data/conversations-24-Sep-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-09-23",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_23_OCT_2024",
+    "order": 20,
+    "location": "/data/conversations-23-Oct-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-10-22",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_29_NOV_2024",
+    "order": 21,
+    "location": "/data/conversations-29-Nov-2024.json",
+    "isLatest": false,
+    "createdOn": "2024-11-28",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_05_JAN_2025",
+    "order": 22,
+    "location": "/data/conversations-05-Jan-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-01-04",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_12_JAN_2025",
+    "order": 23,
+    "location": "/data/conversations-12-Jan-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-01-11",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_29_JAN_2025",
+    "order": 24,
+    "location": "/data/conversations-29-Jan-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-01-28",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_08_FEB_2025",
+    "order": 25,
+    "location": "/data/conversations-08-Feb-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-02-07",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_15_FEB_2025",
+    "order": 26,
+    "location": "/data/conversations-15-Feb-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-02-14",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_17_FEB_2025",
+    "order": 27,
+    "location": "/data/conversations-17-Feb-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-02-16",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_19_FEB_2025",
+    "order": 28,
+    "location": "/data/conversations-19-Feb-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-02-18",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_26_FEB_2025",
+    "order": 29,
+    "location": "/data/conversations-26-Feb-2025.json",
+    "isLatest": false,
+    "createdOn": "2025-02-25",
+    "createdBy": "PREMENDRA"
+  },
+  {
+    "id": "CONVERSATIONS_03_MAR_2025",
+    "order": 30,
+    "location": "/data/conversations-03-Mar-2025.json",
+    "isLatest": true,
+    "createdOn": "2025-03-02",
+    "createdBy": "PREMENDRA"
+  }
+]

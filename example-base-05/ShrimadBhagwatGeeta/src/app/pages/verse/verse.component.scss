@@ -1,0 +1,55 @@
+.verse-page {
+  background-color: var(--app-surface-bg);
+  transition: background-color 0.2s ease;
+
+  .verse-header {
+    background: linear-gradient(135deg, #198754, #0d6efd);
+  }
+
+  .verse-block {
+    background-color: var(--app-verse-block-secondary);
+    border-radius: 0.5rem;
+    padding: 1rem;
+
+    & > * + * {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .sanskrit-line {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .transliteration-line {
+    font-size: 1rem;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .audio-wrapper {
+    background-color: var(--app-audio-bg);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+  }
+
+  audio {
+    width: 100%;
+  }
+
+  .commentary-block {
+    background-color: var(--app-commentary-bg);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--app-border-color);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .commentary-highlight {
+    text-align: center;
+    font-weight: 700;
+  }
+}
+

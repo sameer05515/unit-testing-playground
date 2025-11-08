@@ -1,0 +1,40 @@
+@use "bootstrap/scss/bootstrap";
+
+:root {
+  --app-body-bg: #eef1f6;
+  --app-surface-bg: #f5f7fa;
+  --app-text-color: #212529;
+  --app-hero-top-gradient: rgba(13, 110, 253, 0.08);
+  --app-hero-bottom-gradient: rgba(25, 135, 84, 0.08);
+  --app-card-shadow: 0 0.75rem 2.25rem rgba(13, 110, 253, 0.15);
+  --app-border-color: rgba(13, 110, 253, 0.1);
+  --app-audio-bg: rgba(13, 110, 253, 0.08);
+  --app-verse-block-primary: rgba(13, 110, 253, 0.05);
+  --app-verse-block-secondary: rgba(25, 135, 84, 0.05);
+  --app-commentary-bg: #ffffff;
+}
+
+[data-bs-theme='dark'] {
+  --app-body-bg: #0f172a;
+  --app-surface-bg: #111827;
+  --app-text-color: #e2e8f0;
+  --app-hero-top-gradient: rgba(13, 110, 253, 0.25);
+  --app-hero-bottom-gradient: rgba(25, 135, 84, 0.25);
+  --app-card-shadow: 0 0.75rem 2.25rem rgba(13, 110, 253, 0.35);
+  --app-border-color: rgba(125, 211, 252, 0.35);
+  --app-audio-bg: rgba(13, 110, 253, 0.18);
+  --app-verse-block-primary: rgba(13, 110, 253, 0.18);
+  --app-verse-block-secondary: rgba(25, 135, 84, 0.18);
+  --app-commentary-bg: #1f2937;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--app-body-bg);
+  color: var(--app-text-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a {
+  text-decoration: none;
+}

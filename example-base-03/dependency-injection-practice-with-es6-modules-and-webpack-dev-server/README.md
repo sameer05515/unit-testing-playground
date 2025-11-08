@@ -1,3 +1,22 @@
+# Backend resume service application
+
+```
+cd D:\GIT\my-backup\CMD123\10-May-2024\ ; Get-ChildItem -Name; .\resume-service-backend.bat
+```
+
+OR
+
+```
+@echo off
+
+title "express-pdf-viewer"
+set CURRENT_DIR=%cd%
+cd D:\GIT\unit-testing-playground\example-base-05\express-pdf-viewer
+D:
+npm run dev:v2
+```
+
+
 # 4 ways to start this project, containing javascript modules
 
 ## [without npm] using `http-server` 

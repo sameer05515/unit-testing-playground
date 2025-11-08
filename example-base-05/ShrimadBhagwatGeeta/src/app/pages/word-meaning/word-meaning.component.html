@@ -1,0 +1,91 @@
+<section class="word-meaning-page py-4">
+  <div class="container" *ngIf="detail$ | async as detail; else loading">
+    <ng-container *ngIf="detail; else notFound">
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="word-header p-4 rounded text-white d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
+            <div>
+              <h1 class="h3 mb-1" i18n="@@wordHeading">Occurrences of "{{ detail.id }}"</h1>
+              <p class="mb-0 text-white-75" i18n="@@wordSubheading">
+                Explore the Sanskrit word usage across verses and quickly jump to the referenced shloks.
+              </p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <a routerLink="/" class="btn btn-outline-light btn-sm" i18n="@@wordHomeCta">Home</a>
+              <a
+                *ngIf="detail.previousWMRoute"
+                [routerLink]="detail.previousWMRoute"
+                class="btn btn-light btn-sm"
+                i18n="@@wordPreviousCta"
+              >
+                Previous
+              </a>
+              <a
+                *ngIf="detail.nextWMRoute"
+                [routerLink]="detail.nextWMRoute"
+                class="btn btn-light btn-sm"
+                i18n="@@wordNextCta"
+              >
+                Next
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" i18n="@@wordTableHeaderWord">Word</th>
+                    <th scope="col" i18n="@@wordTableHeaderMeaning">Meaning</th>
+                    <th scope="col" i18n="@@wordTableHeaderReference">Reference</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of detail.data">
+                    <td class="fw-semibold">{{ row.word }}</td>
+                    <td>{{ row.meaning }}</td>
+                    <td>
+                      <a
+                        *ngIf="row.route; else referenceText"
+                        [routerLink]="row.route"
+                        class="link-primary text-decoration-none"
+                      >
+                        {{ row.referenceHeader }}
+                      </a>
+                      <ng-template #referenceText>
+                        <span i18n="@@wordReferenceFallback">{{ row.referenceHeader }}</span>
+                      </ng-template>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden" i18n="@@wordLoadingLabel">Loading word meanings…</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #notFound>
+  <section class="py-5">
+    <div class="container">
+      <div class="alert alert-warning" role="alert">
+        <span i18n="@@wordMissingMessage">Requested word meaning entry was not found. Return to the</span>
+        <a routerLink="/" class="alert-link" i18n="@@wordMissingHomeLink">home page</a>.
+      </div>
+    </div>
+  </section>
+</ng-template>
+
