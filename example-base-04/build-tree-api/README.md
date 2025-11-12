@@ -16,6 +16,12 @@ Express + EJS playground that wraps the `buildTree` indentation utility in both 
    ```
 3. Open `http://localhost:3000` and paste an indented outline. Submit the form to render the tree on the page or use the “Call JSON API” button to inspect the REST response.
 
+## Testing & Coverage
+
+- Run the full unit + e2e suite: `npm test`
+- Generate coverage reports: `npm run test:coverage` (uses `c8`, outputs to `coverage/`)
+- Tests rely on the exported Express app, so no server needs to be running beforehand.
+
 ## API
 
 `POST /api/build-tree`

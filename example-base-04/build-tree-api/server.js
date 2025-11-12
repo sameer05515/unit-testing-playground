@@ -76,8 +76,12 @@ app.use((req, res) => {
   res.status(404).render('404', { path: req.path });
 });
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`build-tree-api listening on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`build-tree-api listening on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
 
