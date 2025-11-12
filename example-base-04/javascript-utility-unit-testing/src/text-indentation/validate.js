@@ -9,49 +9,27 @@ const areAllLevelsEqual = (levels) => {
     return uniqueLevels.length === 1;
 };
 
-// Function to calculate the difference between consecutive indentation levels
-const calculateDifferences = (levels) => {
-    const differences = [];
-    for (let i = 1; i < levels.length; i++) {
-        differences.push(levels[i] - levels[i - 1]);
+const normalizeLines = (lines) => lines.map(line => line.replace(/\s+$/, ''));
+
+const gcd = (a, b) => {
+    const absA = Math.abs(a);
+    const absB = Math.abs(b);
+    if (absB === 0) {
+        return absA;
     }
-    return differences;
+    return gcd(absB, absA % absB);
 };
 
-// Function to check if differences are consistent
-const areDifferencesConsistent = (differences) => {
-    const firstDifference = differences[0];
-    return differences.every(diff => diff === firstDifference || diff % firstDifference === 0);
-};
-
-// Function to build the hierarchical tree from lines
-const buildTreeFromLines = (lines, firstIndentation, firstDifference) => {
-    const result = [];
-    const stack = [{ name: lines[0].trim(), level: 0, children: [] }];
-    result.push(stack[0]);
-
-    for (let i = 1; i < lines.length; i++) {
-        const level = (getIndentationLevel(lines[i]) - firstIndentation) / firstDifference;
-        const node = { name: lines[i].trim(), level, children: [] };
-
-        while (stack.length > 0 && stack[stack.length - 1].level >= level) {
-            stack.pop();
-        }
-
-        if (stack.length > 0) {
-            stack[stack.length - 1].children.push(node);
-        }
-
-        stack.push(node);
-        result.push(node);
+const computeIndentUnit = (levels) => {
+    const positives = levels.filter(level => level > 0);
+    if (positives.length === 0) {
+        return 0;
     }
-
-    return result;
+    return positives.reduce((acc, level) => gcd(acc, level));
 };
 
-// Main validation function
 const validate = (input) => {
-    if (typeof input !== 'string') {
+    if (!Array.isArray(input)) {
         return {
             isValid: false,
             errorCode: ErrorCodes.INVALID_INPUT.code,
@@ -60,13 +38,23 @@ const validate = (input) => {
         };
     }
 
-    const lines = input.split('\n').map(line => line.trimRight()).filter(line => line.length > 0);
+    const hasNonString = input.some(line => typeof line !== 'string');
+    if (hasNonString) {
+        return {
+            isValid: false,
+            errorCode: ErrorCodes.INVALID_INPUT.code,
+            message: ErrorCodes.INVALID_INPUT.message,
+            data: []
+        };
+    }
+
+    const lines = normalizeLines(input).filter(line => line.length > 0);
 
     if (lines.length === 0) {
         return {
-            isValid: false,
-            errorCode: ErrorCodes.EMPTY_INPUT.code,
-            message: ErrorCodes.EMPTY_INPUT.message,
+            isValid: true,
+            errorCode: ErrorCodes.SUCCESS.code,
+            message: ErrorCodes.SUCCESS.message,
             data: []
         };
     }
@@ -81,7 +69,19 @@ const validate = (input) => {
     }
 
     const firstIndentation = getIndentationLevel(lines[0]);
-    const levels = lines.map(line => getIndentationLevel(line));
+    const levels = lines.map(line => {
+        const indentation = getIndentationLevel(line);
+        return indentation - firstIndentation;
+    });
+
+    if (levels.some(level => level < 0)) {
+        return {
+            isValid: false,
+            errorCode: ErrorCodes.INVALID_INDENTATION.code,
+            message: ErrorCodes.INVALID_INDENTATION.message,
+            data: []
+        };
+    }
 
     if (areAllLevelsEqual(levels)) {
         return {
@@ -92,8 +92,8 @@ const validate = (input) => {
         };
     }
 
-    const differences = calculateDifferences(levels);
-    if (!areDifferencesConsistent(differences)) {
+    const indentUnit = computeIndentUnit(levels);
+    if (indentUnit <= 0) {
         return {
             isValid: false,
             errorCode: ErrorCodes.INCONSISTENT_INDENTATION.code,
@@ -102,24 +102,48 @@ const validate = (input) => {
         };
     }
 
-    // Validate indentation
-    const firstDifference = differences[0];
-    if (firstDifference <= 0) {
+    const normalizedLevels = levels.map(level => level / indentUnit);
+    const hasInvalidLevel = normalizedLevels.some(level => !Number.isInteger(level) || level < 0);
+    if (hasInvalidLevel) {
         return {
             isValid: false,
-            errorCode: ErrorCodes.INVALID_INDENTATION.code,
-            message: ErrorCodes.INVALID_INDENTATION.message,
+            errorCode: ErrorCodes.INCONSISTENT_INDENTATION.code,
+            message: ErrorCodes.INCONSISTENT_INDENTATION.message,
             data: []
         };
     }
 
-    const result = buildTreeFromLines(lines, firstIndentation, firstDifference);
+    const roots = [];
+    const stack = [];
+
+    for (let index = 0; index < lines.length; index++) {
+        const level = normalizedLevels[index];
+        if (level > 0 && !stack[level - 1]) {
+            return {
+                isValid: false,
+                errorCode: ErrorCodes.INCONSISTENT_INDENTATION.code,
+                message: ErrorCodes.INCONSISTENT_INDENTATION.message,
+                data: []
+            };
+        }
+
+        const node = { name: lines[index].trim(), level, children: [] };
+
+        if (level === 0) {
+            roots.push(node);
+        } else {
+            stack[level - 1].children.push(node);
+        }
+
+        stack[level] = node;
+        stack.length = level + 1;
+    }
 
     return {
         isValid: true,
         errorCode: ErrorCodes.SUCCESS.code,
         message: ErrorCodes.SUCCESS.message,
-        data: result
+        data: roots
     };
 };
 

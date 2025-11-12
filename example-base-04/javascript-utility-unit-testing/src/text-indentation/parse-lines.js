@@ -1,8 +1,21 @@
-const ErrorCodes= require('./error-codes');
+const ErrorCodes = require('./error-codes');
 
 function parseLines(text) {
-    
-    if (!text || typeof text !== 'string') {
+    if (typeof text !== 'string') {
+        return {
+            isValid: false,
+            errorCode: ErrorCodes.INVALID_INPUT.code,
+            message: ErrorCodes.INVALID_INPUT.message,
+            data: []
+        };
+    }
+
+    const lines = text
+        .split('\n')
+        .map(line => line.trimRight())
+        .filter(line => line.length > 0);
+
+    if (lines.length === 0) {
         return {
             isValid: false,
             errorCode: ErrorCodes.EMPTY_INPUT.code,
@@ -10,16 +23,6 @@ function parseLines(text) {
             data: []
         };
     }
-    const lines = text.split('\n').map(line => line.trimRight()).filter(line => line.length > 0);
-
-    // if (lines.length === 0) {
-    //     return {
-    //         isValid: false,
-    //         errorCode: ErrorCodes.EMPTY_INPUT.code,
-    //         message: ErrorCodes.EMPTY_INPUT.message,
-    //         data: []
-    //     };
-    // }
 
     const indentationLevel = (line) => line.search(/\S/);
     const firstIndentation = indentationLevel(lines[0]);
@@ -43,4 +46,4 @@ function parseLines(text) {
     };
 }
 
-module.exports= parseLines;
+module.exports = parseLines;
