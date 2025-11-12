@@ -1,14 +1,20 @@
 # Promise-Practice REVISION Strategy
 
 ## Overview
-This project is designed to help you learn and practice various concepts related to Promises in JavaScript. The key concepts covered include:
+This project is designed to help you learn and practice various concepts related to Promises in JavaScript and their practical implementation in different environments. The key concepts covered include:
 
 1. **Creating Promises in JavaScript**
 2. **Consuming a Promise using `async/await` syntax**
 3. **Consuming a Promise using `then()`, `catch()`, and `finally()` syntax**
 4. **Consuming Promises for each value of a given input array, SEQUENTIALLY, using `async/await`**
 5. **Consuming Promises for each value of a given input array, SEQUENTIALLY, using Promise chaining via `Promise.resolve` and `Promise.finally`**
-6. **Consuming Promises for each value of a given input array, IN-PARALLEL, using `Promise.all`
+6. **Consuming Promises for each value of a given input array, IN-PARALLEL, using `Promise.all`**
+7. **Handling Promise errors and demonstrating robust error handling mechanisms**
+8. **Using `Promise.race` and `Promise.any` for competitive and tolerant Promise consumption**
+9. **Promise utilities for timeouts, delays (e.g., `Promise.withTimeout`, `setTimeout` with Promises)**
+10. **Fetching data from APIs and integrating with real-world backends using Promises**
+11. **Combining Promises with UI frameworks (React, Vue) for rendering asynchronous data**
+12. **Testing asynchronous code and Promises using test frameworks and utilities**
 
 ## Getting Started
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
@@ -16,6 +22,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 ### Prerequisites
 - Node.js (v12 or later recommended)
 - npm (v6 or later)
+- For some sub-projects (React, Vue), you may need `npx`, `create-react-app`, or `@vue/cli` as appropriate
 
 ### Installation
 1. Clone the repository:
@@ -65,7 +72,9 @@ To use webpack for bundling the project and webpack-dev-server for development, 
             ],
         },
         devServer: {
-            contentBase: path.join(__dirname, 'dist'),
+            static: {
+                directory: path.join(__dirname, 'dist'),
+            },
             compress: true,
             port: 6060,
         },
@@ -95,6 +104,8 @@ To use webpack for bundling the project and webpack-dev-server for development, 
   - **index.html**: The main HTML file.
   - **styles.css**: The CSS file for styling.
   - **app.js**: The JavaScript file containing the main logic and examples.
+- **test/**: (if present) Contains test cases for async/promise features.
+- **examples/**: (if present) Additional hands-on demonstrations.
 
 ## Learning Objectives
 This project focuses on the following key learning objectives:
@@ -117,19 +128,38 @@ Understand how to manage sequential Promises using `Promise.resolve` and `Promis
 ### 6. Parallel Promise Consumption with `Promise.all`
 Discover how to execute multiple Promises in parallel using `Promise.all`.
 
+### 7. Competitive/Optimistic/Partial Promise Resolution
+Use `Promise.race`, `Promise.any`, and `Promise.allSettled` for cases where only some or the first-resolved Promise matters.
+
+### 8. Error Handling Patterns
+Handle errors gracefully in both promise and async/await workflows.
+
+### 9. Promises in User Interfaces
+Use Promises to manage UI states, loading spinners, error banners, and interactions in frameworks like React and Vue.
+
+### 10. Integrating with APIs and Backends
+Consume backend data using fetch/XHR Promises and integrate with REST APIs or mock servers.
+
+### 11. Writing and Testing Async Code
+Explore how to test code that uses Promises with libraries like Jest or Mocha.
+
+### 12. Cancellation and Timeout Techniques
+Implement patterns for aborting or timing out Promises (e.g., with AbortController, limited timeouts, custom wrappers).
+
 ## Additional Notes
 - Ensure your development environment is set up with the necessary prerequisites.
 - Follow the examples in `app.js` to understand each concept thoroughly.
+- Explore sub-projects for advanced topics or integration examples.
 
 ## Contributing
-If you wish to contribute to this project, please fork the repository and submit a pull request.
+If you wish to contribute to this project, please fork the repository and submit a pull request. Add new promise patterns or real-world examples for others to learn from!
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 - Inspired by various JavaScript Promise tutorials and documentation.
-- Special thanks to ChatGPT for providing valuable assistance and making the development process smoother.
+- Special thanks to ChatGPT and the open-source community for guidance and idea sharing.
 
 ---
 
@@ -137,11 +167,16 @@ Happy Coding!
 
 
 
-# Sequence of projects to be referenced 
-1. **example-base-03\promise-practice**
-2. **example-base-03\promise-practice-in-react**
-3. **example-base-03\nodejs-backend**
-4. **example-base-03\promise-practice-with-commonjs-webpack**
-5. **example-base-03\d3-charts-es6-modules-with-webpack-dev-server**
-6. **example-base-03\dependency-injection-practice-with-es6-modules-and-http-server**
-7. **example-base-03\dependency-injection-practice-with-es6-modules-and-webpack-dev-server**
+# Sequence of projects to be referenced (Recommended order of study)
+1. **example-base-03/promise-practice**
+2. **example-base-03/promise-practice-in-react**
+3. **example-base-03/nodejs-backend**
+4. **example-base-03/promise-practice-with-commonjs-webpack**
+5. **example-base-03/d3-charts-es6-modules-with-webpack-dev-server**
+6. **example-base-03/dependency-injection-practice-with-es6-modules-and-http-server**
+7. **example-base-03/dependency-injection-practice-with-es6-modules-and-webpack-dev-server**
+8. **example-base-03/vue-crud** _(Vue 3, Axios, Promises in CRUD)_
+9. **example-base-03/angular-crud** _(Angular 18, HttpClient, Observables & Promises)_
+10. **example-base-03/jquery-TS-WebPack** _(TypeScript, jQuery, Promises with AJAX)_
+
+Feel free to explore each project and expand your understanding of Promises and async patterns across different JavaScript environments!
