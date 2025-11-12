@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build Tree API</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      main {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .cta-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .cta-group a {
+        display: inline-block;
+        padding: 0.85rem 1.75rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .cta-group a:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 20px rgba(37, 99, 235, 0.2);
+      }
+
+      .docs-list {
+        display: grid;
+        gap: 1rem;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .docs-list a {
+        display: block;
+        padding: 1rem 1.25rem;
+        border-radius: 14px;
+        border: 1px solid rgba(37, 99, 235, 0.15);
+        text-decoration: none;
+        color: #1e293b;
+        text-align: left;
+        transition: border-color 0.15s ease, transform 0.15s ease;
+      }
+
+      .docs-list a:hover {
+        border-color: rgba(37, 99, 235, 0.4);
+        transform: translateY(-1px);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Build Tree API</h1>
+        <p>
+          Convert indented outlines into a navigable hierarchy using the same utility that powers our unit-testing
+          playground.
+        </p>
+      </header>
+
+      <div class="cta-group">
+        <a href="<%= playgroundUrl %>">Open Playground</a>
+        <a href="/docs/swagger">Swagger UI</a>
+        <a href="/docs/redoc">Redoc</a>
+      </div>
+
+      <section>
+        <h2>Documentation</h2>
+        <div class="docs-list">
+          <% docs.forEach(doc => { %>
+            <a href="<%= doc.href %>"><%= doc.name %> &rarr;</a>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+

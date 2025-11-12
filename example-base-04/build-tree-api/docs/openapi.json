@@ -1,0 +1,165 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Build Tree API",
+    "version": "1.0.0",
+    "description": "API for converting indented text into a hierarchical tree structure."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/api/build-tree": {
+      "post": {
+        "summary": "Build a hierarchical tree from indented text",
+        "description": "Takes an indented plain-text outline and returns a structured tree with level metadata.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "textInput": {
+                    "type": "string",
+                    "description": "Indented text outline. Each indentation level should be consistent."
+                  }
+                },
+                "required": [
+                  "textInput"
+                ]
+              },
+              "examples": {
+                "ValidTree": {
+                  "value": {
+                    "textInput": "Root\\n    Child 1\\n        Grandchild 1\\n    Child 2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tree creation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildTreeResponse"
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "isValid": true,
+                      "errorCode": "SUCCESS",
+                      "message": "Success",
+                      "data": [
+                        {
+                          "name": "Root",
+                          "level": 0,
+                          "children": [
+                            {
+                              "name": "Child 1",
+                              "level": 1,
+                              "children": [
+                                {
+                                  "name": "Grandchild 1",
+                                  "level": 2,
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Child 2",
+                              "level": 1,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "InvalidIndentation": {
+                    "value": {
+                      "isValid": false,
+                      "errorCode": 3,
+                      "message": "Indentation levels are inconsistent.",
+                      "data": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TreeNode": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TreeNode"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "level",
+          "children"
+        ]
+      },
+      "BuildTreeResponse": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Whether the input passed validation."
+          },
+          "errorCode": {
+            "description": "Machine-readable code describing the validation state.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable validation message."
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TreeNode"
+            }
+          }
+        },
+        "required": [
+          "isValid",
+          "errorCode",
+          "message",
+          "data"
+        ]
+      }
+    }
+  }
+}
+
