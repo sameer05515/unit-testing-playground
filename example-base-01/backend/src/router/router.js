@@ -7,8 +7,15 @@ router.get('/', function(req, res, next) {
       if (err) {
         return next(err);
       }
-      const transformedResponse = body.products?.map(p => ({ title: p.title, description: p.description })) || [];
-      res.json(transformedResponse);
+
+      const products = Array.isArray(body?.products)
+        ? body.products.map((p) => ({
+            title: p.title,
+            description: p.description,
+          }))
+        : [];
+
+      res.json({ products });
     });
   });
 
