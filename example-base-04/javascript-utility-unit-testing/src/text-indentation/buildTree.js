@@ -1,6 +1,6 @@
 
-const validate= require('./validate');
-const parseLines= require('./parse-lines');
+const validate = require('./validate');
+const parseLines = require('./parse-lines');
 
 function buildTree(text) {
     const parsed = parseLines(text);
@@ -16,18 +16,4 @@ function buildTree(text) {
 
     return validate(parsed.data);
 }
-
-// Example Usage:
-const textInput = `
-    Node 1
-        Node 1.1
-        Node 1.2
-            Node 1.2.1
-    Node 2
-`;
-
-const result = buildTree(textInput);
-// console.log(result);
-
-
-module.exports= buildTree;
+module.exports = buildTree;

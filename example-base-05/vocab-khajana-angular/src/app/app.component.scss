@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.list-group-item {
+  border: 1px solid var(--bs-border-color-translucent);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.list-group-item + .list-group-item {
+  margin-top: 1rem;
+}
+
+.badge {
+  letter-spacing: 0.05em;
+}
+
+.btn-outline-secondary {
+  border-color: var(--bs-border-color);
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 2rem;
+        }
+        h1 {
+            margin-bottom: 1rem;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 0.625rem 0.75rem;
+            border: 1px solid #cbd5e1;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #f8fafc;
+        }
+        .error {
+            color: #b91c1c;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<h1>Registered Students</h1>
+<p class="error" id="error-banner" hidden></p>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Unique Id</th>
+        <th>Name</th>
+        <th>Date of Birth</th>
+    </tr>
+    </thead>
+    <tbody id="student-table-body">
+    <tr>
+        <td colspan="4">Loading students…</td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('student-table-body');
+        const errorBanner = document.getElementById('error-banner');
+
+        function showError(message) {
+            errorBanner.textContent = message;
+            errorBanner.hidden = false;
+        }
+
+        function renderStudents(students) {
+            tableBody.innerHTML = '';
+
+            if (!Array.isArray(students) || students.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 4;
+                cell.textContent = 'No students found.';
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+                return;
+            }
+
+            students.forEach(student => {
+                const row = document.createElement('tr');
+
+                ['id', 'uniqueId', 'name', 'dob'].forEach(key => {
+                    const cell = document.createElement('td');
+                    cell.textContent = student?.[key] ?? '';
+                    row.appendChild(cell);
+                });
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        fetch('/students')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load students data.');
+                }
+                return response.json();
+            })
+            .then(renderStudents)
+            .catch(error => {
+                tableBody.innerHTML = '';
+                showError(error.message || 'Unexpected error occurred.');
+            });
+    });
+</script>
+</body>
+</html>
+

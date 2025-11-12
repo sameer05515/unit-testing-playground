@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build Tree Playground</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Build Tree Playground</h1>
+        <p>Paste an indented outline and submit to see the computed hierarchy.</p>
+      </header>
+
+      <section class="panels">
+        <form id="build-tree-form" method="post" action="/playground">
+          <label for="textInput">Indented Text</label>
+          <textarea
+            id="textInput"
+            name="textInput"
+            rows="12"
+            placeholder="Root&#10;    Child 1&#10;        Grandchild 1&#10;    Child 2"
+          ><%= input %></textarea>
+          <div class="form-actions">
+            <button type="submit">Render Server-Side</button>
+            <button type="button" id="api-button">Call JSON API</button>
+          </div>
+        </form>
+
+        <div class="output">
+          <h2>Latest Result</h2>
+          <% if (error) { %>
+            <div class="alert error">
+              <h3>Validation Failed</h3>
+              <ul>
+                <li><strong>Code:</strong> <%= error.errorCode %></li>
+                <li><strong>Message:</strong> <%= error.message %></li>
+              </ul>
+            </div>
+          <% } else if (result) { %>
+            <div class="alert success">
+              <h3>Tree Generated</h3>
+              <p><strong>Status:</strong> <%= result.message %></p>
+            </div>
+            <pre id="server-result"><%= JSON.stringify(result.data, null, 2) %></pre>
+          <% } else { %>
+            <p>No results yet. Submit text to generate a tree.</p>
+          <% } %>
+
+          <div class="api-result">
+            <h3>API Response</h3>
+            <pre id="api-response" aria-live="polite">Click “Call JSON API” to load response…</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const apiButton = document.getElementById('api-button');
+      const textInput = document.getElementById('textInput');
+      const apiResponse = document.getElementById('api-response');
+
+      apiButton?.addEventListener('click', async () => {
+        apiButton.disabled = true;
+        apiResponse.textContent = 'Calling /api/build-tree…';
+
+        try {
+          const response = await fetch('/api/build-tree', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ textInput: textInput.value })
+          });
+
+          const payload = await response.json();
+          apiResponse.textContent = JSON.stringify(payload, null, 2);
+        } catch (error) {
+          apiResponse.textContent = `Request failed: ${error.message}`;
+        } finally {
+          apiButton.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
+

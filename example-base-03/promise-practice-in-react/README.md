@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# Promise Practice (React Edition)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React playground that mirrors the vanilla Promise demos found in `../promise-practice`, but rebuilt with modern React tooling. The app lets you browse Promise exercises, simulated APIs, and moment.js utilities by picking routes from a dropdown. Each example focuses on a different pattern: simple `useState` flows, reducer-driven state machines, chained async work, error handling, and data visualisation.
 
-## Available Scripts
+## Quick Start
 
-In the project directory, you can run:
+```powershell
+cd promise-practice-in-react
+npm install
+npm start
+```
 
-### `npm start`
+The development server runs on `http://localhost:3000`. Saving changes hot-reloads the browser.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Overview
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- `src/utils/promises.js` wraps a static employee dataset with Promise-based APIs (`fetchUsers`, `fetchUserDetailsForEmpCode`, `fetchUserAttendanceForDateRange`). Each call is randomized with configurable latency and success/failure probabilities.
+- `src/utils/router-constants.js` holds the entire route tree. `generateRoutes()` turns that config into `<Routes>` elements so new demos can be registered in one place.
+- `src/common/CustomSelect.jsx` renders a select control backed by the route config. Changing the selection triggers a `useNavigate` to the corresponding demo.
+- `src/common/ContainerComponent.jsx` is a layout primitive that supplies header/left/right/footer regions used across demos.
+- `src/components/sub-components/PromisePractice*.jsx` showcase different Promise techniques:
+  - **PromisePractice1** – basic `useState` loading/error flows.
+  - **PromisePractice2** – consolidated status/message reducer plus styling via `PROMISE_STATUS_CONSTANTS`.
+  - **PromisePracticeWithReducer** – full `useReducer` for Promise state transitions.
+  - **PromisePractice3** – sequential Promises with chained `.then()` calls fetching user lists and details.
+  - **PromisePractice4** – similar chain built around `Promise.resolve()` for improved readability and error propagation.
+  - **PromisePractice5** – extends the chain to a third async call producing attendance data and rendering tabular results.
+- `src/components/sub-components/MomentUsageBasicExamples.jsx` contains companion demos that exercise moment.js for date generation, input-driven ranges, and synthetic attendance flags.
 
-### `npm test`
+## Routing & Navigation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Routes are generated from `routeConfig`:
 
-### `npm run build`
+- `/` loads the `Parent` container, which displays the select box and renders child routes inside its footer via `<Outlet />`.
+- Child routes map to each Promise and Date demo. Toggle `displayInCombo` to control which options show up in the dropdown.
+- An inline `NotFound` component handles unmatched routes with a simple back button.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To add a new exercise:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Create the component under `src/components/sub-components/YourDemo.jsx`.
+2. Register it in `componentMap` and a `routeConfig` entry (set `displayInCombo: true` to expose it in the select).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Promise Simulation Controls
 
-### `npm run eject`
+Inside `src/utils/promises.js`:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `SKIP_SIMULATION` forces every Promise to resolve for deterministic demos.
+- `DEFAULT_THRESHOLD`, `MIN_TIMEOUT_IN_MS`, `MAX_TIMEOUT_IN_MS`, and the `timeoutInMS` argument let you tune success odds and artificial latency per call.
+- Helpers such as `generateEmployeeAttendanceData` and `generateDateRange` supply realistic payloads without a backend dependency.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Testing & Production Builds
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- `npm test` runs CRA's Jest setup (React Testing Library is pre-configured, though no custom specs ship with the project yet).
+- `npm run build` bundles the app for production.
+- `npm run eject` exposes the underlying CRA configuration (irreversible).
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Tips
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Open the browser console when running sequential demos (especially `PromisePractice4`/`5`) to see the detailed logging each step emits.
+- The moment-based demos accept `DD/MMM/YYYY` formatted strings. Extend the validation logic in `DateRangeComponentV2/V3` if you need stricter parsing or locale support.
+- Because all data is simulated locally, the app runs offline. Swap the Promise helpers with real API calls when you are ready to integrate with a backend.
