@@ -6,11 +6,27 @@
     <title>Build Tree API</title>
     <link rel="stylesheet" href="/styles.css" />
     <style>
+      body {
+        background: radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 55%),
+          #f8fafc;
+      }
+
       main {
         text-align: center;
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 2.5rem;
+      }
+
+      header {
+        display: grid;
+        gap: 1rem;
+      }
+
+      header p {
+        max-width: 640px;
+        margin: 0 auto;
+        color: #475569;
       }
 
       .cta-group {
@@ -22,41 +38,83 @@
 
       .cta-group a {
         display: inline-block;
-        padding: 0.85rem 1.75rem;
+        padding: 0.9rem 1.85rem;
         border-radius: 999px;
         text-decoration: none;
         font-weight: 600;
         color: #ffffff;
         background: linear-gradient(135deg, #2563eb, #7c3aed);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .cta-group a.secondary {
+        background: none;
+        color: #2563eb;
+        border: 1px solid rgba(37, 99, 235, 0.4);
+        backdrop-filter: blur(6px);
       }
 
       .cta-group a:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 20px rgba(37, 99, 235, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(37, 99, 235, 0.25);
       }
 
-      .docs-list {
+      .info-grid {
         display: grid;
-        gap: 1rem;
-        max-width: 480px;
-        margin: 0 auto;
+        gap: 1.5rem;
+        text-align: left;
       }
 
-      .docs-list a {
+      .info-grid section {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 1.75rem;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      .info-grid h2 {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+      }
+
+      .info-grid .docs-list {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .info-grid .docs-list a {
         display: block;
-        padding: 1rem 1.25rem;
+        padding: 0.9rem 1.1rem;
         border-radius: 14px;
-        border: 1px solid rgba(37, 99, 235, 0.15);
+        border: 1px solid rgba(37, 99, 235, 0.12);
         text-decoration: none;
         color: #1e293b;
-        text-align: left;
+        background: rgba(37, 99, 235, 0.02);
         transition: border-color 0.15s ease, transform 0.15s ease;
       }
 
-      .docs-list a:hover {
-        border-color: rgba(37, 99, 235, 0.4);
+      .info-grid .docs-list a:hover {
+        border-color: rgba(37, 99, 235, 0.45);
         transform: translateY(-1px);
+      }
+
+      .info-grid ul {
+        margin: 0;
+        padding-left: 1.25rem;
+        color: #475569;
+      }
+
+      .info-grid code {
+        font-family: 'Fira Code', Consolas, 'Courier New', monospace;
+        padding: 0.1rem 0.35rem;
+        background: rgba(148, 163, 184, 0.2);
+        border-radius: 0.35rem;
+      }
+
+      @media (min-width: 900px) {
+        .info-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
     </style>
   </head>
@@ -65,25 +123,55 @@
       <header>
         <h1>Build Tree API</h1>
         <p>
-          Convert indented outlines into a navigable hierarchy using the same utility that powers our unit-testing
-          playground.
+          Turn indented outlines into a structured tree with rich validation feedback. Explore the playground,
+          inspect our OpenAPI docs, or embed the utility in your own workflow.
         </p>
       </header>
 
       <div class="cta-group">
-        <a href="<%= playgroundUrl %>">Open Playground</a>
-        <a href="/docs/swagger">Swagger UI</a>
-        <a href="/docs/redoc">Redoc</a>
+        <a href="<%= playgroundUrl %>">Launch Playground</a>
+        <a class="secondary" href="/docs/swagger">Swagger UI</a>
+        <a class="secondary" href="/docs/redoc">Redoc</a>
       </div>
 
-      <section>
-        <h2>Documentation</h2>
-        <div class="docs-list">
-          <% docs.forEach(doc => { %>
-            <a href="<%= doc.href %>"><%= doc.name %> &rarr;</a>
-          <% }) %>
-        </div>
-      </section>
+      <div class="info-grid">
+        <section>
+          <h2>Quick Start</h2>
+          <ul>
+            <li>POST indented text to <code>/api/build-tree</code> and receive structured JSON output.</li>
+            <li>Reuse the same logic inline via the playground form for rapid experimentation.</li>
+            <li>Validation guards against empty input, inconsistent indentation, and malformed outlines.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Documentation</h2>
+          <p>Pick your preferred format to explore the service contract.</p>
+          <div class="docs-list">
+            <% docs.forEach(doc => { %>
+              <a href="<%= doc.href %>"><%= doc.name %> &rarr;</a>
+            <% }) %>
+          </div>
+        </section>
+
+        <section>
+          <h2>Feature Highlights</h2>
+          <ul>
+            <li>Hierarchical output preserves indentation depth as <code>level</code> metadata.</li>
+            <li>Simple error model with explicit <code>errorCode</code> and human-readable messages.</li>
+            <li>Shared utility layer with the unit-testing playground ensures parity between environments.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Integration Tips</h2>
+          <ul>
+            <li>Normalize input to spaces or tabs consistently before posting for predictable levels.</li>
+            <li>Wrap API calls in your own CLI or editor extension to preview outlines on the fly.</li>
+            <li>Combine with your favourite test runner to enforce indentation rules in lint pipelines.</li>
+          </ul>
+        </section>
+      </div>
     </main>
   </body>
 </html>
