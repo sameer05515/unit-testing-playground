@@ -18,6 +18,8 @@ The development server listens on `http://localhost:3000`.
 ## Available Endpoints
 
 - `GET /` – Health check and quick links to documentation.
+- `GET /welcome` – Rendered welcome page with navigation cards.
+- `GET /dashboard` – Server-rendered dashboard that consumes the JSON APIs.
 - `GET /api/employees` – Retrieve all employees.
 - `GET /api/employees/{id}` – Retrieve a single employee.
 - `POST /api/employees` – Create a new employee (expects `name` and `position`).
@@ -36,4 +38,10 @@ The development server listens on `http://localhost:3000`.
 - Raw OpenAPI JSON: [`http://localhost:3000/docs/openapi.json`](http://localhost:3000/docs/openapi.json)
 
 Both documentation portals are generated from the single `src/docs/openapi.js` definition.
+
+## Views
+
+- Templates live in `src/views/`.
+- The project uses EJS as the view engine (`npm install` already brings it in).
+- Visit `http://localhost:3000/welcome` or `http://localhost:3000/dashboard` for rendered pages that link to or consume the API.
 
