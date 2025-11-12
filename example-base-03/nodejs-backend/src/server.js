@@ -38,12 +38,6 @@ app.use('/api', employeeRoutes);
 app.use('/students', studentsRouter);
 
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Sample nodejs-backend is running. Visit /docs/swagger or /docs/redoc for API docs.'
-  });
-});
-
-app.get('/welcome', (req, res) => {
   res.render('welcome', {
     title: 'Welcome',
     description: 'Explore the sample API via the links below.',
@@ -54,6 +48,12 @@ app.get('/welcome', (req, res) => {
       { href: '/students', label: 'Students JSON' },
       { href: '/api/employees', label: 'Employees JSON' }
     ]
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({
+    message: 'Sample nodejs-backend is running. Visit /docs/swagger or /docs/redoc for API docs.'
   });
 });
 
