@@ -10,5 +10,10 @@ public class HomeController {
     public String welcome() {
         return "welcome";
     }
+
+    @GetMapping("/redoc")
+    public String redoc() {
+        return "redoc";
+    }
 }
 
