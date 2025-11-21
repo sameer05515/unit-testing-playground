@@ -35,9 +35,11 @@ const performanceMiddleware = (req, res, next) => {
       console.warn(`⚠️  Slow request: ${req.method} ${req.path} took ${duration.toFixed(2)}ms`);
     }
 
-    // Add performance headers
-    res.setHeader('X-Response-Time', `${duration.toFixed(2)}ms`);
-    res.setHeader('X-Memory-Delta', `${memoryDelta.toFixed(2)}MB`);
+    // Add performance headers only if headers haven't been sent yet
+    if (!res.headersSent) {
+      res.setHeader('X-Response-Time', `${duration.toFixed(2)}ms`);
+      res.setHeader('X-Memory-Delta', `${memoryDelta.toFixed(2)}MB`);
+    }
 
     // Call original end
     originalEnd.call(this, chunk, encoding);
