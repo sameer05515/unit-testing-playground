@@ -6,6 +6,11 @@
     <title>Comics Viewer</title>
     
     <!-- Tailwind CSS -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Alpine.js -->
@@ -19,12 +24,21 @@
         .sidebar-scroll::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
+        .dark .sidebar-scroll::-webkit-scrollbar-track {
+            background: #374151;
+        }
         .sidebar-scroll::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 4px;
         }
+        .dark .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
         .sidebar-scroll::-webkit-scrollbar-thumb:hover {
             background: #555;
+        }
+        .dark .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
         }
         
         /* PDF viewer container */
@@ -33,15 +47,15 @@
         }
     </style>
 </head>
-<body class="bg-gray-100" x-data="comicsViewer" x-init="init()">
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200" x-data="comicsViewer" x-init="init()">
     <!-- Header -->
-    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-50 h-20">
+    <header class="bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 right-0 z-50 h-20 transition-colors duration-200">
         <div class="flex items-center justify-between h-full px-4">
             <div class="flex items-center space-x-4">
                 <!-- Toggle Sidebar Button -->
                 <button 
                     @click="sidebarOpen = !sidebarOpen"
-                    class="p-2 rounded-md hover:bg-gray-200 transition-colors"
+                    class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
                     aria-label="Toggle sidebar">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -53,8 +67,8 @@
                 <button 
                     @click="previousComic()"
                     :disabled="!selectedComic || filteredComics.length === 0"
-                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
-                    class="p-2 rounded-md transition-colors"
+                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    class="p-2 rounded-md transition-colors text-gray-700 dark:text-gray-200"
                     aria-label="Previous comic">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -66,8 +80,8 @@
                 <button 
                     @click="nextComic()"
                     :disabled="!selectedComic || filteredComics.length === 0"
-                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
-                    class="p-2 rounded-md transition-colors"
+                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    class="p-2 rounded-md transition-colors text-gray-700 dark:text-gray-200"
                     aria-label="Next comic">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -77,13 +91,32 @@
                 
                 <!-- PDF Name -->
                 <div class="flex items-center space-x-2">
-                    <h1 class="text-xl font-bold text-gray-800" x-text="selectedComic ? selectedComic.name : 'No comic selected'"></h1>
+                    <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100" x-text="selectedComic ? selectedComic.name : 'No comic selected'"></h1>
                 </div>
             </div>
             
-            <!-- Count Display -->
-            <div class="text-sm text-gray-600">
-                <span x-text="selectedComic && currentIndex >= 0 ? currentIndex + 1 : 0"></span> / <span x-text="filteredComics.length"></span>
+            <div class="flex items-center space-x-4">
+                <!-- Theme Toggle Button -->
+                <button 
+                    @click="toggleTheme()"
+                    class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                    aria-label="Toggle theme">
+                    <!-- Sun icon (light mode) -->
+                    <svg x-show="!darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <!-- Moon icon (dark mode) -->
+                    <svg x-show="darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Count Display -->
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <span x-text="selectedComic && currentIndex >= 0 ? currentIndex + 1 : 0"></span> / <span x-text="filteredComics.length"></span>
+                </div>
             </div>
         </div>
     </header>
@@ -92,21 +125,21 @@
         <!-- Left Sidebar -->
         <aside 
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed left-0 top-20 bottom-0 w-80 bg-white shadow-lg transition-transform duration-300 ease-in-out z-40 overflow-hidden flex flex-col">
+            class="fixed left-0 top-20 bottom-0 w-80 bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-in-out z-40 overflow-hidden flex flex-col">
             
             <!-- Sidebar Header -->
-            <div class="p-4 border-b bg-gray-50">
-                <h2 class="text-lg font-semibold text-gray-800">Comics List</h2>
-                <p class="text-sm text-gray-500 mt-1" x-text="`${totalCount} comics found`"></p>
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Comics List</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" x-text="`${totalCount} comics found`"></p>
             </div>
             
             <!-- Search Box -->
-            <div class="p-4 border-b">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                 <input 
                     type="text" 
                     x-model="searchQuery"
                     placeholder="Search comics..."
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
             </div>
             
             <!-- Comics List -->
@@ -116,10 +149,10 @@
                         <li>
                             <button 
                                 @click="selectComic(comic, index)"
-                                :class="selectedComic && selectedComic.path === comic.path ? 'bg-blue-100 border-blue-500' : 'hover:bg-gray-100 border-transparent'"
-                                class="w-full text-left p-3 rounded-md border-2 transition-colors mb-1">
-                                <div class="font-medium text-gray-800" x-text="comic.name"></div>
-                                <div class="text-xs text-gray-500 mt-1" x-text="formatSize(comic.size)"></div>
+                                :class="selectedComic && selectedComic.path === comic.path ? 'bg-blue-100 dark:bg-blue-900 border-blue-500 dark:border-blue-400' : 'hover:bg-gray-100 dark:hover:bg-gray-700 border-transparent'"
+                                class="w-full text-left p-3 rounded-md border-2 transition-colors mb-1 text-gray-800 dark:text-gray-200">
+                                <div class="font-medium" x-text="comic.name"></div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1" x-text="formatSize(comic.size)"></div>
                             </button>
                         </li>
                     </template>
@@ -154,11 +187,11 @@
                 <template x-if="!selectedComic">
                     <div class="flex items-center justify-center h-full">
                         <div class="text-center">
-                            <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="mx-auto h-24 w-24 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                             </svg>
-                            <p class="mt-4 text-gray-500 text-lg">Select a comic from the sidebar to view</p>
+                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-lg">Select a comic from the sidebar to view</p>
                         </div>
                     </div>
                 </template>
@@ -175,6 +208,7 @@
                 selectedComic: null,
                 currentIndex: -1,
                 comics: [],
+                darkMode: false,
                 get totalCount() {
                     return this.comics.length;
                 },
@@ -236,11 +270,31 @@
                     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
                 },
                 init() {
+                    // Load theme preference from localStorage
+                    const savedTheme = localStorage.getItem('theme');
+                    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        this.darkMode = true;
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        this.darkMode = false;
+                        document.documentElement.classList.remove('dark');
+                    }
+                    
                     // Load comics data
                     fetch('/api/comics')
                         .then(res => res.json())
                         .then(data => { this.comics = data; })
                         .catch(err => console.error('Error loading comics:', err));
+                },
+                toggleTheme() {
+                    this.darkMode = !this.darkMode;
+                    if (this.darkMode) {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    }
                 }
             }));
         });
