@@ -57,5 +57,29 @@ public class ComicsController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(resource);
     }
+    
+    @GetMapping("/comic-slug/{slug}")
+    public ResponseEntity<Resource> getComicBySlug(@PathVariable String slug) {
+        ComicFile comic = comicsService.getComicBySlug(slug);
+        
+        if (comic == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        File comicFile = comicsService.getComicFile(comic.getRelativePath());
+        
+        if (comicFile == null || !comicFile.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Resource resource = new FileSystemResource(comicFile);
+        String encodedFilename = URLEncoder.encode(comicFile.getName(), StandardCharsets.UTF_8)
+                .replace("+", "%20");
+        
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + encodedFilename + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
 }
 

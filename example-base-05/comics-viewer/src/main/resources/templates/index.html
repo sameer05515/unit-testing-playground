@@ -178,7 +178,7 @@
             <div class="pdf-container">
                 <template x-if="selectedComic">
                     <iframe 
-                        :src="`/comic/${encodeURIComponent(selectedComic.relativePath)}`"
+                        :src="`/comic-slug/${selectedComic.slug}`"
                         class="w-full h-full border-0"
                         frameborder="0">
                     </iframe>

@@ -11,6 +11,7 @@ public class ComicFile {
     private String name;
     private String path;
     private String relativePath;
+    private String slug;
     private long size;
 }
 
