@@ -49,6 +49,32 @@
                     </svg>
                 </button>
                 
+                <!-- Previous Button -->
+                <button 
+                    @click="previousComic()"
+                    :disabled="!selectedComic || filteredComics.length === 0"
+                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+                    class="p-2 rounded-md transition-colors"
+                    aria-label="Previous comic">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                
+                <!-- Next Button -->
+                <button 
+                    @click="nextComic()"
+                    :disabled="!selectedComic || filteredComics.length === 0"
+                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+                    class="p-2 rounded-md transition-colors"
+                    aria-label="Next comic">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                
                 <!-- PDF Name -->
                 <div class="flex items-center space-x-2">
                     <h1 class="text-xl font-bold text-gray-800" x-text="selectedComic ? selectedComic.name : 'No comic selected'"></h1>
@@ -57,7 +83,7 @@
             
             <!-- Count Display -->
             <div class="text-sm text-gray-600">
-                <span x-text="currentIndex + 1"></span> / <span x-text="totalCount"></span>
+                <span x-text="selectedComic && currentIndex >= 0 ? currentIndex + 1 : 0"></span> / <span x-text="filteredComics.length"></span>
             </div>
         </div>
     </header>
@@ -115,7 +141,7 @@
             style="display: none;"></div>
         
         <!-- Main Content Area -->
-        <main class="flex-1 ml-0 lg:ml-80 transition-all duration-300">
+        <main :class="sidebarOpen ? 'lg:ml-80' : 'lg:ml-0'" class="flex-1 ml-0 transition-all duration-300">
             <div class="pdf-container">
                 <template x-if="selectedComic">
                     <iframe 
@@ -163,11 +189,44 @@
                 },
                 selectComic(comic, index) {
                     this.selectedComic = comic;
-                    this.currentIndex = index;
+                    // Find the index in the filtered list
+                    const filtered = this.filteredComics;
+                    const actualIndex = filtered.findIndex(c => c.path === comic.path);
+                    this.currentIndex = actualIndex >= 0 ? actualIndex : index;
                     // Close sidebar on mobile after selection
                     if (window.innerWidth < 1024) {
                         this.sidebarOpen = false;
                     }
+                },
+                previousComic() {
+                    const filtered = this.filteredComics;
+                    if (filtered.length === 0) return;
+                    
+                    let newIndex = this.currentIndex;
+                    if (newIndex < 0) {
+                        // If no comic selected, select the last one
+                        newIndex = filtered.length - 1;
+                    } else {
+                        // Circular navigation: go to previous, wrap to last if at first
+                        newIndex = (newIndex - 1 + filtered.length) % filtered.length;
+                    }
+                    
+                    this.selectComic(filtered[newIndex], newIndex);
+                },
+                nextComic() {
+                    const filtered = this.filteredComics;
+                    if (filtered.length === 0) return;
+                    
+                    let newIndex = this.currentIndex;
+                    if (newIndex < 0) {
+                        // If no comic selected, select the first one
+                        newIndex = 0;
+                    } else {
+                        // Circular navigation: go to next, wrap to first if at last
+                        newIndex = (newIndex + 1) % filtered.length;
+                    }
+                    
+                    this.selectComic(filtered[newIndex], newIndex);
                 },
                 formatSize(bytes) {
                     if (bytes === 0) return '0 Bytes';
@@ -192,19 +251,13 @@
             if (!viewer) return;
             
             // Arrow keys for navigation
-            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
                 e.preventDefault();
-                const filtered = viewer.filteredComics;
-                if (filtered.length === 0) return;
-                
-                let newIndex = viewer.currentIndex;
-                if (e.key === 'ArrowDown') {
-                    newIndex = (newIndex + 1) % filtered.length;
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                    viewer.nextComic();
                 } else {
-                    newIndex = (newIndex - 1 + filtered.length) % filtered.length;
+                    viewer.previousComic();
                 }
-                
-                viewer.selectComic(filtered[newIndex], newIndex);
             }
             
             // Escape to close sidebar
