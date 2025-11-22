@@ -33,6 +33,15 @@ public class ComicsController {
         return "index";
     }
     
+    @GetMapping("/view/{slug}")
+    public String viewComic(@PathVariable String slug, Model model) {
+        List<ComicFile> comics = comicsService.getAllComics();
+        model.addAttribute("comics", comics);
+        model.addAttribute("totalCount", comics.size());
+        model.addAttribute("initialSlug", slug);
+        return "index";
+    }
+    
     @GetMapping("/api/comics")
     @ResponseBody
     public List<ComicFile> getComicsJson() {

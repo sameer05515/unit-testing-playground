@@ -199,7 +199,8 @@
         </main>
     </div>
     
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         // Helper functions for Alpine.js
         document.addEventListener('alpine:init', () => {
             Alpine.data('comicsViewer', () => ({
@@ -227,6 +228,13 @@
                     const filtered = this.filteredComics;
                     const actualIndex = filtered.findIndex(c => c.path === comic.path);
                     this.currentIndex = actualIndex >= 0 ? actualIndex : index;
+                    
+                    // Update URL with slug
+                    if (comic.slug) {
+                        const newUrl = `/view/${comic.slug}`;
+                        window.history.pushState({ slug: comic.slug }, '', newUrl);
+                    }
+                    
                     // Close sidebar on mobile after selection
                     if (window.innerWidth < 1024) {
                         this.sidebarOpen = false;
@@ -283,8 +291,43 @@
                     // Load comics data
                     fetch('/api/comics')
                         .then(res => res.json())
-                        .then(data => { this.comics = data; })
+                        .then(data => { 
+                            this.comics = data;
+                            
+                            // Check if there's a slug in the URL or initialSlug from server
+                            const urlSlug = this.getSlugFromUrl();
+                            const initialSlug = /*[[${initialSlug}]]*/ null;
+                            const slugToLoad = initialSlug || urlSlug;
+                            
+                            if (slugToLoad) {
+                                const comic = this.comics.find(c => c.slug === slugToLoad);
+                                if (comic) {
+                                    const index = this.comics.indexOf(comic);
+                                    this.selectComic(comic, index);
+                                }
+                            }
+                        })
                         .catch(err => console.error('Error loading comics:', err));
+                    
+                    // Handle browser back/forward buttons
+                    window.addEventListener('popstate', (e) => {
+                        const slug = this.getSlugFromUrl();
+                        if (slug) {
+                            const comic = this.comics.find(c => c.slug === slug);
+                            if (comic) {
+                                const index = this.comics.indexOf(comic);
+                                this.selectComic(comic, index);
+                            }
+                        } else {
+                            this.selectedComic = null;
+                            this.currentIndex = -1;
+                        }
+                    });
+                },
+                getSlugFromUrl() {
+                    const path = window.location.pathname;
+                    const match = path.match(/\/view\/([^\/]+)/);
+                    return match ? match[1] : null;
                 },
                 toggleTheme() {
                     this.darkMode = !this.darkMode;
@@ -319,6 +362,7 @@
                 viewer.sidebarOpen = false;
             }
         });
+        /*]]>*/
     </script>
 </body>
 </html>
