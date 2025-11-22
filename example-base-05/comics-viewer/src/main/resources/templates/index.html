@@ -95,7 +95,48 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
+                <!-- Documentation Icons -->
+                <div class="flex items-center space-x-1 border-r border-gray-300 dark:border-gray-600 pr-3">
+                    <!-- Swagger UI -->
+                    <a 
+                        href="/docs"
+                        target="_blank"
+                        class="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                        aria-label="Swagger UI Documentation"
+                        title="Swagger UI">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.568 18.005c-.215 0-.396-.07-.543-.21a.742.742 0 01-.21-.543c0-.215.07-.396.21-.543a.742.742 0 01.543-.21c.215 0 .396.07.543.21a.742.742 0 01.21.543c0 .215-.07.396-.21.543a.742.742 0 01-.543.21zm.568-2.5c-.215 0-.396-.07-.543-.21a.742.742 0 01-.21-.543V7.248c0-.215.07-.396.21-.543a.742.742 0 01.543-.21c.215 0 .396.07.543.21a.742.742 0 01.21.543v7.504c0 .215-.07.396-.21.543a.742.742 0 01-.543.21z"/>
+                        </svg>
+                    </a>
+                    
+                    <!-- Redocly -->
+                    <a 
+                        href="/redoc"
+                        target="_blank"
+                        class="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                        aria-label="Redocly Documentation"
+                        title="Redocly">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </a>
+                    
+                    <!-- OpenAPI JSON -->
+                    <a 
+                        href="/api-docs"
+                        target="_blank"
+                        class="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                        aria-label="OpenAPI JSON"
+                        title="OpenAPI JSON">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </a>
+                </div>
+                
                 <!-- Theme Toggle Button -->
                 <button 
                     @click="toggleTheme()"

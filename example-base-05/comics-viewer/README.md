@@ -84,6 +84,24 @@ comics-viewer/
    - Arrow Up/Down: Navigate through comics
    - Escape: Close sidebar
 
+## API Documentation
+
+The application includes Swagger UI and Redocly documentation:
+
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **Redocly**: http://localhost:8080/redoc.html
+- **OpenAPI JSON**: http://localhost:8080/v3/api-docs
+- **Quick Links**:
+  - `/docs` - Redirects to Swagger UI
+  - `/redoc` - Redirects to Redocly
+  - `/api-docs` - Redirects to OpenAPI JSON
+
+### API Endpoints
+
+- `GET /api/comics` - Get all comics list
+- `GET /comic-slug/{slug}` - Get comic PDF by slug
+- `GET /comic/{path}` - Get comic PDF by path (legacy)
+
 ## Technologies Used
 
 - **Spring Boot 3.2.0**: Backend framework
