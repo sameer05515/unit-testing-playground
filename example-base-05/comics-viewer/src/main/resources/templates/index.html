@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comics Viewer</title>
+    
+    <!-- Tailwind CSS -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        /* Custom scrollbar for sidebar */
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .dark .sidebar-scroll::-webkit-scrollbar-track {
+            background: #374151;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        .dark .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+        
+        /* PDF viewer container */
+        .pdf-container {
+            height: calc(100vh - 80px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200" x-data="comicsViewer" x-init="init()">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 right-0 z-50 h-20 transition-colors duration-200">
+        <div class="flex items-center justify-between h-full px-4">
+            <div class="flex items-center space-x-4">
+                <!-- Toggle Sidebar Button -->
+                <button 
+                    @click="sidebarOpen = !sidebarOpen"
+                    class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                    aria-label="Toggle sidebar">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                
+                <!-- Previous Button -->
+                <button 
+                    @click="previousComic()"
+                    :disabled="!selectedComic || filteredComics.length === 0"
+                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    class="p-2 rounded-md transition-colors text-gray-700 dark:text-gray-200"
+                    aria-label="Previous comic">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                
+                <!-- Next Button -->
+                <button 
+                    @click="nextComic()"
+                    :disabled="!selectedComic || filteredComics.length === 0"
+                    :class="!selectedComic || filteredComics.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    class="p-2 rounded-md transition-colors text-gray-700 dark:text-gray-200"
+                    aria-label="Next comic">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                
+                <!-- PDF Name -->
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100" x-text="selectedComic ? selectedComic.name : 'No comic selected'"></h1>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Documentation Icons -->
+                <div class="flex items-center space-x-1 border-r border-gray-300 dark:border-gray-600 pr-3">
+                    <!-- Swagger UI -->
+                    <a 
+                        href="/docs"
+                        target="_blank"
+                        class="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                        aria-label="Swagger UI Documentation"
+                        title="Swagger UI">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.568 18.005c-.215 0-.396-.07-.543-.21a.742.742 0 01-.21-.543c0-.215.07-.396.21-.543a.742.742 0 01.543-.21c.215 0 .396.07.543.21a.742.742 0 01.21.543c0 .215-.07.396-.21.543a.742.742 0 01-.543.21zm.568-2.5c-.215 0-.396-.07-.543-.21a.742.742 0 01-.21-.543V7.248c0-.215.07-.396.21-.543a.742.742 0 01.543-.21c.215 0 .396.07.543.21a.742.742 0 01.21.543v7.504c0 .215-.07.396-.21.543a.742.742 0 01-.543.21z"/>
+                        </svg>
+                    </a>
+                    
+                    <!-- Redocly -->
+                    <a 
+                        href="/redoc"
+                        target="_blank"
+                        class="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                        aria-label="Redocly Documentation"
+                        title="Redocly">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </a>
+                    
+                    <!-- OpenAPI JSON -->
+                    <a 
+                        href="/api-docs"
+                        target="_blank"
+                        class="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                        aria-label="OpenAPI JSON"
+                        title="OpenAPI JSON">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </a>
+                </div>
+                
+                <!-- Theme Toggle Button -->
+                <button 
+                    @click="toggleTheme()"
+                    class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                    aria-label="Toggle theme">
+                    <!-- Sun icon (light mode) -->
+                    <svg x-show="!darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <!-- Moon icon (dark mode) -->
+                    <svg x-show="darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Count Display -->
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <span x-text="selectedComic && currentIndex >= 0 ? currentIndex + 1 : 0"></span> / <span x-text="filteredComics.length"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="flex pt-20">
+        <!-- Left Sidebar -->
+        <aside 
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            class="fixed left-0 top-20 bottom-0 w-80 bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-in-out z-40 overflow-hidden flex flex-col">
+            
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Comics List</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" x-text="`${totalCount} comics found`"></p>
+            </div>
+            
+            <!-- Search Box -->
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <input 
+                    type="text" 
+                    x-model="searchQuery"
+                    placeholder="Search comics..."
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
+            </div>
+            
+            <!-- Comics List -->
+            <div class="flex-1 overflow-y-auto sidebar-scroll">
+                <ul class="p-2">
+                    <template x-for="(comic, index) in filteredComics" :key="comic.path">
+                        <li>
+                            <button 
+                                @click="selectComic(comic, index)"
+                                :class="selectedComic && selectedComic.path === comic.path ? 'bg-blue-100 dark:bg-blue-900 border-blue-500 dark:border-blue-400' : 'hover:bg-gray-100 dark:hover:bg-gray-700 border-transparent'"
+                                class="w-full text-left p-3 rounded-md border-2 transition-colors mb-1 text-gray-800 dark:text-gray-200">
+                                <div class="font-medium" x-text="comic.name"></div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1" x-text="formatSize(comic.size)"></div>
+                            </button>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Overlay for mobile -->
+        <div 
+            x-show="sidebarOpen"
+            @click="sidebarOpen = false"
+            class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+            x-transition:enter="transition-opacity ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            style="display: none;"></div>
+        
+        <!-- Main Content Area -->
+        <main :class="sidebarOpen ? 'lg:ml-80' : 'lg:ml-0'" class="flex-1 ml-0 transition-all duration-300">
+            <div class="pdf-container">
+                <template x-if="selectedComic">
+                    <iframe 
+                        :src="`/comic-slug/${selectedComic.slug}`"
+                        class="w-full h-full border-0"
+                        frameborder="0">
+                    </iframe>
+                </template>
+                
+                <template x-if="!selectedComic">
+                    <div class="flex items-center justify-center h-full">
+                        <div class="text-center">
+                            <svg class="mx-auto h-24 w-24 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-lg">Select a comic from the sidebar to view</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </main>
+    </div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // Helper functions for Alpine.js
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('comicsViewer', () => ({
+                sidebarOpen: true,
+                searchQuery: '',
+                selectedComic: null,
+                currentIndex: -1,
+                comics: [],
+                darkMode: false,
+                get totalCount() {
+                    return this.comics.length;
+                },
+                get filteredComics() {
+                    if (!this.searchQuery) {
+                        return this.comics;
+                    }
+                    const query = this.searchQuery.toLowerCase();
+                    return this.comics.filter(comic => 
+                        comic.name.toLowerCase().includes(query)
+                    );
+                },
+                selectComic(comic, index) {
+                    this.selectedComic = comic;
+                    // Find the index in the filtered list
+                    const filtered = this.filteredComics;
+                    const actualIndex = filtered.findIndex(c => c.path === comic.path);
+                    this.currentIndex = actualIndex >= 0 ? actualIndex : index;
+                    
+                    // Update URL with slug
+                    if (comic.slug) {
+                        const newUrl = `/view/${comic.slug}`;
+                        window.history.pushState({ slug: comic.slug }, '', newUrl);
+                    }
+                    
+                    // Close sidebar on mobile after selection
+                    if (window.innerWidth < 1024) {
+                        this.sidebarOpen = false;
+                    }
+                },
+                previousComic() {
+                    const filtered = this.filteredComics;
+                    if (filtered.length === 0) return;
+                    
+                    let newIndex = this.currentIndex;
+                    if (newIndex < 0) {
+                        // If no comic selected, select the last one
+                        newIndex = filtered.length - 1;
+                    } else {
+                        // Circular navigation: go to previous, wrap to last if at first
+                        newIndex = (newIndex - 1 + filtered.length) % filtered.length;
+                    }
+                    
+                    this.selectComic(filtered[newIndex], newIndex);
+                },
+                nextComic() {
+                    const filtered = this.filteredComics;
+                    if (filtered.length === 0) return;
+                    
+                    let newIndex = this.currentIndex;
+                    if (newIndex < 0) {
+                        // If no comic selected, select the first one
+                        newIndex = 0;
+                    } else {
+                        // Circular navigation: go to next, wrap to first if at last
+                        newIndex = (newIndex + 1) % filtered.length;
+                    }
+                    
+                    this.selectComic(filtered[newIndex], newIndex);
+                },
+                formatSize(bytes) {
+                    if (bytes === 0) return '0 Bytes';
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+                },
+                init() {
+                    // Load theme preference from localStorage
+                    const savedTheme = localStorage.getItem('theme');
+                    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        this.darkMode = true;
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        this.darkMode = false;
+                        document.documentElement.classList.remove('dark');
+                    }
+                    
+                    // Load comics data
+                    fetch('/api/comics')
+                        .then(res => res.json())
+                        .then(data => { 
+                            this.comics = data;
+                            
+                            // Check if there's a slug in the URL or initialSlug from server
+                            const urlSlug = this.getSlugFromUrl();
+                            const initialSlug = /*[[${initialSlug}]]*/ null;
+                            const slugToLoad = initialSlug || urlSlug;
+                            
+                            if (slugToLoad) {
+                                const comic = this.comics.find(c => c.slug === slugToLoad);
+                                if (comic) {
+                                    const index = this.comics.indexOf(comic);
+                                    this.selectComic(comic, index);
+                                }
+                            }
+                        })
+                        .catch(err => console.error('Error loading comics:', err));
+                    
+                    // Handle browser back/forward buttons
+                    window.addEventListener('popstate', (e) => {
+                        const slug = this.getSlugFromUrl();
+                        if (slug) {
+                            const comic = this.comics.find(c => c.slug === slug);
+                            if (comic) {
+                                const index = this.comics.indexOf(comic);
+                                this.selectComic(comic, index);
+                            }
+                        } else {
+                            this.selectedComic = null;
+                            this.currentIndex = -1;
+                        }
+                    });
+                },
+                getSlugFromUrl() {
+                    const path = window.location.pathname;
+                    const match = path.match(/\/view\/([^\/]+)/);
+                    return match ? match[1] : null;
+                },
+                toggleTheme() {
+                    this.darkMode = !this.darkMode;
+                    if (this.darkMode) {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    }
+                }
+            }));
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const viewer = Alpine.$data(document.querySelector('[x-data]'));
+            if (!viewer) return;
+            
+            // Arrow keys for navigation
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                    viewer.nextComic();
+                } else {
+                    viewer.previousComic();
+                }
+            }
+            
+            // Escape to close sidebar
+            if (e.key === 'Escape') {
+                viewer.sidebarOpen = false;
+            }
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Shrimad Bhagwat Geeta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .word-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .word-meaning-page {
+            min-height: 100vh;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <section class="word-meaning-page py-4">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Word Header -->
+                <div class="col-12">
+                    <div class="word-header p-4 rounded text-white d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
+                        <div>
+                            <h1 class="h3 mb-1">Occurrences of "<%= detail.id %>"</h1>
+                            <p class="mb-0 text-white-75">
+                                Explore the Sanskrit word usage across verses and quickly jump to the referenced shloks.
+                            </p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="/" class="btn btn-outline-light btn-sm">
+                                <span class="icon-inline" aria-hidden="true">🏠</span>
+                                <span class="ms-1">Home</span>
+                            </a>
+                            <% if (detail.previousWMRoute) { %>
+                                <a href="<%= detail.previousWMRoute %>" class="btn btn-light btn-sm">
+                                    <span class="icon-inline" aria-hidden="true">⬅️</span>
+                                    <span class="ms-1">Previous</span>
+                                </a>
+                            <% } %>
+                            <% if (detail.nextWMRoute) { %>
+                                <a href="<%= detail.nextWMRoute %>" class="btn btn-light btn-sm">
+                                    <span class="icon-inline" aria-hidden="true">➡️</span>
+                                    <span class="ms-1">Next</span>
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Word Meaning Table -->
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Word</th>
+                                        <th scope="col">Meaning</th>
+                                        <th scope="col">Reference</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (detail.data && detail.data.length > 0) { %>
+                                        <% detail.data.forEach(row => { %>
+                                            <tr>
+                                                <td class="fw-semibold"><%= row.word %></td>
+                                                <td><%= row.meaning %></td>
+                                                <td>
+                                                    <% if (row.route) { %>
+                                                        <a href="<%= row.route %>" class="link-primary text-decoration-none">
+                                                            <%= row.referenceHeader %>
+                                                        </a>
+                                                    <% } else { %>
+                                                        <span><%= row.referenceHeader %></span>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-4">No occurrences found</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top mt-12">
+        <div class="container py-4 text-center text-muted">
+            <p class="mb-0">Shrimad Bhagwat Geeta API &copy; 2025</p>
+        </div>
+    </footer>
+</body>
+</html>
+
