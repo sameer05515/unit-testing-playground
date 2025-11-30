@@ -44,7 +44,12 @@ A Node.js + EJS application providing RESTful API and web interface for Shrimad 
 - `GET /api/chapters` - Get all chapters summary
 - `GET /api/chapters/:id` - Get chapter by ID
 - `GET /api/chapters/:id/verses` - Get chapter verses summary
+- `GET /api/chapters/:id/verses/summary` - Get chapter verses summary (alternative endpoint)
 - `GET /api/chapters/:id/verses/:verseId` - Get verse details
+
+### Word Meanings
+
+- `GET /api/word-meaning/:wordId` - Get word meaning details
 
 ### Examples
 
@@ -52,6 +57,21 @@ A Node.js + EJS application providing RESTful API and web interface for Shrimad 
 - Get chapter 1: `http://localhost:3000/api/chapters/1`
 - Get verses of chapter 1: `http://localhost:3000/api/chapters/1/verses`
 - Get verse 1.1: `http://localhost:3000/api/chapters/1/verses/1`
+- Get word meaning: `http://localhost:3000/api/word-meaning/a-kāraḥ`
+
+## API Documentation
+
+The application includes Swagger UI and Redoc documentation:
+
+- **Swagger UI**: http://localhost:3000/swagger-ui
+- **Redoc**: http://localhost:3000/redoc
+- **OpenAPI JSON**: http://localhost:3000/api-docs/swagger.json
+
+### Quick Links
+
+- `/swagger-ui` - Interactive Swagger UI documentation
+- `/redoc` - Beautiful Redoc documentation
+- `/api-docs/swagger.json` - OpenAPI specification in JSON format
 
 ## Web Interface
 
@@ -59,6 +79,7 @@ A Node.js + EJS application providing RESTful API and web interface for Shrimad 
 - `/chapters` - List all chapters
 - `/chapters/:id` - Chapter detail page
 - `/chapters/:id/verses/:verseId` - Verse detail page
+- `/word-meaning/:wordId` - Word meaning detail page with occurrences
 
 ## Project Structure
 
