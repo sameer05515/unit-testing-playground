@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-6">
+                <h1 class="text-3xl font-bold text-gray-800">Shrimad Bhagwat Geeta API</h1>
+                <p class="text-gray-600 mt-2">RESTful API and Web Interface for Bhagwat Geeta Content</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- API Documentation Card -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">API Endpoints</h2>
+                    <ul class="space-y-3">
+                        <li>
+                            <code class="bg-gray-100 px-2 py-1 rounded text-sm">GET /api/chapters</code>
+                            <p class="text-gray-600 text-sm mt-1">Get all chapters summary</p>
+                        </li>
+                        <li>
+                            <code class="bg-gray-100 px-2 py-1 rounded text-sm">GET /api/chapters/:id</code>
+                            <p class="text-gray-600 text-sm mt-1">Get chapter by ID</p>
+                        </li>
+                        <li>
+                            <code class="bg-gray-100 px-2 py-1 rounded text-sm">GET /api/chapters/:id/verses</code>
+                            <p class="text-gray-600 text-sm mt-1">Get chapter verses summary</p>
+                        </li>
+                        <li>
+                            <code class="bg-gray-100 px-2 py-1 rounded text-sm">GET /api/chapters/:id/verses/:verseId</code>
+                            <p class="text-gray-600 text-sm mt-1">Get verse details</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Web Interface Card -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Web Interface</h2>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="/chapters" class="text-blue-600 hover:text-blue-800 underline">
+                                View All Chapters
+                            </a>
+                            <p class="text-gray-600 text-sm mt-1">Browse all 18 chapters</p>
+                        </li>
+                        <li>
+                            <a href="/chapters/1" class="text-blue-600 hover:text-blue-800 underline">
+                                View Chapter 1
+                            </a>
+                            <p class="text-gray-600 text-sm mt-1">Example chapter page</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Quick Links</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="/chapters" class="block p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                        <h3 class="font-semibold text-blue-800">Chapters</h3>
+                        <p class="text-sm text-blue-600 mt-1">View all chapters</p>
+                    </a>
+                    <a href="/api/chapters" class="block p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                        <h3 class="font-semibold text-green-800">API</h3>
+                        <p class="text-sm text-green-600 mt-1">JSON API endpoints</p>
+                    </a>
+                    <a href="/chapters/1" class="block p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                        <h3 class="font-semibold text-purple-800">Example</h3>
+                        <p class="text-sm text-purple-600 mt-1">Chapter 1 details</p>
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t mt-12">
+            <div class="container mx-auto px-4 py-6 text-center text-gray-600">
+                <p>Shrimad Bhagwat Geeta API &copy; 2025</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+

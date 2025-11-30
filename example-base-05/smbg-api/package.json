@@ -1,0 +1,29 @@
+{
+  "name": "smbg-api",
+  "version": "1.0.0",
+  "description": "Shrimad Bhagwat Geeta API with Node.js and EJS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "bhagwat-geeta",
+    "api",
+    "nodejs",
+    "ejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "ejs": "^3.1.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+

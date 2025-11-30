@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Shrimad Bhagwat Geeta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-800">Shrimad Bhagwat Geeta</h1>
+                    <div class="flex gap-4">
+                        <a href="/chapters/<%= chapter.id %>" class="text-blue-600 hover:text-blue-800">Chapter <%= chapter.id %></a>
+                        <a href="/chapters" class="text-blue-600 hover:text-blue-800">All Chapters</a>
+                        <a href="/" class="text-blue-600 hover:text-blue-800">Home</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <!-- Verse Header -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2"><%= verse.verseHeader || `Verse ${verse.id}` %></h2>
+                <p class="text-gray-600">Chapter <%= chapter.id %>: <%= chapter.chapterTitle %></p>
+            </div>
+
+            <!-- Verse Content -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <% if (verse.text) { %>
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Text</h3>
+                        <p class="text-gray-700 text-lg leading-relaxed"><%= verse.text %></p>
+                    </div>
+                <% } %>
+
+                <% if (verse.translation) { %>
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Translation</h3>
+                        <p class="text-gray-700 leading-relaxed"><%= verse.translation %></p>
+                    </div>
+                <% } %>
+
+                <% if (verse.meaning) { %>
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Meaning</h3>
+                        <p class="text-gray-700 leading-relaxed"><%= verse.meaning %></p>
+                    </div>
+                <% } %>
+
+                <% if (verse.wordMeanings && verse.wordMeanings.length > 0) { %>
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Word Meanings</h3>
+                        <div class="space-y-2">
+                            <% verse.wordMeanings.forEach(word => { %>
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 rounded">
+                                    <span class="font-semibold text-gray-800"><%= word.word %>:</span>
+                                    <span class="text-gray-700"><%= word.meaning %></span>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <% if (verse.commentary) { %>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Commentary</h3>
+                        <p class="text-gray-700 leading-relaxed"><%= verse.commentary %></p>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Navigation -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center">
+                    <a href="/chapters/<%= chapter.id %>" 
+                       class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                        ← Back to Chapter
+                    </a>
+                    <div class="flex gap-2">
+                        <a href="/api/chapters/<%= chapter.id %>/verses/<%= verse.id %>" 
+                           class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
+                            View JSON
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t mt-12">
+            <div class="container mx-auto px-4 py-6 text-center text-gray-600">
+                <p>Shrimad Bhagwat Geeta API &copy; 2025</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+
