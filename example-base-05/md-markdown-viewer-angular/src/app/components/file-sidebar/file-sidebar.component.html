@@ -1,0 +1,46 @@
+<aside
+  *ngIf="sidebarOpen"
+  class="border-end border-secondary bg-dark text-light overflow-hidden d-flex flex-column h-100"
+>
+  <div class="p-3 d-flex flex-column flex-grow-1 overflow-hidden">
+    <div class="mb-3 flex-shrink-0">
+      <label class="form-label text-uppercase text-muted small">Quick filter</label>
+      <input
+        type="search"
+        class="form-control form-control-sm bg-dark border-secondary text-light"
+        placeholder="Type to filter..."
+        [(ngModel)]="filter"
+      />
+    </div>
+
+    <div
+      #sidebarList
+      class="list-group list-group-flush flex-grow-1 overflow-auto"
+    >
+      <button
+        *ngFor="let file of filteredFiles; trackBy: trackBySlug"
+        type="button"
+        class="list-group-item list-group-item-action bg-dark border-secondary text-light"
+        [class.active]="isActive(file)"
+        [attr.data-slug]="file.slug"
+        (click)="onFileClick(file.slug)"
+      >
+        <p class="fw-semibold mb-1">{{ file.name }}</p>
+        <small class="text-muted d-block text-truncate">{{ file.relativePath }}</small>
+      </button>
+      <div
+        *ngIf="filteredFiles.length === 0"
+        class="list-group-item bg-dark border-secondary text-muted text-center py-4"
+      >
+        No files match your filter
+      </div>
+      <div
+        *ngIf="files.length === 0"
+        class="list-group-item bg-dark border-secondary text-muted text-center py-4"
+      >
+        No markdown files found
+      </div>
+    </div>
+  </div>
+</aside>
+

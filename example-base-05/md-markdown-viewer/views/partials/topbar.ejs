@@ -1,0 +1,45 @@
+        <header class="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/70 px-6 py-5 backdrop-blur">
+          <% if (activeFile) { %>
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-slate-500">File</p>
+              <h1 class="text-2xl font-display font-semibold text-white"><%= activeFile.name %></h1>
+            </div>
+            <% const prevIndex = (activeFile.index - 1 + files.length) % files.length; %>
+            <% const nextIndex = (activeFile.index + 1) % files.length; %>
+            <div class="flex flex-wrap gap-6 text-sm items-center">
+              <button
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-slate-200 transition hover:bg-slate-800"
+                @click="toggleSidebar()"
+              >
+                <span x-text="sidebarOpen ? 'Hide list' : 'Show list'"></span>
+              </button>
+              <div>
+                <p class="text-xs uppercase tracking-widest text-slate-500">Slug</p>
+                <p class="font-mono text-slate-200 break-all"><%= activeFile.slug %></p>
+              </div>
+              <div>
+                <p class="text-xs uppercase tracking-widest text-slate-500">Position</p>
+                <p class="font-semibold text-white"><%= meta.currentIndex %> / <%= meta.total %></p>
+              </div>
+              <div class="flex gap-2">
+                <a
+                  href="/?slug=<%= files[prevIndex].slug %>"
+                  class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-slate-200 transition hover:bg-slate-800"
+                >
+                  ‹ Prev
+                </a>
+                <a
+                  href="/?slug=<%= files[nextIndex].slug %>"
+                  class="inline-flex items-center gap-2 rounded-lg border border-indigo-500 bg-indigo-500/20 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-indigo-200 transition hover:bg-indigo-500/40"
+                >
+                  Next ›
+                </a>
+              </div>
+            </div>
+          </div>
+          <% } else { %>
+          <div class="text-slate-400">No markdown files detected.</div>
+          <% } %>
+        </header>
+

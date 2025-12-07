@@ -1,0 +1,11 @@
+/* Component-specific styles */
+header {
+  height: 100%;
+  overflow: auto;
+}
+
+div[class*="border-bottom"] {
+  height: 100%;
+  overflow: auto;
+}
+

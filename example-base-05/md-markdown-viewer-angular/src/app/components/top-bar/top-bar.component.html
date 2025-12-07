@@ -1,0 +1,27 @@
+<header
+  *ngIf="activeFile"
+  class="border-bottom border-secondary px-4 py-3 bg-dark text-light"
+>
+  <div class="d-flex flex-column flex-lg-row gap-3 align-items-lg-center justify-content-lg-between">
+    <div>
+      <p class="text-uppercase text-muted small mb-1">File</p>
+      <h1 class="h3 fw-semibold mb-1">{{ activeFile.name }}</h1>
+      <small class="text-muted">{{ activeFile.relativePath }}</small>
+    </div>
+    <button
+      class="btn btn-outline-info btn-sm align-self-start align-self-lg-center"
+      (click)="onRefresh()"
+      type="button"
+    >
+      Refresh list
+    </button>
+  </div>
+</header>
+
+<div
+  *ngIf="!activeFile"
+  class="border-bottom border-secondary px-4 py-3 bg-dark text-light"
+>
+  <p class="mb-2 text-muted">No markdown files detected.</p>
+</div>
+

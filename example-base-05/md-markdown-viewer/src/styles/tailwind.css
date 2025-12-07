@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-body min-h-screen;
+  }
+}
+
+@layer components {
+  .scroll-y {
+    scrollbar-width: thin;
+  }
+
+  .scroll-y::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scroll-y::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.6);
+    border-radius: 9999px;
+  }
+}
+
