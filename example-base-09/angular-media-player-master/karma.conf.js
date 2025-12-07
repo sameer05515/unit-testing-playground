@@ -17,7 +17,12 @@ module.exports = function (config) {
       'test/unit.js',
       'test/playback.js',
       'test/methods.js',
-      'test/video.js'
+      'test/video.js',
+      'test/volume.js',
+      'test/events.js',
+      'test/properties.js',
+      'test/edge-cases.js',
+      'test/selective-play.js'
     ],
     // list of files to exclude
     exclude: [],

@@ -32,6 +32,9 @@ Using github hosting:
 <script src="//colthreepv.github.io/angular-media-player/dist/angular-media-player.min.js" type="text/javascript"></script>
 ```
 
+## Documentation
+For comprehensive usage examples and API reference, see [USAGE.md](USAGE.md).
+
 ## Test coverage
 At the moment IE passes only 8 tests of 20, most of them require an `<audio>` tag to work with `.ogg` files.
 ![test-coverage](http://i.imgur.com/mkFdC4q.gif)
