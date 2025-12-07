@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html ng-app="dynamicPlaylistApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Playlist Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js"></script>
+  <script src="../src/helpers.js"></script>
+  <script src="../src/directive.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .player-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      background: #f9f9f9;
+      margin-bottom: 20px;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 3px;
+    }
+    .btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+    .btn-secondary {
+      background: #2196F3;
+      color: white;
+    }
+    .playlist {
+      list-style: none;
+      padding: 0;
+    }
+    .playlist li {
+      padding: 10px;
+      margin: 5px 0;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .playlist li.active {
+      background: #4CAF50;
+      color: white;
+    }
+    .add-track-form {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .add-track-form input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      background: #e8e8e8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Playlist Example</h1>
+  
+  <div ng-controller="DynamicPlaylistController" class="player-container">
+    <audio media-player="player" playlist="playlist">
+      <source src="http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg" type="audio/ogg">
+    </audio>
+    
+    <div class="controls">
+      <button class="btn-primary" ng-click="player.playPause()">
+        <span ng-show="!player.playing">▶ Play</span>
+        <span ng-show="player.playing">⏸ Pause</span>
+      </button>
+      <button class="btn-secondary" ng-click="player.next()">⏭ Next</button>
+      <button class="btn-secondary" ng-click="player.prev()">⏮ Previous</button>
+      <button class="btn-danger" ng-click="player.stop()">⏹ Stop</button>
+    </div>
+    
+    <div class="status">
+      <p><strong>Track:</strong> {{ player.currentTrack }} of {{ player.tracks }}</p>
+      <p><strong>Time:</strong> {{ player.formatTime }} / {{ player.formatDuration }}</p>
+    </div>
+    
+    <!-- Add Track Form -->
+    <div class="add-track-form">
+      <h3>Add Track to Playlist</h3>
+      <input type="text" ng-model="newTrack.title" placeholder="Track Title">
+      <input type="text" ng-model="newTrack.src" placeholder="Audio URL (e.g., .ogg, .mp3)">
+      <input type="text" ng-model="newTrack.type" placeholder="MIME Type (e.g., audio/ogg)">
+      <button class="btn-primary" ng-click="addTrack()">Add Track</button>
+      <button class="btn-secondary" ng-click="loadSamplePlaylist()">Load Sample Playlist</button>
+      <button class="btn-danger" ng-click="clearPlaylist()">Clear Playlist</button>
+    </div>
+    
+    <!-- Playlist -->
+    <h3>Playlist ({{ playlist.length }} tracks)</h3>
+    <ul class="playlist">
+      <li ng-repeat="track in playlist" 
+          ng-class="{active: $index + 1 === player.currentTrack}">
+        <span ng-click="player.play($index)" style="cursor: pointer; flex: 1;">
+          <strong>Track {{ $index + 1 }}:</strong> {{ track.title || 'Untitled' }}
+        </span>
+        <button class="btn-danger" 
+                ng-click="removeTrack($index)" 
+                style="padding: 5px 10px; font-size: 12px;">
+          Remove
+        </button>
+      </li>
+      <li ng-if="playlist.length === 0" style="text-align: center; color: #999;">
+        Playlist is empty. Add tracks above.
+      </li>
+    </ul>
+  </div>
+  
+  <script>
+    angular.module('dynamicPlaylistApp', ['mediaPlayer'])
+    .controller('DynamicPlaylistController', function($scope) {
+      // Initial playlist
+      $scope.playlist = [
+        { 
+          src: 'http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg', 
+          type: 'audio/ogg',
+          title: 'Silence'
+        }
+      ];
+      
+      // New track form data
+      $scope.newTrack = {
+        title: '',
+        src: '',
+        type: 'audio/ogg'
+      };
+      
+      // Add a new track to the playlist
+      $scope.addTrack = function() {
+        if ($scope.newTrack.src && $scope.newTrack.type) {
+          $scope.playlist.push({
+            src: $scope.newTrack.src,
+            type: $scope.newTrack.type,
+            title: $scope.newTrack.title || 'Untitled Track'
+          });
+          
+          // Clear form
+          $scope.newTrack = {
+            title: '',
+            src: '',
+            type: 'audio/ogg'
+          };
+        } else {
+          alert('Please provide at least a URL and MIME type');
+        }
+      };
+      
+      // Remove a track from the playlist
+      $scope.removeTrack = function(index) {
+        if (confirm('Remove track ' + (index + 1) + '?')) {
+          $scope.playlist.splice(index, 1);
+        }
+      };
+      
+      // Load sample playlist
+      $scope.loadSamplePlaylist = function() {
+        $scope.playlist = [
+          { 
+            src: 'http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg', 
+            type: 'audio/ogg',
+            title: 'Silence'
+          },
+          { 
+            src: 'http://upload.wikimedia.org/wikipedia/en/c/cb/Stairway_to_Heaven_3_sections.ogg', 
+            type: 'audio/ogg',
+            title: 'Stairway to Heaven'
+          },
+          { 
+            src: 'http://upload.wikimedia.org/wikipedia/en/d/d0/Beatles_cometogether.ogg', 
+            type: 'audio/ogg',
+            title: 'Come Together'
+          }
+        ];
+      };
+      
+      // Clear entire playlist
+      $scope.clearPlaylist = function() {
+        if (confirm('Clear entire playlist?')) {
+          $scope.playlist = [];
+        }
+      };
+    });
+  </script>
+</body>
+</html>

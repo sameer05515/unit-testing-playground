@@ -35,6 +35,17 @@ Using github hosting:
 ## Documentation
 For comprehensive usage examples and API reference, see [USAGE.md](USAGE.md).
 
+## Examples
+Working examples demonstrating various features are available in the [examples/](examples/) folder:
+- **01-basic-audio.html** - Simple audio player
+- **02-playlist.html** - Playlist functionality
+- **03-video-player.html** - Video player example
+- **04-complete-player.html** - Full-featured player
+- **05-events-handling.html** - Event handling demonstration
+- **06-dynamic-playlist.html** - Dynamic playlist management
+
+See [examples/README.md](examples/README.md) for details on running the examples.
+
 ## Test coverage
 At the moment IE passes only 8 tests of 20, most of them require an `<audio>` tag to work with `.ogg` files.
 ![test-coverage](http://i.imgur.com/mkFdC4q.gif)

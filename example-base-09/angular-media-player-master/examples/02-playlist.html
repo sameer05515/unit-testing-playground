@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html ng-app="playlistApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Playlist Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js"></script>
+  <script src="../src/helpers.js"></script>
+  <script src="../src/directive.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .player-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      background: #f9f9f9;
+      margin-bottom: 20px;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .playlist {
+      list-style: none;
+      padding: 0;
+    }
+    .playlist li {
+      padding: 10px;
+      margin: 5px 0;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .playlist li:hover {
+      background: #f0f0f0;
+    }
+    .playlist li.active {
+      background: #4CAF50;
+      color: white;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      background: #e8e8e8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Playlist Example</h1>
+  
+  <div ng-controller="PlaylistController" class="player-container">
+    <audio media-player="player" playlist="playlist">
+      <source src="http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg" type="audio/ogg">
+    </audio>
+    
+    <div class="controls">
+      <button ng-click="player.prev()">⏮ Previous</button>
+      <button ng-click="player.playPause()">
+        <span ng-show="!player.playing">▶ Play</span>
+        <span ng-show="player.playing">⏸ Pause</span>
+      </button>
+      <button ng-click="player.next()">⏭ Next</button>
+      <button ng-click="player.stop()">⏹ Stop</button>
+    </div>
+    
+    <div class="status">
+      <p><strong>Track:</strong> {{ player.currentTrack }} of {{ player.tracks }}</p>
+      <p><strong>Time:</strong> {{ player.formatTime }} / {{ player.formatDuration }}</p>
+      <p><strong>Status:</strong> 
+        <span ng-show="player.playing">Playing</span>
+        <span ng-show="!player.playing">Paused</span>
+      </p>
+    </div>
+    
+    <h3>Playlist</h3>
+    <ul class="playlist">
+      <li ng-repeat="track in playlist" 
+          ng-class="{active: $index + 1 === player.currentTrack}"
+          ng-click="player.play($index)">
+        Track {{ $index + 1 }}: {{ track.title || 'Unknown' }}
+      </li>
+    </ul>
+  </div>
+  
+  <script>
+    angular.module('playlistApp', ['mediaPlayer'])
+    .controller('PlaylistController', function($scope) {
+      $scope.playlist = [
+        { 
+          src: 'http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg', 
+          type: 'audio/ogg',
+          title: 'Silence'
+        },
+        { 
+          src: 'http://upload.wikimedia.org/wikipedia/en/c/cb/Stairway_to_Heaven_3_sections.ogg', 
+          type: 'audio/ogg',
+          title: 'Stairway to Heaven'
+        },
+        { 
+          src: 'http://upload.wikimedia.org/wikipedia/en/d/d0/Beatles_cometogether.ogg', 
+          type: 'audio/ogg',
+          title: 'Come Together'
+        }
+      ];
+    });
+  </script>
+</body>
+</html>
