@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -23,6 +24,10 @@ public class ComicsService {
     private String comicsDirectory;
     
     public List<ComicFile> getAllComics() {
+        return getAllComics("name");
+    }
+    
+    public List<ComicFile> getAllComics(String sortBy) {
         List<ComicFile> comics = new ArrayList<>();
         Set<String> usedSlugs = new HashSet<>();
         Path rootPath = Paths.get(comicsDirectory);
@@ -34,17 +39,18 @@ public class ComicsService {
         try (Stream<Path> paths = Files.walk(rootPath)) {
             paths.filter(Files::isRegularFile)
                  .filter(path -> path.toString().toLowerCase().endsWith(".pdf"))
-                 .sorted(Comparator.comparing(Path::toString))
                  .forEach(path -> {
                      try {
                          String relativePath = rootPath.relativize(path).toString().replace("\\", "/");
                          String slug = generateUniqueSlug(path.getFileName().toString(), relativePath, usedSlugs);
+                         FileTime lastModifiedTime = Files.getLastModifiedTime(path);
                          comics.add(new ComicFile(
                              path.getFileName().toString(),
                              path.toString(),
                              relativePath,
                              slug,
-                             Files.size(path)
+                             Files.size(path),
+                             lastModifiedTime.toMillis()
                          ));
                      } catch (IOException e) {
                          // Skip files that can't be read
@@ -52,6 +58,16 @@ public class ComicsService {
                  });
         } catch (IOException e) {
             // Return empty list on error
+        }
+        
+        // Sort based on sortBy parameter
+        if ("date".equalsIgnoreCase(sortBy) || "dateDesc".equalsIgnoreCase(sortBy)) {
+            comics.sort(Comparator.comparing(ComicFile::getLastModified).reversed());
+        } else if ("dateAsc".equalsIgnoreCase(sortBy)) {
+            comics.sort(Comparator.comparing(ComicFile::getLastModified));
+        } else {
+            // Default: sort by name
+            comics.sort(Comparator.comparing(ComicFile::getName, String.CASE_INSENSITIVE_ORDER));
         }
         
         return comics;
