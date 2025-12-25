@@ -1,0 +1,20 @@
+{
+  "name": "mp4-scanner-backend",
+  "version": "1.0.0",
+  "description": "Backend service to scan and catalog MP4 files from E: drive",
+  "main": "src/scanner.js",
+  "scripts": {
+    "start": "node src/scanner.js",
+    "scan": "node src/scanner.js"
+  },
+  "keywords": [
+    "mp4",
+    "scanner",
+    "file-system",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
+
