@@ -6,7 +6,9 @@ const crypto = require('crypto');
 const DRIVE_PATH = process.env.DRIVE_PATH || 'E:\\';
 const OUTPUT_FILE = path.join(__dirname, '..', 'media-files.json');
 const ALLOWED_EXTENSIONS = ['.mp3', '.mp4', '.pdf', '.jpg', '.jpeg', '.flv'];
-const EXCLUDE_DIRS = process.env.EXCLUDE_DIRS ? process.env.EXCLUDE_DIRS.split(',').map(d => d.trim()) : [];
+const EXCLUDE_DIRS = process.env.EXCLUDE_DIRS 
+  ? process.env.EXCLUDE_DIRS.split(',').map(d => d.trim().replace(/^["']|["']$/g, ''))
+  : [];
 
 // Extension type mapping
 const EXTENSION_TYPES = {
@@ -56,24 +58,45 @@ function getExtensionType(extension) {
 function shouldExcludeDirectory(dirPath, excludeDirs) {
   if (!excludeDirs || excludeDirs.length === 0) return false;
   
-  const normalizedPath = dirPath.toLowerCase().replace(/\\/g, '/');
+  // Normalize the directory path (remove quotes, normalize slashes, lowercase)
+  const normalizedPath = dirPath.toLowerCase().replace(/\\/g, '/').replace(/^["']|["']$/g, '');
   
   for (const excludeDir of excludeDirs) {
-    const normalizedExclude = excludeDir.toLowerCase().replace(/\\/g, '/');
+    // Remove quotes and normalize the exclude directory
+    let normalizedExclude = excludeDir.trim().toLowerCase().replace(/\\/g, '/').replace(/^["']|["']$/g, '');
     
-    // Check if directory name matches
+    // Remove trailing slash if present
+    normalizedExclude = normalizedExclude.replace(/\/$/, '');
+    
+    // Check if directory name matches (just the basename)
     const dirName = path.basename(dirPath).toLowerCase();
-    if (dirName === normalizedExclude || dirName === path.basename(normalizedExclude).toLowerCase()) {
+    const excludeName = path.basename(normalizedExclude).toLowerCase();
+    if (dirName === excludeName || dirName === normalizedExclude) {
       return true;
     }
     
-    // Check if full path matches or is a subdirectory
-    if (normalizedPath === normalizedExclude || normalizedPath.startsWith(normalizedExclude + '/')) {
+    // Check if full path matches exactly
+    if (normalizedPath === normalizedExclude) {
       return true;
     }
     
-    // Check if it's a relative match (e.g., "node_modules" anywhere in path)
-    if (normalizedPath.includes('/' + normalizedExclude + '/') || normalizedPath.endsWith('/' + normalizedExclude)) {
+    // Check if this directory is a subdirectory of an excluded path
+    // e.g., "E:/$RECYCLE.BIN" should match "E:/$RECYCLE.BIN/SubFolder"
+    if (normalizedPath.startsWith(normalizedExclude + '/')) {
+      return true;
+    }
+    
+    // Check if the excluded directory name appears anywhere in the path
+    // e.g., "node_modules" should match "E:/project/node_modules"
+    if (normalizedPath.includes('/' + excludeName + '/') || 
+        normalizedPath.endsWith('/' + excludeName) ||
+        normalizedPath === excludeName) {
+      return true;
+    }
+    
+    // Also check if the full exclude path appears in the directory path
+    if (normalizedPath.includes(normalizedExclude + '/') || 
+        normalizedPath.endsWith('/' + normalizedExclude)) {
       return true;
     }
   }
@@ -103,8 +126,13 @@ async function scanDirectory(dirPath, fileList = [], excludeDirs = []) {
 
       try {
         if (entry.isDirectory()) {
-          // Recursively scan subdirectories
-          await scanDirectory(fullPath, fileList, excludeDirs);
+          // Check if this subdirectory should be excluded before scanning
+          if (!shouldExcludeDirectory(fullPath, excludeDirs)) {
+            // Recursively scan subdirectories
+            await scanDirectory(fullPath, fileList, excludeDirs);
+          } else {
+            console.log(`Excluding directory: ${fullPath}`);
+          }
         } else if (entry.isFile()) {
           const fileExtension = path.extname(entry.name).toLowerCase();
           
