@@ -337,7 +337,7 @@ function displayFileDetails(data) {
                 ` : ''}
             </div>
             <div>
-                <button class="btn btn-success" onclick="openViewer('${file.slug}'); bootstrap.Modal.getInstance(document.getElementById('fileDetailsModal')).hide();">
+                <button class="btn btn-success" onclick="bootstrap.Modal.getInstance(document.getElementById('fileDetailsModal')).hide(); setTimeout(() => openViewer('${file.slug}'), 300);">
                     <i class="bi bi-play-circle"></i> Open in Viewer
                 </button>
             </div>
@@ -357,23 +357,169 @@ function resetFilters() {
     loadFiles(1);
 }
 
-// Open universal viewer in popup
-function openViewer(slug) {
-    const width = window.innerWidth * 0.9;
-    const height = window.innerHeight * 0.9;
-    const left = (window.innerWidth - width) / 2;
-    const top = (window.innerHeight - height) / 2;
-    
-    const viewerWindow = window.open(
-        `/viewer/${slug}`,
-        'universalViewer',
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no`
-    );
-    
-    if (!viewerWindow) {
-        alert('Please allow popups for this site to view files');
+// Current viewer file data
+let currentViewerFile = null;
+let currentViewerNavigation = null;
+
+// Open universal viewer in modal
+async function openViewer(slug) {
+    try {
+        const response = await fetch(`/api/files/${slug}`);
+        if (!response.ok) {
+            throw new Error('Failed to load file');
+        }
+        const data = await response.json();
+        currentViewerFile = data.file;
+        currentViewerNavigation = data.navigation;
+        
+        displayViewer(data);
+        
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('universalViewerModal'));
+        modal.show();
+    } catch (error) {
+        console.error('Error loading file for viewer:', error);
+        alert('Error loading file: ' + error.message);
     }
 }
+
+// Display content in viewer modal
+function displayViewer(data) {
+    const file = data.file;
+    const navigation = data.navigation;
+    
+    // Update header
+    const typeIcons = {
+        'image': 'image',
+        'video': 'play-circle',
+        'song': 'music-note-beamed',
+        'pdf': 'file-earmark-pdf'
+    };
+    const icon = typeIcons[file.extensionType] || 'file';
+    
+    document.getElementById('viewerIcon').className = `bi bi-${icon}`;
+    document.getElementById('viewerFileName').textContent = file.name;
+    document.getElementById('viewerTypeBadge').textContent = file.extensionType;
+    document.getElementById('viewerTypeBadge').className = `badge badge-type-${file.extensionType}`;
+    document.getElementById('viewerFileSize').textContent = file.sizeFormatted;
+    document.getElementById('viewerFileExtension').textContent = file.extension;
+    
+    // Show/hide navigation buttons
+    document.getElementById('viewerPrevBtn').style.display = navigation.prev ? 'block' : 'none';
+    document.getElementById('viewerNextBtn').style.display = navigation.next ? 'block' : 'none';
+    
+    // Show/hide action buttons based on file type
+    const downloadBtn = document.getElementById('viewerDownloadBtn');
+    const fullscreenBtn = document.getElementById('viewerFullscreenBtn');
+    
+    if (file.extensionType === 'video' || file.extensionType === 'image') {
+        downloadBtn.style.display = 'block';
+        if (file.extensionType === 'video') {
+            fullscreenBtn.style.display = 'block';
+        } else {
+            fullscreenBtn.style.display = 'none';
+        }
+    } else {
+        downloadBtn.style.display = 'block';
+        fullscreenBtn.style.display = 'none';
+    }
+    
+    // Display content based on type
+    const contentDiv = document.getElementById('viewerContent');
+    
+    if (file.extensionType === 'image') {
+        contentDiv.innerHTML = `
+            <img src="/file/${file.slug}" alt="${escapeHtml(file.name)}" 
+                 style="max-width: 100%; max-height: 100%; object-fit: contain;" 
+                 class="img-fluid">
+        `;
+    } else if (file.extensionType === 'video') {
+        contentDiv.innerHTML = `
+            <video controls autoplay style="max-width: 100%; max-height: 100%;" id="viewerVideo">
+                <source src="/file/${file.slug}" type="video/${file.extension === '.mp4' ? 'mp4' : 'x-flv'}">
+                Your browser does not support the video tag.
+            </video>
+        `;
+    } else if (file.extensionType === 'song') {
+        contentDiv.innerHTML = `
+            <div class="text-center w-100">
+                <audio controls autoplay style="width: 80%; max-width: 600px;" id="viewerAudio">
+                    <source src="/file/${file.slug}" type="audio/mpeg">
+                    Your browser does not support the audio tag.
+                </audio>
+                <div class="mt-4 text-white">
+                    <h4>${escapeHtml(file.name)}</h4>
+                    <p class="text-muted">${file.sizeFormatted}</p>
+                </div>
+            </div>
+        `;
+    } else if (file.extensionType === 'pdf') {
+        contentDiv.innerHTML = `
+            <iframe src="/file/${file.slug}" 
+                    style="width: 100%; height: 100%; border: none;" 
+                    id="viewerIframe"></iframe>
+        `;
+    } else {
+        contentDiv.innerHTML = `
+            <div class="text-center text-white">
+                <i class="bi bi-file-earmark-x" style="font-size: 4rem;"></i>
+                <h3>Unsupported File Type</h3>
+                <p>This file type cannot be previewed in the browser.</p>
+                <p class="text-muted">File: ${escapeHtml(file.name)}</p>
+                <p class="text-muted">Path: ${escapeHtml(file.path)}</p>
+            </div>
+        `;
+    }
+}
+
+// Navigate viewer (prev/next)
+function navigateViewer(direction) {
+    if (!currentViewerNavigation) return;
+    
+    const targetSlug = direction === 'prev' 
+        ? currentViewerNavigation.prev?.slug 
+        : currentViewerNavigation.next?.slug;
+    
+    if (targetSlug) {
+        openViewer(targetSlug);
+    }
+}
+
+// Download file from viewer
+function downloadViewerFile() {
+    if (currentViewerFile) {
+        window.location.href = `/file/${currentViewerFile.slug}?download=true`;
+    }
+}
+
+// Toggle fullscreen for video
+function toggleViewerFullscreen() {
+    const video = document.getElementById('viewerVideo');
+    if (video) {
+        if (!document.fullscreenElement) {
+            video.requestFullscreen().catch(err => {
+                console.error('Error attempting to enable fullscreen:', err);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+}
+
+// Keyboard navigation for viewer modal
+document.addEventListener('keydown', (e) => {
+    const viewerModal = document.getElementById('universalViewerModal');
+    if (viewerModal && viewerModal.classList.contains('show')) {
+        if (e.key === 'ArrowLeft' && currentViewerNavigation?.prev) {
+            navigateViewer('prev');
+        } else if (e.key === 'ArrowRight' && currentViewerNavigation?.next) {
+            navigateViewer('next');
+        } else if (e.key === 'Escape') {
+            const modal = bootstrap.Modal.getInstance(viewerModal);
+            if (modal) modal.hide();
+        }
+    }
+});
 
 // Escape HTML to prevent XSS
 function escapeHtml(text) {
