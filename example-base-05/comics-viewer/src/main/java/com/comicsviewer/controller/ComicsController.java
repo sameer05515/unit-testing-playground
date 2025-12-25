@@ -73,7 +73,7 @@ public class ComicsController {
     @GetMapping("/comic/{path:.+}")
     @Operation(
             summary = "Get comic by path",
-            description = "Retrieves a comic PDF file by its relative path. This is the legacy endpoint."
+            description = "Retrieves a comic PDF file by its relative path. This is the legacy endpoint. Searches across all configured directories."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -90,7 +90,8 @@ public class ComicsController {
             @Parameter(description = "Relative path to the comic file", required = true)
             @PathVariable String path) {
         String decodedPath = java.net.URLDecoder.decode(path, StandardCharsets.UTF_8);
-        File comicFile = comicsService.getComicFile(decodedPath);
+        // Search across all directories (sourceDirectory is null, so it searches all)
+        File comicFile = comicsService.getComicFile(decodedPath, null);
         
         if (comicFile == null || !comicFile.exists()) {
             return ResponseEntity.notFound().build();
@@ -131,7 +132,8 @@ public class ComicsController {
             return ResponseEntity.notFound().build();
         }
         
-        File comicFile = comicsService.getComicFile(comic.getRelativePath());
+        // Use source directory if available for faster lookup
+        File comicFile = comicsService.getComicFile(comic.getRelativePath(), comic.getSourceDirectory());
         
         if (comicFile == null || !comicFile.exists()) {
             return ResponseEntity.notFound().build();

@@ -28,5 +28,8 @@ public class ComicFile {
     
     @Schema(description = "File modification date in milliseconds since epoch", example = "1640995200000")
     private long lastModified;
+    
+    @Schema(description = "Source directory identifier (index or name) for multi-directory support", example = "0")
+    private String sourceDirectory;
 }
 
