@@ -32,9 +32,17 @@ function loadMediaFiles() {
   }
 }
 
+// Import scan service
+const scanService = require('./scanService');
+
 // Root endpoint - serve main view
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'index.html'));
+});
+
+// Scan view endpoint
+app.get('/scan', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views', 'scan.html'));
 });
 
 // API: Get all media files data
@@ -272,6 +280,46 @@ app.get('/file/:slug', (req, res) => {
   // Stream the file
   const fileStream = fs.createReadStream(file.path);
   fileStream.pipe(res);
+});
+
+// Scan API endpoints
+app.post('/api/scan/start', (req, res) => {
+  try {
+    const result = scanService.startScan();
+    if (result.error) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to start scan',
+      message: error.message
+    });
+  }
+});
+
+app.get('/api/scan/status', (req, res) => {
+  try {
+    const status = scanService.getScanStatus();
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to get scan status',
+      message: error.message
+    });
+  }
+});
+
+app.post('/api/scan/reset', (req, res) => {
+  try {
+    scanService.resetScanStatus();
+    res.json({ success: true, message: 'Scan status reset' });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to reset scan status',
+      message: error.message
+    });
+  }
 });
 
 // Health check
