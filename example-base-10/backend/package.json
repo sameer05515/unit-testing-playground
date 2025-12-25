@@ -1,0 +1,24 @@
+{
+  "name": "backend-api",
+  "version": "1.0.0",
+  "description": "Express API backend for fetching JSON data",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "keywords": [
+    "express",
+    "api",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "swagger-ui-express": "^5.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "redoc-express": "^1.0.0"
+  }
+}
