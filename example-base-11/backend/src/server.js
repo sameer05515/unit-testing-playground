@@ -32,6 +32,29 @@ function loadMediaFiles() {
   }
 }
 
+// Helper function to parse size string to bytes
+// Examples: "1KB" -> 1024, "1MB" -> 1048576, "1GB" -> 1073741824
+function parseSizeToBytes(sizeStr) {
+  if (!sizeStr) return null;
+  
+  const upper = sizeStr.toUpperCase().trim();
+  const match = upper.match(/^(\d+(?:\.\d+)?)\s*(KB|MB|GB|TB)$/);
+  
+  if (!match) return null;
+  
+  const value = parseFloat(match[1]);
+  const unit = match[2];
+  
+  const multipliers = {
+    'KB': 1024,
+    'MB': 1024 * 1024,
+    'GB': 1024 * 1024 * 1024,
+    'TB': 1024 * 1024 * 1024 * 1024
+  };
+  
+  return Math.floor(value * (multipliers[unit] || 1));
+}
+
 // Import scan service
 const scanService = require('./scanService');
 
@@ -106,6 +129,21 @@ app.get('/api/files', (req, res) => {
       file.name.toLowerCase().includes(searchTerm) ||
       file.path.toLowerCase().includes(searchTerm)
     );
+  }
+
+  // Filter by size (min and max)
+  if (req.query.minSize) {
+    const minSizeBytes = parseSizeToBytes(req.query.minSize);
+    if (minSizeBytes !== null) {
+      files = files.filter(file => file.size >= minSizeBytes);
+    }
+  }
+
+  if (req.query.maxSize) {
+    const maxSizeBytes = parseSizeToBytes(req.query.maxSize);
+    if (maxSizeBytes !== null) {
+      files = files.filter(file => file.size <= maxSizeBytes);
+    }
   }
 
   // Sort
@@ -285,7 +323,8 @@ app.get('/file/:slug', (req, res) => {
 // Scan API endpoints
 app.post('/api/scan/start', (req, res) => {
   try {
-    const result = scanService.startScan();
+    const excludeDirs = req.body.excludeDirs || [];
+    const result = scanService.startScan(excludeDirs);
     if (result.error) {
       return res.status(400).json(result);
     }

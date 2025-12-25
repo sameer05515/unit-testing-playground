@@ -3,9 +3,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 // Configuration
-const DRIVE_PATH = 'E:\\';
+const DRIVE_PATH = process.env.DRIVE_PATH || 'E:\\';
 const OUTPUT_FILE = path.join(__dirname, '..', 'media-files.json');
 const ALLOWED_EXTENSIONS = ['.mp3', '.mp4', '.pdf', '.jpg', '.jpeg', '.flv'];
+const EXCLUDE_DIRS = process.env.EXCLUDE_DIRS ? process.env.EXCLUDE_DIRS.split(',').map(d => d.trim()) : [];
 
 // Extension type mapping
 const EXTENSION_TYPES = {
@@ -47,12 +48,53 @@ function getExtensionType(extension) {
 }
 
 /**
+ * Check if a directory should be excluded
+ * @param {string} dirPath - Directory path to check
+ * @param {Array} excludeDirs - Array of directory paths/names to exclude
+ * @returns {boolean} - True if directory should be excluded
+ */
+function shouldExcludeDirectory(dirPath, excludeDirs) {
+  if (!excludeDirs || excludeDirs.length === 0) return false;
+  
+  const normalizedPath = dirPath.toLowerCase().replace(/\\/g, '/');
+  
+  for (const excludeDir of excludeDirs) {
+    const normalizedExclude = excludeDir.toLowerCase().replace(/\\/g, '/');
+    
+    // Check if directory name matches
+    const dirName = path.basename(dirPath).toLowerCase();
+    if (dirName === normalizedExclude || dirName === path.basename(normalizedExclude).toLowerCase()) {
+      return true;
+    }
+    
+    // Check if full path matches or is a subdirectory
+    if (normalizedPath === normalizedExclude || normalizedPath.startsWith(normalizedExclude + '/')) {
+      return true;
+    }
+    
+    // Check if it's a relative match (e.g., "node_modules" anywhere in path)
+    if (normalizedPath.includes('/' + normalizedExclude + '/') || normalizedPath.endsWith('/' + normalizedExclude)) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+/**
  * Recursively scan directory for media files
  * @param {string} dirPath - Directory path to scan
  * @param {Array} fileList - Array to store found files
+ * @param {Array} excludeDirs - Array of directories to exclude
  * @returns {Promise<Array>} - Array of file information objects
  */
-async function scanDirectory(dirPath, fileList = []) {
+async function scanDirectory(dirPath, fileList = [], excludeDirs = []) {
+  // Check if this directory should be excluded
+  if (shouldExcludeDirectory(dirPath, excludeDirs)) {
+    console.log(`Excluding directory: ${dirPath}`);
+    return fileList;
+  }
+
   try {
     const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
 
@@ -62,7 +104,7 @@ async function scanDirectory(dirPath, fileList = []) {
       try {
         if (entry.isDirectory()) {
           // Recursively scan subdirectories
-          await scanDirectory(fullPath, fileList);
+          await scanDirectory(fullPath, fileList, excludeDirs);
         } else if (entry.isFile()) {
           const fileExtension = path.extname(entry.name).toLowerCase();
           
@@ -119,10 +161,13 @@ function formatBytes(bytes) {
 async function main() {
   console.log(`Starting scan of ${DRIVE_PATH} for files with extensions: ${ALLOWED_EXTENSIONS.join(', ')}`);
   console.log(`Output will be saved to: ${OUTPUT_FILE}`);
+  if (EXCLUDE_DIRS.length > 0) {
+    console.log(`Excluding directories: ${EXCLUDE_DIRS.join(', ')}`);
+  }
   console.log('This may take a while depending on the number of files...\n');
 
   const startTime = Date.now();
-  const mediaFiles = await scanDirectory(DRIVE_PATH);
+  const mediaFiles = await scanDirectory(DRIVE_PATH, [], EXCLUDE_DIRS);
   const endTime = Date.now();
   const duration = ((endTime - startTime) / 1000).toFixed(2);
 

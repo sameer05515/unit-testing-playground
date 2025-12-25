@@ -30,11 +30,11 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Search</label>
                         <input type="text" class="form-control" id="searchInput" placeholder="Search by name or path...">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label">Type</label>
                         <select class="form-select" id="typeFilter">
                             <option value="">All Types</option>
@@ -44,7 +44,7 @@
                             <option value="pdf">PDF</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label">Extension</label>
                         <select class="form-select" id="extensionFilter">
                             <option value="">All Extensions</option>
@@ -57,6 +57,34 @@
                         </select>
                     </div>
                     <div class="col-md-2">
+                        <label class="form-label">Min Size</label>
+                        <select class="form-select" id="minSizeFilter">
+                            <option value="">No Minimum</option>
+                            <option value="1KB">1 KB</option>
+                            <option value="100KB">100 KB</option>
+                            <option value="1MB">1 MB</option>
+                            <option value="10MB">10 MB</option>
+                            <option value="100MB">100 MB</option>
+                            <option value="1GB">1 GB</option>
+                            <option value="5GB">5 GB</option>
+                            <option value="10GB">10 GB</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Max Size</label>
+                        <select class="form-select" id="maxSizeFilter">
+                            <option value="">No Maximum</option>
+                            <option value="1MB">1 MB</option>
+                            <option value="10MB">10 MB</option>
+                            <option value="100MB">100 MB</option>
+                            <option value="1GB">1 GB</option>
+                            <option value="5GB">5 GB</option>
+                            <option value="10GB">10 GB</option>
+                            <option value="50GB">50 GB</option>
+                            <option value="100GB">100 GB</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
                         <label class="form-label">Sort By</label>
                         <select class="form-select" id="sortBy">
                             <option value="path">Path</option>

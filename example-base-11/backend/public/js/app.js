@@ -106,6 +106,8 @@ async function loadFiles(page = 1) {
     const search = document.getElementById('searchInput').value.trim();
     const type = document.getElementById('typeFilter').value;
     const extension = document.getElementById('extensionFilter').value;
+    const minSize = document.getElementById('minSizeFilter').value;
+    const maxSize = document.getElementById('maxSizeFilter').value;
     const sortBy = document.getElementById('sortBy').value;
 
     // Build query params
@@ -119,6 +121,8 @@ async function loadFiles(page = 1) {
     if (search) params.append('search', search);
     if (type) params.append('type', type);
     if (extension) params.append('extension', extension);
+    if (minSize) params.append('minSize', minSize);
+    if (maxSize) params.append('maxSize', maxSize);
 
     try {
         const response = await fetch(`/api/files?${params}`);
@@ -353,6 +357,8 @@ function resetFilters() {
     document.getElementById('searchInput').value = '';
     document.getElementById('typeFilter').value = '';
     document.getElementById('extensionFilter').value = '';
+    document.getElementById('minSizeFilter').value = '';
+    document.getElementById('maxSizeFilter').value = '';
     document.getElementById('sortBy').value = 'path';
     loadFiles(1);
 }

@@ -103,6 +103,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label">Exclude Directories</label>
+                        <textarea class="form-control" id="excludeDirs" rows="3" 
+                                  placeholder="Enter directory names or paths to exclude (one per line or comma-separated)&#10;Examples:&#10;node_modules&#10;System Volume Information&#10;E:\Windows&#10;E:\Program Files"></textarea>
+                        <small class="text-muted">
+                            Enter directory names (e.g., "node_modules") or full paths (e.g., "E:\Windows"). 
+                            One per line or comma-separated. Matching directories and their subdirectories will be excluded.
+                        </small>
+                    </div>
+                </div>
                 <div class="d-grid">
                     <button class="btn btn-primary btn-lg" id="startScanBtn" onclick="startScan()">
                         <i class="bi bi-play-fill"></i> Start Scan
@@ -183,8 +194,28 @@
             addLog('Starting scan...', 'info');
 
             try {
+                // Get exclude directories from textarea
+                const excludeDirsText = document.getElementById('excludeDirs').value.trim();
+                let excludeDirs = [];
+                
+                if (excludeDirsText) {
+                    // Split by newlines and commas, then filter out empty strings
+                    excludeDirs = excludeDirsText
+                        .split(/[\n,]+/)
+                        .map(dir => dir.trim())
+                        .filter(dir => dir.length > 0);
+                }
+
+                if (excludeDirs.length > 0) {
+                    addLog(`Excluding directories: ${excludeDirs.join(', ')}`, 'info');
+                }
+
                 const response = await fetch('/api/scan/start', {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ excludeDirs: excludeDirs })
                 });
 
                 if (!response.ok) {

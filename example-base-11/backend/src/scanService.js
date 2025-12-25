@@ -67,8 +67,9 @@ function formatBytes(bytes) {
 
 /**
  * Start scan process
+ * @param {Array} excludeDirs - Array of directory paths/names to exclude
  */
-function startScan() {
+function startScan(excludeDirs = []) {
   if (scanStatus.status === 'running') {
     return { error: 'Scan is already in progress' };
   }
@@ -86,11 +87,18 @@ function startScan() {
     error: null
   };
 
+  // Prepare environment variables
+  const env = { ...process.env };
+  if (excludeDirs && excludeDirs.length > 0) {
+    env.EXCLUDE_DIRS = excludeDirs.join(',');
+  }
+
   // Start scan in background
   const scannerPath = path.join(__dirname, 'scanner.js');
   const scanProcess = spawn('node', [scannerPath], {
     detached: true,
-    stdio: ['ignore', 'pipe', 'pipe']
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env: env
   });
 
   scanProcess.stdout.on('data', (data) => {
