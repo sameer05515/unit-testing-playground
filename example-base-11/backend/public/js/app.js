@@ -6,6 +6,7 @@ let currentFilters = {};
 // Load statistics on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadStats();
+    updateRemoveButtons(); // Initialize remove buttons visibility
     loadFiles();
 });
 
@@ -98,6 +99,23 @@ function getTypeIcon(type) {
     return icons[type] || 'file';
 }
 
+// Get sort criteria from UI
+function getSortCriteria() {
+    const sortItems = document.querySelectorAll('.sort-item');
+    const sorts = [];
+    
+    sortItems.forEach(item => {
+        const field = item.querySelector('.sort-field').value;
+        const order = item.querySelector('.sort-order').value;
+        
+        if (field && field.trim()) {
+            sorts.push(`${field}:${order}`);
+        }
+    });
+    
+    return sorts.length > 0 ? sorts.join(',') : null;
+}
+
 // Load files with filters
 async function loadFiles(page = 1) {
     currentPage = page;
@@ -108,14 +126,12 @@ async function loadFiles(page = 1) {
     const extension = document.getElementById('extensionFilter').value;
     const minSize = document.getElementById('minSizeFilter').value;
     const maxSize = document.getElementById('maxSizeFilter').value;
-    const sortBy = document.getElementById('sortBy').value;
+    const sortCriteria = getSortCriteria();
 
     // Build query params
     const params = new URLSearchParams({
         page: page,
-        limit: currentLimit,
-        sortBy: sortBy,
-        sortOrder: 'asc'
+        limit: currentLimit
     });
 
     if (search) params.append('search', search);
@@ -123,6 +139,9 @@ async function loadFiles(page = 1) {
     if (extension) params.append('extension', extension);
     if (minSize) params.append('minSize', minSize);
     if (maxSize) params.append('maxSize', maxSize);
+    if (sortCriteria) {
+        params.append('sort', sortCriteria);
+    }
 
     try {
         const response = await fetch(`/api/files?${params}`);
@@ -352,6 +371,58 @@ function displayFileDetails(data) {
     modal.show();
 }
 
+// Add sort item
+function addSortItem() {
+    const container = document.getElementById('sortContainer');
+    const newItem = document.createElement('div');
+    newItem.className = 'sort-item row g-2 mb-2';
+    newItem.innerHTML = `
+        <div class="col-md-5">
+            <select class="form-select sort-field">
+                <option value="">-- Select Sort Field --</option>
+                <option value="path">Path</option>
+                <option value="name">Name</option>
+                <option value="size">Size</option>
+                <option value="modified">Modified Date</option>
+                <option value="created">Created Date</option>
+                <option value="extension">Extension</option>
+                <option value="extensionType">Type</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select sort-order">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-outline-danger remove-sort" onclick="removeSortItem(this)">
+                <i class="bi bi-trash"></i> Remove
+            </button>
+        </div>
+    `;
+    container.appendChild(newItem);
+    updateRemoveButtons();
+}
+
+// Remove sort item
+function removeSortItem(button) {
+    const item = button.closest('.sort-item');
+    item.remove();
+    updateRemoveButtons();
+}
+
+// Update remove buttons visibility
+function updateRemoveButtons() {
+    const sortItems = document.querySelectorAll('.sort-item');
+    const removeButtons = document.querySelectorAll('.remove-sort');
+    
+    // Show remove button only if there's more than one sort item
+    removeButtons.forEach(btn => {
+        btn.style.display = sortItems.length > 1 ? 'block' : 'none';
+    });
+}
+
 // Reset filters
 function resetFilters() {
     document.getElementById('searchInput').value = '';
@@ -359,7 +430,37 @@ function resetFilters() {
     document.getElementById('extensionFilter').value = '';
     document.getElementById('minSizeFilter').value = '';
     document.getElementById('maxSizeFilter').value = '';
-    document.getElementById('sortBy').value = 'path';
+    
+    // Reset sort to single default
+    const sortContainer = document.getElementById('sortContainer');
+    sortContainer.innerHTML = `
+        <div class="sort-item row g-2 mb-2">
+            <div class="col-md-5">
+                <select class="form-select sort-field">
+                    <option value="">-- Select Sort Field --</option>
+                    <option value="path" selected>Path</option>
+                    <option value="name">Name</option>
+                    <option value="size">Size</option>
+                    <option value="modified">Modified Date</option>
+                    <option value="created">Created Date</option>
+                    <option value="extension">Extension</option>
+                    <option value="extensionType">Type</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select sort-order">
+                    <option value="asc" selected>Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-sm btn-outline-danger remove-sort" style="display: none;" onclick="removeSortItem(this)">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+            </div>
+        </div>
+    `;
+    updateRemoveButtons();
     loadFiles(1);
 }
 

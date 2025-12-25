@@ -90,7 +90,13 @@ function startScan(excludeDirs = []) {
   // Prepare environment variables
   const env = { ...process.env };
   if (excludeDirs && excludeDirs.length > 0) {
-    env.EXCLUDE_DIRS = excludeDirs.join(',');
+    // Clean up exclude directories (remove quotes, trim)
+    const cleanedExcludeDirs = excludeDirs.map(dir => dir.trim().replace(/^["']|["']$/g, ''));
+    env.EXCLUDE_DIRS = cleanedExcludeDirs.join(',');
+    scanStatus.lastLog = { 
+      message: `Excluding directories: ${cleanedExcludeDirs.join(', ')}`, 
+      type: 'info' 
+    };
   }
 
   // Start scan in background

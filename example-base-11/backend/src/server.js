@@ -146,23 +146,63 @@ app.get('/api/files', (req, res) => {
     }
   }
 
-  // Sort
-  const sortBy = req.query.sortBy || 'path';
-  const sortOrder = req.query.sortOrder || 'asc';
-  files.sort((a, b) => {
-    let aVal = a[sortBy];
-    let bVal = b[sortBy];
-    
-    if (typeof aVal === 'string') {
-      aVal = aVal.toLowerCase();
-      bVal = bVal.toLowerCase();
-    }
-    
-    if (sortOrder === 'desc') {
-      return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
-    }
-    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-  });
+  // Multiple sorts - support multiple sort criteria
+  // Format: sort=field1:order1,field2:order2 or sortBy=field&sortOrder=order (backward compatibility)
+  let sortCriteria = [];
+  
+  if (req.query.sort) {
+    // New format: sort=field1:order1,field2:order2
+    const sortPairs = req.query.sort.split(',');
+    sortPairs.forEach(pair => {
+      const [field, order = 'asc'] = pair.split(':');
+      if (field && field.trim()) {
+        sortCriteria.push({ field: field.trim(), order: order.trim() || 'asc' });
+      }
+    });
+  } else if (req.query.sortBy) {
+    // Backward compatibility: single sort
+    const sortBy = req.query.sortBy;
+    const sortOrder = req.query.sortOrder || 'asc';
+    sortCriteria.push({ field: sortBy, order: sortOrder });
+  } else {
+    // Default: sort by path
+    sortCriteria.push({ field: 'path', order: 'asc' });
+  }
+
+  // Apply multiple sorts
+  if (sortCriteria.length > 0) {
+    files.sort((a, b) => {
+      for (const { field, order } of sortCriteria) {
+        let aVal = a[field];
+        let bVal = b[field];
+        
+        // Handle undefined/null values
+        if (aVal === undefined || aVal === null) aVal = '';
+        if (bVal === undefined || bVal === null) bVal = '';
+        
+        // Handle string comparison
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+        
+        // Compare values
+        let comparison = 0;
+        if (aVal < bVal) {
+          comparison = -1;
+        } else if (aVal > bVal) {
+          comparison = 1;
+        }
+        
+        // If values are equal, continue to next sort criteria
+        if (comparison !== 0) {
+          // Apply sort order
+          return order === 'desc' ? -comparison : comparison;
+        }
+      }
+      return 0; // All sort criteria are equal
+    });
+  }
 
   // Pagination
   const page = parseInt(req.query.page) || 1;
