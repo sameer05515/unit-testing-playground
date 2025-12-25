@@ -1,13 +1,53 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 // Configuration
 const DRIVE_PATH = 'E:\\';
-const OUTPUT_FILE = path.join(__dirname, '..', 'mp4-files.json');
-const FILE_EXTENSION = '.mp4';
+const OUTPUT_FILE = path.join(__dirname, '..', 'media-files.json');
+const ALLOWED_EXTENSIONS = ['.mp3', '.mp4', '.pdf', '.jpg', '.jpeg', '.flv'];
+
+// Extension type mapping
+const EXTENSION_TYPES = {
+  '.mp3': 'song',
+  '.mp4': 'video',
+  '.flv': 'video',
+  '.pdf': 'pdf',
+  '.jpg': 'image',
+  '.jpeg': 'image'
+};
 
 /**
- * Recursively scan directory for MP4 files
+ * Generate a unique slug from file path
+ * @param {string} filePath - Full file path
+ * @returns {string} - Unique slug
+ */
+function generateSlug(filePath) {
+  // Create a hash from the file path for uniqueness
+  const hash = crypto.createHash('md5').update(filePath).digest('hex').substring(0, 8);
+  // Create a readable slug from the filename
+  const fileName = path.basename(filePath, path.extname(filePath));
+  const readableSlug = fileName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 50); // Limit length
+  
+  return `${readableSlug}-${hash}`;
+}
+
+/**
+ * Get extension type category
+ * @param {string} extension - File extension (with or without dot)
+ * @returns {string} - Extension type (image, pdf, song, video)
+ */
+function getExtensionType(extension) {
+  const ext = extension.toLowerCase().startsWith('.') ? extension.toLowerCase() : `.${extension.toLowerCase()}`;
+  return EXTENSION_TYPES[ext] || 'unknown';
+}
+
+/**
+ * Recursively scan directory for media files
  * @param {string} dirPath - Directory path to scan
  * @param {Array} fileList - Array to store found files
  * @returns {Promise<Array>} - Array of file information objects
@@ -23,22 +63,30 @@ async function scanDirectory(dirPath, fileList = []) {
         if (entry.isDirectory()) {
           // Recursively scan subdirectories
           await scanDirectory(fullPath, fileList);
-        } else if (entry.isFile() && path.extname(entry.name).toLowerCase() === FILE_EXTENSION) {
-          // Get file stats
-          const stats = await fs.promises.stat(fullPath);
+        } else if (entry.isFile()) {
+          const fileExtension = path.extname(entry.name).toLowerCase();
           
-          const fileInfo = {
-            path: fullPath,
-            name: entry.name,
-            size: stats.size,
-            sizeFormatted: formatBytes(stats.size),
-            created: stats.birthtime.toISOString(),
-            modified: stats.mtime.toISOString(),
-            accessed: stats.atime.toISOString()
-          };
+          // Check if file extension is in allowed list
+          if (ALLOWED_EXTENSIONS.includes(fileExtension)) {
+            // Get file stats
+            const stats = await fs.promises.stat(fullPath);
+            
+            const fileInfo = {
+              slug: generateSlug(fullPath),
+              path: fullPath,
+              name: entry.name,
+              extension: fileExtension,
+              extensionType: getExtensionType(fileExtension),
+              size: stats.size,
+              sizeFormatted: formatBytes(stats.size),
+              created: stats.birthtime.toISOString(),
+              modified: stats.mtime.toISOString(),
+              accessed: stats.atime.toISOString()
+            };
 
-          fileList.push(fileInfo);
-          console.log(`Found: ${fullPath} (${fileInfo.sizeFormatted})`);
+            fileList.push(fileInfo);
+            console.log(`Found [${fileInfo.extensionType}]: ${fullPath} (${fileInfo.sizeFormatted})`);
+          }
         }
       } catch (error) {
         // Skip files/directories that can't be accessed (permissions, etc.)
@@ -69,27 +117,41 @@ function formatBytes(bytes) {
  * Main function to scan E: drive and save results
  */
 async function main() {
-  console.log(`Starting scan of ${DRIVE_PATH} for ${FILE_EXTENSION} files...`);
+  console.log(`Starting scan of ${DRIVE_PATH} for files with extensions: ${ALLOWED_EXTENSIONS.join(', ')}`);
   console.log(`Output will be saved to: ${OUTPUT_FILE}`);
   console.log('This may take a while depending on the number of files...\n');
 
   const startTime = Date.now();
-  const mp4Files = await scanDirectory(DRIVE_PATH);
+  const mediaFiles = await scanDirectory(DRIVE_PATH);
   const endTime = Date.now();
   const duration = ((endTime - startTime) / 1000).toFixed(2);
 
   // Calculate total size
-  const totalSize = mp4Files.reduce((sum, file) => sum + file.size, 0);
+  const totalSize = mediaFiles.reduce((sum, file) => sum + file.size, 0);
+
+  // Count files by extension type
+  const filesByType = mediaFiles.reduce((acc, file) => {
+    acc[file.extensionType] = (acc[file.extensionType] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Count files by extension
+  const filesByExtension = mediaFiles.reduce((acc, file) => {
+    acc[file.extension] = (acc[file.extension] || 0) + 1;
+    return acc;
+  }, {});
 
   // Create result object
   const result = {
     scanDate: new Date().toISOString(),
     drivePath: DRIVE_PATH,
-    totalFiles: mp4Files.length,
+    totalFiles: mediaFiles.length,
     totalSize: totalSize,
     totalSizeFormatted: formatBytes(totalSize),
     scanDuration: `${duration} seconds`,
-    files: mp4Files.sort((a, b) => a.path.localeCompare(b.path))
+    filesByType: filesByType,
+    filesByExtension: filesByExtension,
+    files: mediaFiles.sort((a, b) => a.path.localeCompare(b.path))
   };
 
   // Write to JSON file
@@ -101,10 +163,18 @@ async function main() {
     );
     
     console.log('\n=== Scan Complete ===');
-    console.log(`Total MP4 files found: ${result.totalFiles}`);
+    console.log(`Total files found: ${result.totalFiles}`);
     console.log(`Total size: ${result.totalSizeFormatted}`);
     console.log(`Scan duration: ${result.scanDuration}`);
-    console.log(`Results saved to: ${OUTPUT_FILE}`);
+    console.log('\nFiles by type:');
+    Object.entries(filesByType).forEach(([type, count]) => {
+      console.log(`  ${type}: ${count}`);
+    });
+    console.log('\nFiles by extension:');
+    Object.entries(filesByExtension).forEach(([ext, count]) => {
+      console.log(`  ${ext}: ${count}`);
+    });
+    console.log(`\nResults saved to: ${OUTPUT_FILE}`);
   } catch (error) {
     console.error(`Error writing to ${OUTPUT_FILE}:`, error.message);
     process.exit(1);
