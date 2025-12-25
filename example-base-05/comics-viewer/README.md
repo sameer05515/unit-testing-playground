@@ -130,6 +130,32 @@ The application includes Swagger UI and Redocly documentation:
 - **Tailwind CSS**: Utility-first CSS framework
 - **Lombok**: Reduces boilerplate code
 
+## Testing
+
+The project includes comprehensive test cases:
+
+### Running Tests
+
+```bash
+# Run all tests
+mvn test
+
+# Run specific test class
+mvn test -Dtest=ComicsServiceTest
+
+# Run with coverage
+mvn test jacoco:report
+```
+
+### Test Structure
+
+- **Unit Tests**: `ComicsServiceTest` - Tests service layer logic
+- **Controller Tests**: `ComicsControllerTest` - Tests REST API endpoints
+- **Model Tests**: `ComicFileTest` - Tests model class
+- **Integration Tests**: `ComicsIntegrationTest` - End-to-end tests
+
+See [TEST_README.md](TEST_README.md) for detailed test documentation.
+
 ## Notes
 
 - The application scans the configured directory(ies) and all subdirectories for PDF files
