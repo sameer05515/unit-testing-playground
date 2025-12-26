@@ -1,6 +1,7 @@
 node_modules/
 mp4-files.json
 media-files.json
+deleted-files.json
 *.log
 .DS_Store
 

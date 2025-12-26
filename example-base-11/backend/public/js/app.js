@@ -206,6 +206,9 @@ function displayFiles(files) {
                 <button class="btn btn-sm btn-success ms-1" onclick="openViewer('${file.slug}')" title="Open in Viewer">
                     <i class="bi bi-play-circle"></i> View
                 </button>
+                <button class="btn btn-sm btn-danger ms-1" onclick="deleteFile('${file.slug}', '${escapeHtml(file.name)}')" title="Delete File">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
             </td>
         </tr>
     `).join('');
@@ -633,6 +636,70 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Delete file
+async function deleteFile(slug, fileName) {
+    if (!confirm(`Are you sure you want to delete "${fileName}"?\n\nThis will:\n- Delete the file from disk\n- Remove it from the media files list\n- Record it in deleted-files.json\n\nThis action cannot be undone!`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/files/${slug}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to delete file');
+        }
+
+        const result = await response.json();
+        
+        // Show success message
+        alert(`File deleted successfully!\n\nFile: ${result.deletedFile.name}\nPath: ${result.deletedFile.path}`);
+        
+        // Reload files list
+        loadFiles(currentPage);
+        
+        // Reload stats
+        loadStats();
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        alert('Error deleting file: ' + error.message);
+    }
+}
+
+// Delete file
+async function deleteFile(slug, fileName) {
+    if (!confirm(`Are you sure you want to delete "${fileName}"?\n\nThis will:\n- Delete the file from disk\n- Remove it from the media files list\n- Record it in deleted-files.json\n\nThis action cannot be undone!`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/files/${slug}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to delete file');
+        }
+
+        const result = await response.json();
+        
+        // Show success message
+        alert(`File deleted successfully!\n\nFile: ${result.deletedFile.name}\nPath: ${result.deletedFile.path}`);
+        
+        // Reload files list
+        loadFiles(currentPage);
+        
+        // Reload stats
+        loadStats();
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        alert('Error deleting file: ' + error.message);
+    }
 }
 
 // Allow Enter key to trigger search

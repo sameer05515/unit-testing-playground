@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Path to media files JSON
 const MEDIA_FILES_PATH = path.join(__dirname, '..', 'media-files.json');
+const DELETED_FILES_PATH = path.join(__dirname, '..', 'deleted-files.json');
 
 // Helper function to load media files data
 function loadMediaFiles() {
@@ -30,6 +31,55 @@ function loadMediaFiles() {
     console.error('Error loading media files:', error);
     return null;
   }
+}
+
+// Helper function to load deleted files data
+function loadDeletedFiles() {
+  try {
+    if (!fs.existsSync(DELETED_FILES_PATH)) {
+      return { deletedFiles: [], lastUpdated: null };
+    }
+    const data = fs.readFileSync(DELETED_FILES_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading deleted files:', error);
+    return { deletedFiles: [], lastUpdated: null };
+  }
+}
+
+// Helper function to save deleted files data
+function saveDeletedFiles(deletedData) {
+  try {
+    const data = {
+      lastUpdated: new Date().toISOString(),
+      deletedFiles: deletedData.deletedFiles || []
+    };
+    fs.writeFileSync(DELETED_FILES_PATH, JSON.stringify(data, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error('Error saving deleted files:', error);
+    return false;
+  }
+}
+
+// Helper function to update media files (remove deleted file)
+function updateMediaFiles(updatedData) {
+  try {
+    fs.writeFileSync(MEDIA_FILES_PATH, JSON.stringify(updatedData, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error('Error updating media files:', error);
+    return false;
+  }
+}
+
+// Helper function to format bytes to human-readable format
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
 // Helper function to parse size string to bytes
@@ -249,6 +299,97 @@ app.get('/api/files/:slug', (req, res) => {
       next: nextFile ? { slug: nextFile.slug, name: nextFile.name } : null
     }
   });
+});
+
+// API: Delete file
+app.delete('/api/files/:slug', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const fileIndex = data.files.findIndex(f => f.slug === req.params.slug);
+  if (fileIndex === -1) {
+    return res.status(404).json({
+      error: 'File not found'
+    });
+  }
+
+  const file = data.files[fileIndex];
+  const filePath = file.path;
+
+  // Check if file exists on disk
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({
+      error: 'File does not exist on disk',
+      message: 'File may have already been deleted'
+    });
+  }
+
+  try {
+    // Delete file from filesystem
+    fs.unlinkSync(filePath);
+    
+    // Add to deleted files
+    const deletedData = loadDeletedFiles();
+    const deletedEntry = {
+      ...file,
+      deletedAt: new Date().toISOString(),
+      deletedBy: req.ip || 'unknown',
+      originalScanDate: data.scanDate
+    };
+    
+    deletedData.deletedFiles.push(deletedEntry);
+    saveDeletedFiles(deletedData);
+
+    // Remove from media files
+    data.files.splice(fileIndex, 1);
+    data.totalFiles = data.files.length;
+    
+    // Recalculate statistics
+    const totalSize = data.files.reduce((sum, f) => sum + f.size, 0);
+    data.totalSize = totalSize;
+    data.totalSizeFormatted = formatBytes(totalSize);
+    
+    // Recalculate files by type
+    data.filesByType = data.files.reduce((acc, f) => {
+      acc[f.extensionType] = (acc[f.extensionType] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Recalculate files by extension
+    data.filesByExtension = data.files.reduce((acc, f) => {
+      acc[f.extension] = (acc[f.extension] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Update media-files.json
+    updateMediaFiles(data);
+
+    res.json({
+      success: true,
+      message: 'File deleted successfully',
+      deletedFile: {
+        slug: file.slug,
+        name: file.name,
+        path: filePath
+      }
+    });
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    res.status(500).json({
+      error: 'Failed to delete file',
+      message: error.message
+    });
+  }
+});
+
+// API: Get deleted files
+app.get('/api/deleted-files', (req, res) => {
+  const deletedData = loadDeletedFiles();
+  res.json(deletedData);
 });
 
 // API: Get files by type
