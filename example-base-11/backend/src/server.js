@@ -386,6 +386,109 @@ app.delete('/api/files/:slug', (req, res) => {
   }
 });
 
+// API: Bulk delete files
+app.post('/api/files/bulk-delete', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const slugs = req.body.slugs || [];
+  if (!Array.isArray(slugs) || slugs.length === 0) {
+    return res.status(400).json({
+      error: 'No files specified for deletion'
+    });
+  }
+
+  const deletedData = loadDeletedFiles();
+  const results = {
+    deleted: 0,
+    failed: 0,
+    details: []
+  };
+
+  // Sort indices in descending order to avoid index shifting issues
+  const filesToDelete = slugs
+    .map(slug => {
+      const index = data.files.findIndex(f => f.slug === slug);
+      return { slug, index, file: index !== -1 ? data.files[index] : null };
+    })
+    .filter(item => item.file !== null)
+    .sort((a, b) => b.index - a.index); // Sort descending
+
+  filesToDelete.forEach(({ slug, index, file }) => {
+    const filePath = file.path;
+    
+    try {
+      // Check if file exists on disk
+      if (!fs.existsSync(filePath)) {
+        results.failed++;
+        results.details.push(`${file.name}: File does not exist on disk`);
+        // Still remove from list even if file doesn't exist
+        data.files.splice(index, 1);
+        return;
+      }
+
+      // Delete file from filesystem
+      fs.unlinkSync(filePath);
+      
+      // Add to deleted files
+      const deletedEntry = {
+        ...file,
+        deletedAt: new Date().toISOString(),
+        deletedBy: req.ip || 'unknown',
+        originalScanDate: data.scanDate
+      };
+      
+      deletedData.deletedFiles.push(deletedEntry);
+      
+      // Remove from media files
+      data.files.splice(index, 1);
+      
+      results.deleted++;
+      results.details.push(`${file.name}: Deleted successfully`);
+    } catch (error) {
+      console.error(`Error deleting file ${file.name}:`, error);
+      results.failed++;
+      results.details.push(`${file.name}: ${error.message}`);
+    }
+  });
+
+  // Save deleted files
+  if (results.deleted > 0) {
+    saveDeletedFiles(deletedData);
+  }
+
+  // Update media files statistics
+  if (results.deleted > 0 || results.failed > 0) {
+    data.totalFiles = data.files.length;
+    
+    // Recalculate statistics
+    const totalSize = data.files.reduce((sum, f) => sum + f.size, 0);
+    data.totalSize = totalSize;
+    data.totalSizeFormatted = formatBytes(totalSize);
+    
+    // Recalculate files by type
+    data.filesByType = data.files.reduce((acc, f) => {
+      acc[f.extensionType] = (acc[f.extensionType] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Recalculate files by extension
+    data.filesByExtension = data.files.reduce((acc, f) => {
+      acc[f.extension] = (acc[f.extension] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Update media-files.json
+    updateMediaFiles(data);
+  }
+
+  res.json(results);
+});
+
 // API: Get deleted files
 app.get('/api/deleted-files', (req, res) => {
   const deletedData = loadDeletedFiles();

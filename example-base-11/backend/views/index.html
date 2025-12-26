@@ -151,7 +151,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="bi bi-list-ul"></i> Files</h5>
-                <div>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedFiles()" style="display: none;">
+                        <i class="bi bi-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
+                    </button>
                     <span id="fileCount" class="badge bg-secondary">0 files</span>
                 </div>
             </div>
@@ -160,6 +163,9 @@
                     <table class="table table-hover table-striped">
                         <thead class="table-dark sticky-top">
                             <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll()" title="Select All">
+                                </th>
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Extension</th>

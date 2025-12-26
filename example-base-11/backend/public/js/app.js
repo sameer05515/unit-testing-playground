@@ -153,11 +153,14 @@ async function loadFiles(page = 1) {
         displayPagination(data);
         document.getElementById('fileCount').textContent = 
             `${data.total.toLocaleString()} files (showing ${data.files.length})`;
+        
+        // Update selected count after loading files
+        updateSelectedCount();
     } catch (error) {
         console.error('Error loading files:', error);
         document.getElementById('filesTableBody').innerHTML = `
             <tr>
-                <td colspan="7" class="text-center text-danger">
+                <td colspan="8" class="text-center text-danger">
                     Error loading files: ${error.message}
                 </td>
             </tr>
@@ -172,7 +175,7 @@ function displayFiles(files) {
     if (files.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="text-center text-muted">
+                <td colspan="8" class="text-center text-muted">
                     No files found
                 </td>
             </tr>
@@ -182,6 +185,9 @@ function displayFiles(files) {
 
     tbody.innerHTML = files.map(file => `
         <tr>
+            <td>
+                <input type="checkbox" class="file-checkbox" value="${file.slug}" onchange="updateSelectedCount()">
+            </td>
             <td>
                 <i class="bi bi-${getTypeIcon(file.extensionType)} file-icon"></i>
                 <strong>${escapeHtml(file.name)}</strong>
@@ -699,6 +705,109 @@ async function deleteFile(slug, fileName) {
     } catch (error) {
         console.error('Error deleting file:', error);
         alert('Error deleting file: ' + error.message);
+    }
+}
+
+// Get selected file slugs
+function getSelectedFiles() {
+    const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+// Update selected count
+function updateSelectedCount() {
+    const selected = getSelectedFiles();
+    const count = selected.length;
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    const countSpan = document.getElementById('selectedCount');
+    
+    if (count > 0) {
+        deleteBtn.style.display = 'inline-block';
+        countSpan.textContent = count;
+    } else {
+        deleteBtn.style.display = 'none';
+    }
+    
+    // Update select all checkbox state
+    const allCheckboxes = document.querySelectorAll('.file-checkbox');
+    const checkedCount = document.querySelectorAll('.file-checkbox:checked').length;
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    
+    if (allCheckboxes.length === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    } else if (checkedCount === allCheckboxes.length) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+    } else if (checkedCount > 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+    } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    }
+}
+
+// Toggle select all
+function toggleSelectAll() {
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const checkboxes = document.querySelectorAll('.file-checkbox');
+    
+    checkboxes.forEach(cb => {
+        cb.checked = selectAllCheckbox.checked;
+    });
+    
+    updateSelectedCount();
+}
+
+// Delete selected files
+async function deleteSelectedFiles() {
+    const selected = getSelectedFiles();
+    
+    if (selected.length === 0) {
+        alert('No files selected');
+        return;
+    }
+    
+    if (!confirm(`Are you sure you want to delete ${selected.length} file(s)?\n\nThis will:\n- Delete the files from disk\n- Remove them from the media files list\n- Record them in deleted-files.json\n\nThis action cannot be undone!`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/files/bulk-delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ slugs: selected })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to delete files');
+        }
+        
+        const result = await response.json();
+        
+        // Show success message
+        const successMsg = `Successfully deleted ${result.deleted} file(s)!\n\n`;
+        const failedMsg = result.failed > 0 ? `Failed to delete ${result.failed} file(s).\n\n` : '';
+        const details = result.details && result.details.length > 0 ? `Details:\n${result.details.join('\n')}` : '';
+        
+        alert(successMsg + failedMsg + details);
+        
+        // Clear selections
+        document.getElementById('selectAllCheckbox').checked = false;
+        updateSelectedCount();
+        
+        // Reload files list
+        loadFiles(currentPage);
+        
+        // Reload stats
+        loadStats();
+    } catch (error) {
+        console.error('Error deleting files:', error);
+        alert('Error deleting files: ' + error.message);
     }
 }
 
