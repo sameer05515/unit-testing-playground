@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Gold Rate Search</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>💰 Gold Rate Dashboard</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a th:href="@{/}" class="nav-link">Home</a></li>
+                <li><a th:href="@{/search}" class="nav-link">Search</a></li>
+                <li><a th:href="@{/calculator}" class="nav-link">Calculator</a></li>
+                <li><a th:href="@{/swagger-ui.html}" class="nav-link" target="_blank">API Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div>
+        <div class="page-header">
+            <h2>🔍 Search Gold Rates</h2>
+            <p class="subtitle">Search by year or year range</p>
+        </div>
+
+        <div class="search-container">
+            <div class="search-section">
+                <h3>Search by Year</h3>
+                <div class="form-group">
+                    <label for="year-input">Enter Year:</label>
+                    <input type="text" id="year-input" placeholder="e.g., 2020" class="form-control">
+                    <button onclick="searchByYear()" class="btn btn-primary">Search</button>
+                </div>
+                <div id="year-result" class="result-box"></div>
+            </div>
+
+            <div class="search-section">
+                <h3>Search by Year Range</h3>
+                <div class="form-group">
+                    <label for="start-year">Start Year:</label>
+                    <input type="text" id="start-year" placeholder="e.g., 2020" class="form-control">
+                    <label for="end-year">End Year:</label>
+                    <input type="text" id="end-year" placeholder="e.g., 2024" class="form-control">
+                    <button onclick="searchByRange()" class="btn btn-primary">Search Range</button>
+                </div>
+                <div id="range-result" class="result-box"></div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script>
+            const API_BASE_URL = '/api/gold-rates';
+
+            async function searchByYear() {
+                const year = document.getElementById('year-input').value.trim();
+                const resultDiv = document.getElementById('year-result');
+                
+                if (!year) {
+                    resultDiv.innerHTML = '<div class="error">Please enter a year</div>';
+                    return;
+                }
+
+                try {
+                    resultDiv.innerHTML = '<div class="loading">Searching...</div>';
+                    const response = await fetch(`${API_BASE_URL}/${year}`);
+                    
+                    if (response.status === 404) {
+                        resultDiv.innerHTML = `<div class="error">No gold rate found for year ${year}</div>`;
+                        return;
+                    }
+                    
+                    if (!response.ok) throw new Error('Failed to fetch data');
+                    
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="result-card">
+                            <h4>Gold Rate for ${data.year}</h4>
+                            <div class="price-display">
+                                <span class="price-large">₹${parseFloat(data.price).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                }
+            }
+
+            async function searchByRange() {
+                const startYear = document.getElementById('start-year').value.trim();
+                const endYear = document.getElementById('end-year').value.trim();
+                const resultDiv = document.getElementById('range-result');
+                
+                if (!startYear || !endYear) {
+                    resultDiv.innerHTML = '<div class="error">Please enter both start and end years</div>';
+                    return;
+                }
+
+                if (parseInt(startYear) > parseInt(endYear)) {
+                    resultDiv.innerHTML = '<div class="error">Start year must be less than or equal to end year</div>';
+                    return;
+                }
+
+                try {
+                    resultDiv.innerHTML = '<div class="loading">Searching...</div>';
+                    const response = await fetch(`${API_BASE_URL}/range?startYear=${startYear}&endYear=${endYear}`);
+                    
+                    if (!response.ok) throw new Error('Failed to fetch data');
+                    
+                    const data = await response.json();
+                    
+                    if (data.length === 0) {
+                        resultDiv.innerHTML = `<div class="error">No gold rates found for the range ${startYear} - ${endYear}</div>`;
+                        return;
+                    }
+
+                    let html = `
+                        <div class="result-card">
+                            <h4>Gold Rates from ${startYear} to ${endYear} (${data.length} records)</h4>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Price (₹)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    
+                    data.forEach(rate => {
+                        html += `
+                            <tr>
+                                <td>${rate.year}</td>
+                                <td class="price">₹${parseFloat(rate.price).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    
+                    resultDiv.innerHTML = html;
+                } catch (error) {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                }
+            }
+
+            // Allow Enter key to trigger search
+            document.getElementById('year-input')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByYear();
+            });
+
+            document.getElementById('start-year')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByRange();
+            });
+
+            document.getElementById('end-year')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByRange();
+            });
+        </script>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Gold Rate Dashboard. Historical gold rate data from 1964 to 2025.</p>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+
