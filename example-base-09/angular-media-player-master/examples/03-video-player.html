@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html ng-app="videoApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Player Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js"></script>
+  <script src="../src/helpers.js"></script>
+  <script src="../src/directive.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .player-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      background: #f9f9f9;
+    }
+    video {
+      width: 100%;
+      max-width: 800px;
+      display: block;
+      margin: 20px 0;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .seek-bar {
+      width: 100%;
+      max-width: 800px;
+      margin: 10px 0;
+    }
+    .volume-control {
+      margin: 10px 0;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      background: #e8e8e8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Video Player Example</h1>
+  
+  <div ng-controller="VideoController" class="player-container">
+    <video media-player="videoPlayer" width="800" height="450" controls>
+      <source src="http://video.webmfiles.org/big-buck-bunny_trailer.webm" type="video/webm">
+    </video>
+    
+    <div class="controls">
+      <button ng-click="videoPlayer.playPause()">
+        <span ng-show="!videoPlayer.playing">▶ Play</span>
+        <span ng-show="videoPlayer.playing">⏸ Pause</span>
+      </button>
+      <button ng-click="videoPlayer.stop()">⏹ Stop</button>
+      <button ng-click="videoPlayer.toggleMute()">
+        <span ng-show="!videoPlayer.muted">🔊</span>
+        <span ng-show="videoPlayer.muted">🔇</span>
+      </button>
+    </div>
+    
+    <div class="seek-bar">
+      <label>Seek:</label>
+      <input type="range" 
+             min="0" 
+             max="{{ videoPlayer.duration }}" 
+             step="1" 
+             ng-model="seekTime"
+             ng-change="videoPlayer.seek(seekTime)"
+             style="width: 100%;">
+    </div>
+    
+    <div class="volume-control">
+      <label>Volume:</label>
+      <input type="range" 
+             min="0" 
+             max="1" 
+             step="0.1" 
+             ng-model="videoPlayer.volume" 
+             ng-change="videoPlayer.setVolume(videoPlayer.volume)">
+      <span>{{ (videoPlayer.volume * 100).toFixed(0) }}%</span>
+    </div>
+    
+    <div class="status">
+      <p><strong>Time:</strong> {{ videoPlayer.formatTime }} / {{ videoPlayer.formatDuration }}</p>
+      <p><strong>Status:</strong> 
+        <span ng-show="videoPlayer.playing">Playing</span>
+        <span ng-show="!videoPlayer.playing">Paused</span>
+      </p>
+      <p><strong>Loading:</strong> {{ videoPlayer.loadPercent }}%</p>
+    </div>
+  </div>
+  
+  <script>
+    angular.module('videoApp', ['mediaPlayer'])
+    .controller('VideoController', function($scope) {
+      $scope.seekTime = 0;
+      
+      // Update seek time as video plays
+      $scope.videoPlayer.on('timeupdate', function() {
+        $scope.$apply(function() {
+          $scope.seekTime = $scope.videoPlayer.currentTime;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

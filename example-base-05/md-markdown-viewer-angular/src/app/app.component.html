@@ -1,0 +1,115 @@
+<div class="layout-container">
+  <!-- Top Bar -->
+  <app-top-bar
+    class="layout-header"
+    [activeFile]="activeFile"
+    (refresh)="refreshFiles()"
+  ></app-top-bar>
+
+  <!-- Main Content -->
+  <div class="layout-main d-flex overflow-hidden">
+    <!-- Sidebar -->
+    <app-file-sidebar
+      class="layout-sidebar"
+      [files]="files"
+      [activeFile]="activeFile"
+      [sidebarOpen]="sidebarOpen"
+      (fileSelected)="selectFile($event)"
+    ></app-file-sidebar>
+
+    <!-- Content Area -->
+    <main class="layout-content d-flex flex-column overflow-hidden">
+      <!-- Empty State -->
+      <div
+        *ngIf="!activeFile && files.length > 0 && !loading"
+        class="flex-grow-1 d-flex align-items-center justify-content-center text-muted"
+      >
+        <div class="text-center">
+          <p class="mb-3">Select a file from the sidebar to view</p>
+          <button
+            class="btn btn-outline-light btn-sm"
+            (click)="sidebarOpen = true"
+            type="button"
+          >
+            Show sidebar
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div
+        *ngIf="loading && files.length === 0"
+        class="flex-grow-1 d-flex align-items-center justify-content-center"
+      >
+        <div class="text-center">
+          <div class="spinner-border text-primary mb-3" role="status"></div>
+          <p class="text-muted">Loading markdown files...</p>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div
+        *ngIf="error && !loading"
+        class="flex-grow-1 d-flex align-items-center justify-content-center"
+      >
+        <div class="alert alert-danger mx-4" style="max-width: 600px;" role="alert">
+          <h5 class="alert-heading">Error</h5>
+          <p class="mb-2">{{ error }}</p>
+          <p class="small text-muted mb-3">
+            Make sure the backend server is running on <code>http://localhost:3030</code>
+          </p>
+          <hr />
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-danger btn-sm" (click)="refreshFiles()" type="button">
+              Retry
+            </button>
+            <button class="btn btn-outline-secondary btn-sm" (click)="error = null" type="button">
+              Dismiss
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Markdown Viewer -->
+      <app-markdown-viewer
+        *ngIf="activeFile && !loading && !error"
+        [content]="renderedContent"
+      ></app-markdown-viewer>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer
+    *ngIf="activeFile"
+    class="layout-footer border-top border-secondary px-4 py-3 bg-dark text-light"
+  >
+    <div class="d-flex flex-column flex-lg-row gap-3 align-items-lg-center justify-content-between">
+      <div>
+        <p class="text-uppercase text-muted small mb-1">Position</p>
+        <span class="fw-semibold">
+          {{ (activeFile.index || 0) + 1 }} / {{ files.length }}
+        </span>
+      </div>
+      <div class="btn-group" role="group" aria-label="File navigation">
+        <button
+          class="btn btn-outline-light btn-sm"
+          (click)="navigatePrev()"
+          type="button"
+        >
+          ‹ Prev
+        </button>
+        <button
+          class="btn btn-outline-light btn-sm"
+          (click)="navigateNext()"
+          type="button"
+        >
+          Next ›
+        </button>
+      </div>
+      <div class="text-muted small text-center text-lg-end">
+        API: <code>/api/files</code> • <code>/api/files/&#123;slug&#125;</code>
+      </div>
+    </div>
+  </footer>
+</div>
+

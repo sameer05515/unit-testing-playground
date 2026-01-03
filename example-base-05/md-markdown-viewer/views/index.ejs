@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/head') %>
+  <body
+    class="bg-slate-950"
+    x-data="{
+      sidebarOpen: (() => {
+        try {
+          return localStorage.getItem('sidebar-open') !== 'false';
+        } catch (error) {
+          return true;
+        }
+      })(),
+      filter: '',
+      toggleSidebar() {
+        this.sidebarOpen = !this.sidebarOpen;
+      }
+    }"
+    x-init="$watch('sidebarOpen', value => {
+      try {
+        localStorage.setItem('sidebar-open', value);
+      } catch (error) {
+        console.warn('Unable to persist sidebar state', error);
+      }
+    })"
+  >
+    <div
+      class="min-h-screen lg:h-screen grid grid-cols-1 transition-[grid-template-columns] duration-300 ease-out"
+      :class="sidebarOpen ? 'lg:grid-cols-[320px_minmax(0,1fr)]' : 'lg:grid-cols-1'"
+    >
+      <%- include('partials/sidebar', { files, activeFile }) %>
+
+      <main class="flex flex-col overflow-hidden">
+        <%- include('partials/topbar', { files, activeFile, meta }) %>
+
+        <section class="flex-1 overflow-y-auto scroll-y px-6 py-8">
+          <article class="prose prose-invert max-w-none">
+            <%- renderedContent %>
+          </article>
+        </section>
+
+        <footer class="border-t border-slate-800 bg-slate-900/70 px-6 py-4 text-sm text-slate-300 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <span>Explore APIs:</span>
+          <div class="flex gap-4 text-indigo-300">
+            <a class="hover:text-indigo-100 underline-offset-4 hover:underline" href="/docs/swagger" target="_blank" rel="noreferrer">Swagger UI</a>
+            <a class="hover:text-indigo-100 underline-offset-4 hover:underline" href="/docs/redoc" target="_blank" rel="noreferrer">ReDoc</a>
+            <a class="hover:text-indigo-100 underline-offset-4 hover:underline" href="/docs/openapi.json" target="_blank" rel="noreferrer">OpenAPI JSON</a>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
+

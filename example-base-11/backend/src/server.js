@@ -1,0 +1,664 @@
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Configure EJS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../views'));
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Path to media files JSON
+const MEDIA_FILES_PATH = path.join(__dirname, '..', 'media-files.json');
+const DELETED_FILES_PATH = path.join(__dirname, '..', 'deleted-files.json');
+
+// Helper function to load media files data
+function loadMediaFiles() {
+  try {
+    if (!fs.existsSync(MEDIA_FILES_PATH)) {
+      return null;
+    }
+    const data = fs.readFileSync(MEDIA_FILES_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading media files:', error);
+    return null;
+  }
+}
+
+// Helper function to load deleted files data
+function loadDeletedFiles() {
+  try {
+    if (!fs.existsSync(DELETED_FILES_PATH)) {
+      return { deletedFiles: [], lastUpdated: null };
+    }
+    const data = fs.readFileSync(DELETED_FILES_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading deleted files:', error);
+    return { deletedFiles: [], lastUpdated: null };
+  }
+}
+
+// Helper function to save deleted files data
+function saveDeletedFiles(deletedData) {
+  try {
+    const data = {
+      lastUpdated: new Date().toISOString(),
+      deletedFiles: deletedData.deletedFiles || []
+    };
+    fs.writeFileSync(DELETED_FILES_PATH, JSON.stringify(data, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error('Error saving deleted files:', error);
+    return false;
+  }
+}
+
+// Helper function to update media files (remove deleted file)
+function updateMediaFiles(updatedData) {
+  try {
+    fs.writeFileSync(MEDIA_FILES_PATH, JSON.stringify(updatedData, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error('Error updating media files:', error);
+    return false;
+  }
+}
+
+// Helper function to format bytes to human-readable format
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Helper function to parse size string to bytes
+// Examples: "1KB" -> 1024, "1MB" -> 1048576, "1GB" -> 1073741824
+function parseSizeToBytes(sizeStr) {
+  if (!sizeStr) return null;
+  
+  const upper = sizeStr.toUpperCase().trim();
+  const match = upper.match(/^(\d+(?:\.\d+)?)\s*(KB|MB|GB|TB)$/);
+  
+  if (!match) return null;
+  
+  const value = parseFloat(match[1]);
+  const unit = match[2];
+  
+  const multipliers = {
+    'KB': 1024,
+    'MB': 1024 * 1024,
+    'GB': 1024 * 1024 * 1024,
+    'TB': 1024 * 1024 * 1024 * 1024
+  };
+  
+  return Math.floor(value * (multipliers[unit] || 1));
+}
+
+// Import scan service
+const scanService = require('./scanService');
+
+// Root endpoint - serve main view
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views', 'index.html'));
+});
+
+// Scan view endpoint
+app.get('/scan', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views', 'scan.html'));
+});
+
+// API: Get all media files data
+app.get('/api/media-files', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found',
+      message: 'Please run the scanner first to generate media-files.json'
+    });
+  }
+  res.json(data);
+});
+
+// API: Get statistics
+app.get('/api/stats', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+  
+  res.json({
+    scanDate: data.scanDate,
+    drivePath: data.drivePath,
+    totalFiles: data.totalFiles,
+    totalSize: data.totalSize,
+    totalSizeFormatted: data.totalSizeFormatted,
+    scanDuration: data.scanDuration,
+    filesByType: data.filesByType,
+    filesByExtension: data.filesByExtension
+  });
+});
+
+// API: Get files with pagination and filters
+app.get('/api/files', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  let files = [...data.files];
+
+  // Filter by extension type
+  if (req.query.type) {
+    files = files.filter(file => file.extensionType === req.query.type);
+  }
+
+  // Filter by extension
+  if (req.query.extension) {
+    files = files.filter(file => file.extension === req.query.extension);
+  }
+
+  // Search by name or path
+  if (req.query.search) {
+    const searchTerm = req.query.search.toLowerCase();
+    files = files.filter(file => 
+      file.name.toLowerCase().includes(searchTerm) ||
+      file.path.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  // Filter by size (min and max)
+  if (req.query.minSize) {
+    const minSizeBytes = parseSizeToBytes(req.query.minSize);
+    if (minSizeBytes !== null) {
+      files = files.filter(file => file.size >= minSizeBytes);
+    }
+  }
+
+  if (req.query.maxSize) {
+    const maxSizeBytes = parseSizeToBytes(req.query.maxSize);
+    if (maxSizeBytes !== null) {
+      files = files.filter(file => file.size <= maxSizeBytes);
+    }
+  }
+
+  // Multiple sorts - support multiple sort criteria
+  // Format: sort=field1:order1,field2:order2 or sortBy=field&sortOrder=order (backward compatibility)
+  let sortCriteria = [];
+  
+  if (req.query.sort) {
+    // New format: sort=field1:order1,field2:order2
+    const sortPairs = req.query.sort.split(',');
+    sortPairs.forEach(pair => {
+      const [field, order = 'asc'] = pair.split(':');
+      if (field && field.trim()) {
+        sortCriteria.push({ field: field.trim(), order: order.trim() || 'asc' });
+      }
+    });
+  } else if (req.query.sortBy) {
+    // Backward compatibility: single sort
+    const sortBy = req.query.sortBy;
+    const sortOrder = req.query.sortOrder || 'asc';
+    sortCriteria.push({ field: sortBy, order: sortOrder });
+  } else {
+    // Default: sort by path
+    sortCriteria.push({ field: 'path', order: 'asc' });
+  }
+
+  // Apply multiple sorts
+  if (sortCriteria.length > 0) {
+    files.sort((a, b) => {
+      for (const { field, order } of sortCriteria) {
+        let aVal = a[field];
+        let bVal = b[field];
+        
+        // Handle undefined/null values
+        if (aVal === undefined || aVal === null) aVal = '';
+        if (bVal === undefined || bVal === null) bVal = '';
+        
+        // Handle string comparison
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+        
+        // Compare values
+        let comparison = 0;
+        if (aVal < bVal) {
+          comparison = -1;
+        } else if (aVal > bVal) {
+          comparison = 1;
+        }
+        
+        // If values are equal, continue to next sort criteria
+        if (comparison !== 0) {
+          // Apply sort order
+          return order === 'desc' ? -comparison : comparison;
+        }
+      }
+      return 0; // All sort criteria are equal
+    });
+  }
+
+  // Pagination
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 50;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  const paginatedFiles = files.slice(startIndex, endIndex);
+
+  res.json({
+    total: files.length,
+    page: page,
+    limit: limit,
+    totalPages: Math.ceil(files.length / limit),
+    files: paginatedFiles
+  });
+});
+
+// API: Get file by slug
+app.get('/api/files/:slug', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const file = data.files.find(f => f.slug === req.params.slug);
+  if (!file) {
+    return res.status(404).json({
+      error: 'File not found'
+    });
+  }
+
+  // Find previous and next files
+  const currentIndex = data.files.findIndex(f => f.slug === req.params.slug);
+  const prevFile = currentIndex > 0 ? data.files[currentIndex - 1] : null;
+  const nextFile = currentIndex < data.files.length - 1 ? data.files[currentIndex + 1] : null;
+
+  res.json({
+    file: file,
+    navigation: {
+      prev: prevFile ? { slug: prevFile.slug, name: prevFile.name } : null,
+      next: nextFile ? { slug: nextFile.slug, name: nextFile.name } : null
+    }
+  });
+});
+
+// API: Delete file
+app.delete('/api/files/:slug', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const fileIndex = data.files.findIndex(f => f.slug === req.params.slug);
+  if (fileIndex === -1) {
+    return res.status(404).json({
+      error: 'File not found'
+    });
+  }
+
+  const file = data.files[fileIndex];
+  const filePath = file.path;
+
+  // Check if file exists on disk
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({
+      error: 'File does not exist on disk',
+      message: 'File may have already been deleted'
+    });
+  }
+
+  try {
+    // Delete file from filesystem
+    fs.unlinkSync(filePath);
+    
+    // Add to deleted files
+    const deletedData = loadDeletedFiles();
+    const deletedEntry = {
+      ...file,
+      deletedAt: new Date().toISOString(),
+      deletedBy: req.ip || 'unknown',
+      originalScanDate: data.scanDate
+    };
+    
+    deletedData.deletedFiles.push(deletedEntry);
+    saveDeletedFiles(deletedData);
+
+    // Remove from media files
+    data.files.splice(fileIndex, 1);
+    data.totalFiles = data.files.length;
+    
+    // Recalculate statistics
+    const totalSize = data.files.reduce((sum, f) => sum + f.size, 0);
+    data.totalSize = totalSize;
+    data.totalSizeFormatted = formatBytes(totalSize);
+    
+    // Recalculate files by type
+    data.filesByType = data.files.reduce((acc, f) => {
+      acc[f.extensionType] = (acc[f.extensionType] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Recalculate files by extension
+    data.filesByExtension = data.files.reduce((acc, f) => {
+      acc[f.extension] = (acc[f.extension] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Update media-files.json
+    updateMediaFiles(data);
+
+    res.json({
+      success: true,
+      message: 'File deleted successfully',
+      deletedFile: {
+        slug: file.slug,
+        name: file.name,
+        path: filePath
+      }
+    });
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    res.status(500).json({
+      error: 'Failed to delete file',
+      message: error.message
+    });
+  }
+});
+
+// API: Bulk delete files
+app.post('/api/files/bulk-delete', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const slugs = req.body.slugs || [];
+  if (!Array.isArray(slugs) || slugs.length === 0) {
+    return res.status(400).json({
+      error: 'No files specified for deletion'
+    });
+  }
+
+  const deletedData = loadDeletedFiles();
+  const results = {
+    deleted: 0,
+    failed: 0,
+    details: []
+  };
+
+  // Sort indices in descending order to avoid index shifting issues
+  const filesToDelete = slugs
+    .map(slug => {
+      const index = data.files.findIndex(f => f.slug === slug);
+      return { slug, index, file: index !== -1 ? data.files[index] : null };
+    })
+    .filter(item => item.file !== null)
+    .sort((a, b) => b.index - a.index); // Sort descending
+
+  filesToDelete.forEach(({ slug, index, file }) => {
+    const filePath = file.path;
+    
+    try {
+      // Check if file exists on disk
+      if (!fs.existsSync(filePath)) {
+        results.failed++;
+        results.details.push(`${file.name}: File does not exist on disk`);
+        // Still remove from list even if file doesn't exist
+        data.files.splice(index, 1);
+        return;
+      }
+
+      // Delete file from filesystem
+      fs.unlinkSync(filePath);
+      
+      // Add to deleted files
+      const deletedEntry = {
+        ...file,
+        deletedAt: new Date().toISOString(),
+        deletedBy: req.ip || 'unknown',
+        originalScanDate: data.scanDate
+      };
+      
+      deletedData.deletedFiles.push(deletedEntry);
+      
+      // Remove from media files
+      data.files.splice(index, 1);
+      
+      results.deleted++;
+      results.details.push(`${file.name}: Deleted successfully`);
+    } catch (error) {
+      console.error(`Error deleting file ${file.name}:`, error);
+      results.failed++;
+      results.details.push(`${file.name}: ${error.message}`);
+    }
+  });
+
+  // Save deleted files
+  if (results.deleted > 0) {
+    saveDeletedFiles(deletedData);
+  }
+
+  // Update media files statistics
+  if (results.deleted > 0 || results.failed > 0) {
+    data.totalFiles = data.files.length;
+    
+    // Recalculate statistics
+    const totalSize = data.files.reduce((sum, f) => sum + f.size, 0);
+    data.totalSize = totalSize;
+    data.totalSizeFormatted = formatBytes(totalSize);
+    
+    // Recalculate files by type
+    data.filesByType = data.files.reduce((acc, f) => {
+      acc[f.extensionType] = (acc[f.extensionType] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Recalculate files by extension
+    data.filesByExtension = data.files.reduce((acc, f) => {
+      acc[f.extension] = (acc[f.extension] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Update media-files.json
+    updateMediaFiles(data);
+  }
+
+  res.json(results);
+});
+
+// API: Get deleted files
+app.get('/api/deleted-files', (req, res) => {
+  const deletedData = loadDeletedFiles();
+  res.json(deletedData);
+});
+
+// API: Get files by type
+app.get('/api/files/type/:type', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const type = req.params.type;
+  const files = data.files.filter(file => file.extensionType === type);
+
+  res.json({
+    type: type,
+    count: files.length,
+    files: files
+  });
+});
+
+// API: Get files by extension
+app.get('/api/files/extension/:extension', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).json({
+      error: 'Media files data not found'
+    });
+  }
+
+  const extension = req.params.extension.startsWith('.') 
+    ? req.params.extension 
+    : `.${req.params.extension}`;
+  
+  const files = data.files.filter(file => file.extension === extension);
+
+  res.json({
+    extension: extension,
+    count: files.length,
+    files: files
+  });
+});
+
+// Universal Viewer - serve file based on type
+app.get('/viewer/:slug', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).send('Media files data not found');
+  }
+
+  const file = data.files.find(f => f.slug === req.params.slug);
+  if (!file) {
+    return res.status(404).send('File not found');
+  }
+
+  // Find previous and next files for navigation
+  const currentIndex = data.files.findIndex(f => f.slug === req.params.slug);
+  const prevFile = currentIndex > 0 ? data.files[currentIndex - 1] : null;
+  const nextFile = currentIndex < data.files.length - 1 ? data.files[currentIndex + 1] : null;
+
+  res.render('universal-viewer', {
+    file: file,
+    navigation: {
+      prev: prevFile ? { slug: prevFile.slug, name: prevFile.name } : null,
+      next: nextFile ? { slug: nextFile.slug, name: nextFile.name } : null
+    }
+  });
+});
+
+// Serve actual file content (for images, videos, audio, PDFs)
+app.get('/file/:slug', (req, res) => {
+  const data = loadMediaFiles();
+  if (!data) {
+    return res.status(404).send('Media files data not found');
+  }
+
+  const file = data.files.find(f => f.slug === req.params.slug);
+  if (!file) {
+    return res.status(404).send('File not found');
+  }
+
+  // Check if file exists
+  if (!fs.existsSync(file.path)) {
+    return res.status(404).send('File not found on disk');
+  }
+
+  // Set appropriate content type
+  const contentTypes = {
+    '.mp4': 'video/mp4',
+    '.mp3': 'audio/mpeg',
+    '.pdf': 'application/pdf',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.flv': 'video/x-flv'
+  };
+
+  const contentType = contentTypes[file.extension] || 'application/octet-stream';
+  res.setHeader('Content-Type', contentType);
+  
+  // Handle download parameter
+  if (req.query.download === 'true') {
+    res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+  } else {
+    res.setHeader('Content-Disposition', `inline; filename="${file.name}"`);
+  }
+
+  // Stream the file
+  const fileStream = fs.createReadStream(file.path);
+  fileStream.pipe(res);
+});
+
+// Scan API endpoints
+app.post('/api/scan/start', (req, res) => {
+  try {
+    const excludeDirs = req.body.excludeDirs || [];
+    const result = scanService.startScan(excludeDirs);
+    if (result.error) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to start scan',
+      message: error.message
+    });
+  }
+});
+
+app.get('/api/scan/status', (req, res) => {
+  try {
+    const status = scanService.getScanStatus();
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to get scan status',
+      message: error.message
+    });
+  }
+});
+
+app.post('/api/scan/reset', (req, res) => {
+  try {
+    scanService.resetScanStatus();
+    res.json({ success: true, message: 'Scan status reset' });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to reset scan status',
+      message: error.message
+    });
+  }
+});
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    hasData: fs.existsSync(MEDIA_FILES_PATH)
+  });
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`View media files: http://localhost:${PORT}/`);
+  console.log(`API endpoint: http://localhost:${PORT}/api/media-files`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
+});
+

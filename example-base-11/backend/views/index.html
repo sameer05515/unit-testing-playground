@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Files Browser</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="bi bi-folder2-open"></i> Media Files Browser
+            </span>
+            <div>
+                <a href="/scan" class="btn btn-outline-light me-2">
+                    <i class="bi bi-search"></i> Scan
+                </a>
+                <div id="stats-badge" class="badge bg-light text-dark">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        <!-- Filters and Search -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search by name or path...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="image">Image</option>
+                            <option value="video">Video</option>
+                            <option value="song">Song</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Extension</label>
+                        <select class="form-select" id="extensionFilter">
+                            <option value="">All Extensions</option>
+                            <option value=".mp4">.mp4</option>
+                            <option value=".mp3">.mp3</option>
+                            <option value=".pdf">.pdf</option>
+                            <option value=".jpg">.jpg</option>
+                            <option value=".jpeg">.jpeg</option>
+                            <option value=".flv">.flv</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Min Size</label>
+                        <select class="form-select" id="minSizeFilter">
+                            <option value="">No Minimum</option>
+                            <option value="1KB">1 KB</option>
+                            <option value="100KB">100 KB</option>
+                            <option value="1MB">1 MB</option>
+                            <option value="10MB">10 MB</option>
+                            <option value="100MB">100 MB</option>
+                            <option value="1GB">1 GB</option>
+                            <option value="5GB">5 GB</option>
+                            <option value="10GB">10 GB</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Max Size</label>
+                        <select class="form-select" id="maxSizeFilter">
+                            <option value="">No Maximum</option>
+                            <option value="1MB">1 MB</option>
+                            <option value="10MB">10 MB</option>
+                            <option value="100MB">100 MB</option>
+                            <option value="1GB">1 GB</option>
+                            <option value="5GB">5 GB</option>
+                            <option value="10GB">10 GB</option>
+                            <option value="50GB">50 GB</option>
+                            <option value="100GB">100 GB</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label class="form-label"><i class="bi bi-sort-alpha-down"></i> Sort Options</label>
+                        <div id="sortContainer">
+                            <div class="sort-item row g-2 mb-2">
+                                <div class="col-md-5">
+                                    <select class="form-select sort-field">
+                                        <option value="">-- Select Sort Field --</option>
+                                        <option value="path">Path</option>
+                                        <option value="name">Name</option>
+                                        <option value="size">Size</option>
+                                        <option value="modified">Modified Date</option>
+                                        <option value="created">Created Date</option>
+                                        <option value="extension">Extension</option>
+                                        <option value="extensionType">Type</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select sort-order">
+                                        <option value="asc">Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-sort" style="display: none;" onclick="removeSortItem(this)">
+                                        <i class="bi bi-trash"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addSortItem()">
+                            <i class="bi bi-plus-circle"></i> Add Sort Field
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <button class="btn btn-primary" onclick="loadFiles()">
+                            <i class="bi bi-search"></i> Apply Filters
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetFilters()">
+                            <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Card -->
+        <div class="row mb-3" id="statsRow" style="display: none;">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Statistics</h5>
+                    </div>
+                    <div class="card-body" id="statsContent">
+                        Loading statistics...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Files Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-list-ul"></i> Files</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedFiles()" style="display: none;">
+                        <i class="bi bi-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
+                    </button>
+                    <span id="fileCount" class="badge bg-secondary">0 files</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark sticky-top">
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll()" title="Select All">
+                                </th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Extension</th>
+                                <th>Size</th>
+                                <th>Modified</th>
+                                <th>Path</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filesTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" id="paginationNav" style="display: none;">
+                    <ul class="pagination justify-content-center" id="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Details Modal -->
+    <div class="modal fade" id="fileDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">File Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="fileDetailsContent">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Universal Viewer Modal -->
+    <div class="modal fade" id="universalViewerModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content" style="background-color: #000;">
+                <div class="modal-header border-secondary" style="background-color: rgba(0, 0, 0, 0.8);">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div>
+                            <h5 class="modal-title text-white mb-0" id="viewerTitle">
+                                <i class="bi bi-file-earmark" id="viewerIcon"></i>
+                                <span id="viewerFileName">Loading...</span>
+                            </h5>
+                            <div class="file-info text-muted small mt-1">
+                                <span class="badge" id="viewerTypeBadge"></span>
+                                <span class="ms-2" id="viewerFileSize"></span>
+                                <span class="ms-2" id="viewerFileExtension"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-light me-2" id="viewerDownloadBtn" style="display: none;" onclick="downloadViewerFile()">
+                                <i class="bi bi-download"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-light me-2" id="viewerFullscreenBtn" style="display: none;" onclick="toggleViewerFullscreen()">
+                                <i class="bi bi-arrows-fullscreen"></i>
+                            </button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body p-0" style="height: calc(100vh - 120px); overflow: auto; display: flex; align-items: center; justify-content: center;">
+                    <div id="viewerContent" class="w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary" style="background-color: rgba(0, 0, 0, 0.8);">
+                    <div class="d-flex justify-content-between w-100 align-items-center">
+                        <div>
+                            <button type="button" class="btn btn-outline-light" id="viewerPrevBtn" onclick="navigateViewer('prev')" style="display: none;">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-outline-light" id="viewerNextBtn" onclick="navigateViewer('next')" style="display: none;">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
+

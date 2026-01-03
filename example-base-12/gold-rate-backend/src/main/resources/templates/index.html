@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - All Gold Rates</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>💰 Gold Rate Dashboard</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a th:href="@{/}" class="nav-link">Home</a></li>
+                <li><a th:href="@{/search}" class="nav-link">Search</a></li>
+                <li><a th:href="@{/calculator}" class="nav-link">Calculator</a></li>
+                <li><a th:href="@{/swagger-ui.html}" class="nav-link" target="_blank">API Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div>
+        <div class="page-header">
+            <h2>📊 All Gold Rates (1964 - 2025)</h2>
+            <p class="subtitle">Complete historical gold rate data</p>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <h3 id="latest-price">Loading...</h3>
+                    <p>Latest Price (2025)</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📉</div>
+                <div class="stat-content">
+                    <h3 id="oldest-price">Loading...</h3>
+                    <p>Oldest Price (1964)</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <h3 id="total-records">Loading...</h3>
+                    <p>Total Records</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3>Gold Rate History</h3>
+                <div class="table-controls">
+                    <input type="text" id="search-input" placeholder="Search by year..." class="search-box">
+                    <button onclick="sortTable('asc')" class="btn btn-secondary">Sort ↑</button>
+                    <button onclick="sortTable('desc')" class="btn btn-secondary">Sort ↓</button>
+                </div>
+            </div>
+            <div id="loading" class="loading">Loading gold rates...</div>
+            <div id="error" class="error" style="display: none;"></div>
+            <table id="gold-rates-table" class="data-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Price (₹)</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div>
+    <script>
+            const API_BASE_URL = '/api/gold-rates';
+            let allGoldRates = [];
+
+            // Load all gold rates on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                loadAllGoldRates();
+                loadLatestPrice();
+                loadOldestPrice();
+            });
+
+            async function loadAllGoldRates() {
+                try {
+                    showLoading();
+                    const response = await fetch(API_BASE_URL);
+                    if (!response.ok) throw new Error('Failed to fetch gold rates');
+                    
+                    allGoldRates = await response.json();
+                    displayGoldRates(allGoldRates);
+                    hideLoading();
+                } catch (error) {
+                    showError('Error loading gold rates: ' + error.message);
+                    hideLoading();
+                }
+            }
+
+            function displayGoldRates(rates) {
+                const tbody = document.getElementById('table-body');
+                tbody.innerHTML = '';
+                
+                rates.forEach((rate, index) => {
+                    const row = document.createElement('tr');
+                    const change = index > 0 ? calculateChange(rates[index - 1].price, rate.price) : null;
+                    
+                    row.innerHTML = `
+                        <td>${rate.year}</td>
+                        <td class="price">₹${parseFloat(rate.price).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        <td class="change ${change !== null && change >= 0 ? 'positive' : 'negative'}">
+                            ${change !== null ? (change >= 0 ? '+' : '') + change.toFixed(2) + '%' : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                document.getElementById('total-records').textContent = rates.length;
+                document.getElementById('gold-rates-table').style.display = 'table';
+            }
+
+            function calculateChange(oldPrice, newPrice) {
+                const old = parseFloat(oldPrice);
+                const newVal = parseFloat(newPrice);
+                return ((newVal - old) / old) * 100;
+            }
+
+            async function loadLatestPrice() {
+                try {
+                    const response = await fetch(API_BASE_URL + '/latest');
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('latest-price').textContent = 
+                            '₹' + parseFloat(data.price).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    }
+                } catch (error) {
+                    console.error('Error loading latest price:', error);
+                }
+            }
+
+            async function loadOldestPrice() {
+                try {
+                    const response = await fetch(API_BASE_URL + '/oldest');
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('oldest-price').textContent = 
+                            '₹' + parseFloat(data.price).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    }
+                } catch (error) {
+                    console.error('Error loading oldest price:', error);
+                }
+            }
+
+            // Search functionality
+            document.getElementById('search-input')?.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm === '') {
+                    displayGoldRates(allGoldRates);
+                } else {
+                    const filtered = allGoldRates.filter(rate => rate.year.includes(searchTerm));
+                    displayGoldRates(filtered);
+                }
+            });
+
+            // Sort functionality
+            function sortTable(direction) {
+                const sorted = [...allGoldRates].sort((a, b) => {
+                    const yearA = parseInt(a.year);
+                    const yearB = parseInt(b.year);
+                    return direction === 'asc' ? yearA - yearB : yearB - yearA;
+                });
+                displayGoldRates(sorted);
+            }
+
+            function showLoading() {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('gold-rates-table').style.display = 'none';
+                document.getElementById('error').style.display = 'none';
+            }
+
+            function hideLoading() {
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            function showError(message) {
+                document.getElementById('error').textContent = message;
+                document.getElementById('error').style.display = 'block';
+            }
+        </script>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Gold Rate Dashboard. Historical gold rate data from 1964 to 2025.</p>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

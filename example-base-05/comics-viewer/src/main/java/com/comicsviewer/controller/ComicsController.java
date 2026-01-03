@@ -34,19 +34,21 @@ public class ComicsController {
     private ComicsService comicsService;
     
     @GetMapping("/")
-    public String index(Model model) {
-        List<ComicFile> comics = comicsService.getAllComics();
+    public String index(Model model, @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "name") String sortBy) {
+        List<ComicFile> comics = comicsService.getAllComics(sortBy);
         model.addAttribute("comics", comics);
         model.addAttribute("totalCount", comics.size());
+        model.addAttribute("sortBy", sortBy);
         return "index";
     }
     
     @GetMapping("/view/{slug}")
-    public String viewComic(@PathVariable String slug, Model model) {
-        List<ComicFile> comics = comicsService.getAllComics();
+    public String viewComic(@PathVariable String slug, Model model, @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "name") String sortBy) {
+        List<ComicFile> comics = comicsService.getAllComics(sortBy);
         model.addAttribute("comics", comics);
         model.addAttribute("totalCount", comics.size());
         model.addAttribute("initialSlug", slug);
+        model.addAttribute("sortBy", sortBy);
         return "index";
     }
     
@@ -54,7 +56,7 @@ public class ComicsController {
     @ResponseBody
     @Operation(
             summary = "Get all comics",
-            description = "Retrieves a list of all available comics with their metadata including name, path, slug, and size"
+            description = "Retrieves a list of all available comics with their metadata including name, path, slug, size, and last modified date. Supports sorting via 'sortBy' query parameter: 'name' (default), 'dateDesc' (newest first), 'dateAsc' (oldest first)"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -64,14 +66,14 @@ public class ComicsController {
                             schema = @Schema(implementation = ComicFile.class))
             )
     })
-    public List<ComicFile> getComicsJson() {
-        return comicsService.getAllComics();
+    public List<ComicFile> getComicsJson(@org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "name") String sortBy) {
+        return comicsService.getAllComics(sortBy);
     }
     
     @GetMapping("/comic/{path:.+}")
     @Operation(
             summary = "Get comic by path",
-            description = "Retrieves a comic PDF file by its relative path. This is the legacy endpoint."
+            description = "Retrieves a comic PDF file by its relative path. This is the legacy endpoint. Searches across all configured directories."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -88,7 +90,8 @@ public class ComicsController {
             @Parameter(description = "Relative path to the comic file", required = true)
             @PathVariable String path) {
         String decodedPath = java.net.URLDecoder.decode(path, StandardCharsets.UTF_8);
-        File comicFile = comicsService.getComicFile(decodedPath);
+        // Search across all directories (sourceDirectory is null, so it searches all)
+        File comicFile = comicsService.getComicFile(decodedPath, null);
         
         if (comicFile == null || !comicFile.exists()) {
             return ResponseEntity.notFound().build();
@@ -129,7 +132,8 @@ public class ComicsController {
             return ResponseEntity.notFound().build();
         }
         
-        File comicFile = comicsService.getComicFile(comic.getRelativePath());
+        // Use source directory if available for faster lookup
+        File comicFile = comicsService.getComicFile(comic.getRelativePath(), comic.getSourceDirectory());
         
         if (comicFile == null || !comicFile.exists()) {
             return ResponseEntity.notFound().build();

@@ -1,0 +1,14 @@
+.list-group-item.active {
+  background-color: rgba(110, 64, 201, 0.2) !important;
+  border-color: #6e40c9 !important;
+  box-shadow: inset 0 0 0 1px #6e40c9;
+}
+
+.list-group-item.active .fw-semibold {
+  color: #ffffff !important;
+}
+
+.list-group-item.active .text-muted {
+  color: #c9d1d9 !important;
+}
+

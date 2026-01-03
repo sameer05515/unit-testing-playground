@@ -216,7 +216,14 @@ const folder_names = [
   // "gamraj-inspector-steel-satelite-boss",
   // "bankelal-aur-fiki-khichdi",
   // "bankelal-aur-ghoonghroo",
-  "bankelal-main-nhi-chhorunga"
+  // "bankelal-main-nhi-chhorunga",
+  // "scd-saja-e-maut"
+  // "gamraj-gimikand",
+  // "gamraj-aur-ustad-gulgula",
+  // "hawaldar-bahadur-aur-bhoot-ki-choti",
+  // "parmaanu-tirachhi-topi",
+  // "scd-match",
+  "Trikaldev-Kaali-Khopdi"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];

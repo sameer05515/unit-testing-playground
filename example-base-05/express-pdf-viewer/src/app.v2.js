@@ -12,6 +12,7 @@ const { PORT, NODE_ENV, ALLOWED_ORIGINS, MAX_REQUEST_SIZE, RATE_LIMIT_WINDOW_MS,
 const errorHandler = require("./middleware/errorHandler");
 const performanceMiddleware = require("./middleware/performance");
 const swaggerUi = require("swagger-ui-express");
+const redoc = require("redoc-express");
 const swaggerSpec = require("./config/swagger");
 
 const app = express();
@@ -109,7 +110,7 @@ if (NODE_ENV === 'development') {
 
 // CORS configuration
 const corsOptions = {
-  origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
+  origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : ['http://localhost:3000','http://localhost:5000'],
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -138,11 +139,32 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
 
-// Swagger API documentation
+// API Documentation - OpenAPI JSON endpoint
+app.get('/api-docs/openapi.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+// Swagger UI API documentation (backward compatible route)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Express PDF Viewer API Documentation',
 }));
+
+// Swagger UI API documentation (alternative route)
+app.use('/api-docs/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Express PDF Viewer API Documentation',
+}));
+
+// ReDoc API documentation
+app.get(
+  '/api-docs/redoc',
+  redoc({
+    title: 'Express PDF Viewer API Documentation',
+    specUrl: '/api-docs/openapi.json',
+  })
+);
 
 // Routes
 const v2Routes = require("./routes/index.v2");

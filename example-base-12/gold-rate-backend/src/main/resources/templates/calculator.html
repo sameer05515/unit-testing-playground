@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator - Price Change Calculator</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>💰 Gold Rate Dashboard</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a th:href="@{/}" class="nav-link">Home</a></li>
+                <li><a th:href="@{/search}" class="nav-link">Search</a></li>
+                <li><a th:href="@{/calculator}" class="nav-link">Calculator</a></li>
+                <li><a th:href="@{/swagger-ui.html}" class="nav-link" target="_blank">API Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div>
+        <div class="page-header">
+            <h2>📊 Price Change Calculator</h2>
+            <p class="subtitle">Calculate percentage change in gold price between two years</p>
+        </div>
+
+        <div class="calculator-container">
+            <div class="calculator-card">
+                <h3>Calculate Price Change</h3>
+                <div class="form-group">
+                    <label for="calc-start-year">Start Year:</label>
+                    <input type="text" id="calc-start-year" placeholder="e.g., 2020" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="calc-end-year">End Year:</label>
+                    <input type="text" id="calc-end-year" placeholder="e.g., 2024" class="form-control">
+                </div>
+                <button onclick="calculatePriceChange()" class="btn btn-primary btn-large">Calculate</button>
+                
+                <div id="calculator-result" class="calculator-result"></div>
+            </div>
+
+            <div class="info-section">
+                <h3>💡 How it works</h3>
+                <p>The calculator shows the percentage change in gold price between two selected years.</p>
+                <p><strong>Formula:</strong> ((End Price - Start Price) / Start Price) × 100</p>
+                
+                <div class="example-section">
+                    <h4>Example Calculations</h4>
+                    <button onclick="setExample(2020, 2024)" class="btn btn-secondary">2020 → 2024</button>
+                    <button onclick="setExample(2010, 2020)" class="btn btn-secondary">2010 → 2020</button>
+                    <button onclick="setExample(2000, 2024)" class="btn btn-secondary">2000 → 2024</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script>
+            const API_BASE_URL = '/api/gold-rates';
+
+            async function calculatePriceChange() {
+                const startYear = document.getElementById('calc-start-year').value.trim();
+                const endYear = document.getElementById('calc-end-year').value.trim();
+                const resultDiv = document.getElementById('calculator-result');
+                
+                if (!startYear || !endYear) {
+                    resultDiv.innerHTML = '<div class="error">Please enter both start and end years</div>';
+                    return;
+                }
+
+                if (parseInt(startYear) > parseInt(endYear)) {
+                    resultDiv.innerHTML = '<div class="error">Start year must be less than or equal to end year</div>';
+                    return;
+                }
+
+                try {
+                    resultDiv.innerHTML = '<div class="loading">Calculating...</div>';
+                    
+                    // Fetch both years' data
+                    const [startResponse, endResponse] = await Promise.all([
+                        fetch(`${API_BASE_URL}/${startYear}`),
+                        fetch(`${API_BASE_URL}/${endYear}`)
+                    ]);
+
+                    if (startResponse.status === 404 || endResponse.status === 404) {
+                        resultDiv.innerHTML = '<div class="error">One or both years not found in the database</div>';
+                        return;
+                    }
+
+                    if (!startResponse.ok || !endResponse.ok) {
+                        throw new Error('Failed to fetch data');
+                    }
+
+                    const startData = await startResponse.json();
+                    const endData = await endResponse.json();
+
+                    // Calculate percentage change
+                    const startPrice = parseFloat(startData.price);
+                    const endPrice = parseFloat(endData.price);
+                    const change = ((endPrice - startPrice) / startPrice) * 100;
+                    const absoluteChange = endPrice - startPrice;
+
+                    const isPositive = change >= 0;
+                    const changeClass = isPositive ? 'positive' : 'negative';
+                    const changeIcon = isPositive ? '📈' : '📉';
+
+                    resultDiv.innerHTML = `
+                        <div class="calculation-result">
+                            <div class="result-header">
+                                <h4>${changeIcon} Price Change: ${startYear} → ${endYear}</h4>
+                            </div>
+                            <div class="result-details">
+                                <div class="detail-row">
+                                    <span class="label">Start Year (${startYear}):</span>
+                                    <span class="value">₹${startPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">End Year (${endYear}):</span>
+                                    <span class="value">₹${endPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Absolute Change:</span>
+                                    <span class="value ${changeClass}">₹${absoluteChange.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                </div>
+                                <div class="detail-row highlight">
+                                    <span class="label">Percentage Change:</span>
+                                    <span class="value ${changeClass} large">${isPositive ? '+' : ''}${change.toFixed(2)}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                }
+            }
+
+            function setExample(startYear, endYear) {
+                document.getElementById('calc-start-year').value = startYear;
+                document.getElementById('calc-end-year').value = endYear;
+                calculatePriceChange();
+            }
+
+            // Allow Enter key to trigger calculation
+            document.getElementById('calc-start-year')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculatePriceChange();
+            });
+
+            document.getElementById('calc-end-year')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculatePriceChange();
+            });
+        </script>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Gold Rate Dashboard. Historical gold rate data from 1964 to 2025.</p>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+

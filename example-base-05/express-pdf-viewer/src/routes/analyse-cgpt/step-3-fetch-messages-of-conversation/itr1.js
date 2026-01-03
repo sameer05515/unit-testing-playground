@@ -33,8 +33,9 @@ router.get("/:slug/:convId", async (req, res) => {
   const { slug, convId } = req.params;
 
   try {
-    const conversations = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\conversations.json`);
-    const qNas = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\qNa.json`);
+    // Disable caching to ensure fresh data on every request
+    const conversations = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\conversations.json`, false);
+    const qNas = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\qNa.json`, false);
     // const messages = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\message.json`);
 
     // const messageContents = await FileRelatedOperations.readJsonFile(
@@ -45,13 +46,32 @@ router.get("/:slug/:convId", async (req, res) => {
     //   messageContentsMap[mc.id] = { ...mc, ...messages.find((msg) => msg.id === mc.id) };
     // });
 
-    const messageContentsMap = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\messageContentsMap.json`);
+    const messageContentsMap = await FileRelatedOperations.readJsonFile(`${testDir}\\itr2\\${slug}\\messageContentsMap.json`, false);
 
     const conv = conversations.find((c) => c.id === convId);
-    conv.messages = conv.messages.map((m) => ({
-      q: messageContentsMap[m],
-      ans: qNas[m].map((qa) => messageContentsMap[qa]),
-    }));
+    
+    if (!conv) {
+      return res.status(404).json({ error: `Conversation with id ${convId} not found` });
+    }
+
+    if (!conv.messages || !Array.isArray(conv.messages)) {
+      return res.status(400).json({ error: 'Conversation messages data is invalid' });
+    }
+
+    // Map messages with proper null handling
+    conv.messages = conv.messages.map((m) => {
+      const questionContent = messageContentsMap[m];
+      const answerIds = qNas[m] || [];
+      const answers = answerIds
+        .map((qa) => messageContentsMap[qa])
+        .filter((ans) => ans !== undefined && ans !== null);
+
+      return {
+        id: m, // Include message ID for reference
+        q: questionContent || null,
+        ans: answers,
+      };
+    });
 
     const { selectedIndex, nextConversationId, prevConversationId } = extractConversationMetadata(
       conversations,

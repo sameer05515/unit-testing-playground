@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="basicAudioApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic Audio Player Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js"></script>
+  <script src="../src/helpers.js"></script>
+  <script src="../src/directive.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .player-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      background: #f9f9f9;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      background: #e8e8e8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Basic Audio Player Example</h1>
+  
+  <div ng-controller="BasicAudioController" class="player-container">
+    <!-- Audio element with media-player directive -->
+    <audio media-player="player">
+      <source src="http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg" type="audio/ogg">
+      <source src="http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="controls">
+      <button ng-click="player.playPause()">
+        <span ng-show="!player.playing">▶ Play</span>
+        <span ng-show="player.playing">⏸ Pause</span>
+      </button>
+      <button ng-click="player.stop()">⏹ Stop</button>
+    </div>
+    
+    <div class="status">
+      <p><strong>Status:</strong> 
+        <span ng-show="player.playing">Playing</span>
+        <span ng-show="!player.playing && !player.ended">Paused</span>
+        <span ng-show="player.ended">Ended</span>
+      </p>
+      <p><strong>Time:</strong> {{ player.formatTime }} / {{ player.formatDuration }}</p>
+      <p><strong>Loading:</strong> {{ player.loadPercent }}%</p>
+    </div>
+  </div>
+  
+  <script>
+    angular.module('basicAudioApp', ['mediaPlayer'])
+    .controller('BasicAudioController', function($scope) {
+      // Controller is ready
+      console.log('Basic audio player initialized');
+    });
+  </script>
+</body>
+</html>

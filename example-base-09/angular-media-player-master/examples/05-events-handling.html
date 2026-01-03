@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html ng-app="eventsApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Handling Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.32/angular.min.js"></script>
+  <script src="../src/helpers.js"></script>
+  <script src="../src/directive.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .player-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      background: #f9f9f9;
+      margin-bottom: 20px;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .event-log {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background: #fff;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .event-item {
+      padding: 5px;
+      margin: 2px 0;
+      border-left: 3px solid #4CAF50;
+      padding-left: 10px;
+    }
+    .event-item.error {
+      border-left-color: #f44336;
+    }
+    .event-item.warning {
+      border-left-color: #ff9800;
+    }
+    .event-item.info {
+      border-left-color: #2196F3;
+    }
+    .clear-btn {
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Event Handling Example</h1>
+  
+  <div ng-controller="EventsController" class="player-container">
+    <audio media-player="player" playlist="playlist">
+      <source src="http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg" type="audio/ogg">
+    </audio>
+    
+    <div class="controls">
+      <button ng-click="player.playPause()">
+        <span ng-show="!player.playing">▶ Play</span>
+        <span ng-show="player.playing">⏸ Pause</span>
+      </button>
+      <button ng-click="player.next()">⏭ Next</button>
+      <button ng-click="player.prev()">⏮ Previous</button>
+      <button ng-click="player.stop()">⏹ Stop</button>
+    </div>
+    
+    <div>
+      <h3>Event Log</h3>
+      <button class="clear-btn" ng-click="clearLog()">Clear Log</button>
+      <div class="event-log">
+        <div ng-repeat="event in events" class="event-item {{ event.type }}">
+          <strong>{{ event.time }}</strong> - <strong>{{ event.name }}</strong>
+          <div ng-if="event.data" style="margin-left: 20px; color: #666;">
+            {{ event.data }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    angular.module('eventsApp', ['mediaPlayer'])
+    .controller('EventsController', function($scope) {
+      $scope.events = [];
+      
+      $scope.playlist = [
+        { 
+          src: 'http://upload.wikimedia.org/wikipedia/commons/0/07/Silence.ogg', 
+          type: 'audio/ogg',
+          title: 'Silence'
+        },
+        { 
+          src: 'http://upload.wikimedia.org/wikipedia/en/c/cb/Stairway_to_Heaven_3_sections.ogg', 
+          type: 'audio/ogg',
+          title: 'Stairway to Heaven'
+        }
+      ];
+      
+      function logEvent(name, type, data) {
+        var time = new Date().toLocaleTimeString();
+        $scope.events.unshift({
+          time: time,
+          name: name,
+          type: type || 'info',
+          data: data
+        });
+        // Keep only last 50 events
+        if ($scope.events.length > 50) {
+          $scope.events.pop();
+        }
+        $scope.$apply();
+      }
+      
+      // Set up event listeners
+      $scope.$watch('player', function(newPlayer) {
+        if (newPlayer) {
+          // Playback events
+          newPlayer.on('play', function() {
+            logEvent('play', 'info', 'Playback started');
+          });
+          
+          newPlayer.on('playing', function() {
+            logEvent('playing', 'info', 'Media is playing');
+          });
+          
+          newPlayer.on('pause', function() {
+            logEvent('pause', 'info', 'Playback paused');
+          });
+          
+          newPlayer.on('ended', function() {
+            logEvent('ended', 'info', 'Playback ended');
+          });
+          
+          // Loading events
+          newPlayer.on('loadstart', function() {
+            logEvent('loadstart', 'info', 'Loading started');
+          });
+          
+          newPlayer.on('loadedmetadata', function() {
+            logEvent('loadedmetadata', 'info', 
+              'Duration: ' + newPlayer.formatDuration);
+          });
+          
+          newPlayer.on('canplay', function() {
+            logEvent('canplay', 'info', 'Media can start playing');
+          });
+          
+          newPlayer.on('canplaythrough', function() {
+            logEvent('canplaythrough', 'info', 'Media can play through without buffering');
+          });
+          
+          // Progress events
+          newPlayer.on('progress', function() {
+            logEvent('progress', 'info', 
+              'Buffered: ' + newPlayer.loadPercent + '%');
+          });
+          
+          newPlayer.on('timeupdate', function() {
+            // Throttle timeupdate logging
+            if (!newPlayer._lastTimeUpdate || 
+                Date.now() - newPlayer._lastTimeUpdate > 1000) {
+              logEvent('timeupdate', 'info', 
+                'Time: ' + newPlayer.formatTime);
+              newPlayer._lastTimeUpdate = Date.now();
+            }
+          });
+          
+          // Network events
+          newPlayer.on('stalled', function() {
+            logEvent('stalled', 'warning', 'Media loading stalled');
+          });
+          
+          newPlayer.on('suspend', function() {
+            logEvent('suspend', 'warning', 'Media loading suspended');
+          });
+          
+          // Volume events
+          newPlayer.on('volumechange', function() {
+            logEvent('volumechange', 'info', 
+              'Volume: ' + (newPlayer.volume * 100).toFixed(0) + 
+              '%, Muted: ' + newPlayer.muted);
+          });
+          
+          // Rate change
+          newPlayer.on('ratechange', function() {
+            logEvent('ratechange', 'info', 
+              'Playback rate: ' + newPlayer.playbackRate + 'x');
+          });
+          
+          // Seeking events
+          newPlayer.on('seeking', function() {
+            logEvent('seeking', 'info', 'Seeking...');
+          });
+          
+          newPlayer.on('seeked', function() {
+            logEvent('seeked', 'info', 'Seek completed');
+          });
+          
+          // Error handling
+          newPlayer.on('error', function() {
+            logEvent('error', 'error', 'An error occurred');
+          });
+          
+          // One-time event example
+          newPlayer.one('loadedmetadata', function() {
+            logEvent('loadedmetadata (one-time)', 'info', 
+              'This event fired only once');
+          });
+        }
+      });
+      
+      $scope.clearLog = function() {
+        $scope.events = [];
+      };
+    });
+  </script>
+</body>
+</html>

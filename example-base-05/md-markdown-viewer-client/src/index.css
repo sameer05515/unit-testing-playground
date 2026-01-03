@@ -1,0 +1,128 @@
+:root {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --border-color: #1e293b;
+  --text-primary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent: #6366f1;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+
+p,
+span,
+label,
+small {
+  color: var(--text-primary);
+}
+
+.text-muted,
+.form-text {
+  color: var(--text-muted) !important;
+}
+
+.app-shell {
+  background-color: var(--bg-primary);
+}
+
+.sidebar-panel {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color) !important;
+}
+
+.sidebar-scroll {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.scroll-y {
+  scrollbar-width: thin;
+}
+
+.scroll-y::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-y::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.5);
+  border-radius: 9999px;
+}
+
+.list-group-item {
+  background-color: transparent;
+  color: var(--text-primary);
+  border-color: rgba(148, 163, 184, 0.2);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.list-group-item.active {
+  background-color: rgba(99, 102, 241, 0.15);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.5);
+}
+
+.list-group-item.active .fw-semibold {
+  color: #ffffff;
+}
+
+.list-group-item.active small {
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.markdown-content pre {
+  background-color: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  overflow-x: auto;
+}
+
+.markdown-content code {
+  color: #f8fafc;
+  font-size: 0.9rem;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  color: var(--text-primary);
+  margin-top: 2rem;
+}
+
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol {
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.markdown-content a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+.alert {
+  color: #fecdd3;
+  background-color: rgba(255, 99, 132, 0.1);
+  border-color: rgba(255, 99, 132, 0.2);
+}
+
