@@ -110,7 +110,7 @@ if (NODE_ENV === 'development') {
 
 // CORS configuration
 const corsOptions = {
-  origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
+  origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : ['http://localhost:3000','http://localhost:5000'],
   credentials: true,
   optionsSuccessStatus: 200
 };
