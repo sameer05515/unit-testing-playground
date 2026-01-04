@@ -224,17 +224,32 @@
         <div class="container-fluid">
             <!-- Metadata Banner -->
             <div class="alert alert-info mb-4" x-show="metadata">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <strong><i class="bi bi-info-circle"></i> About SOLID:</strong>
-                        <span class="ms-2" x-text="metadata?.category"></span>
+                <div class="mb-3">
+                    <h5 class="mb-2">
+                        <i class="bi bi-info-circle"></i> About SOLID
                         <span class="badge bg-primary ms-2" x-text="metadata?.acronym"></span>
+                    </h5>
+                    <p class="mb-2" x-text="metadata?.description"></p>
+                    <div class="small text-muted" x-show="metadata?.history">
+                        <i class="bi bi-clock-history"></i> <span x-text="metadata?.history"></span>
                     </div>
-                    <div class="mt-2 mt-md-0">
-                        <span class="me-2"><strong>Used in:</strong></span>
-                        <template x-for="tech in metadata?.usedIn" :key="tech">
-                            <span class="badge bg-secondary metadata-badge" x-text="tech"></span>
-                        </template>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2 mb-md-0">
+                        <strong><i class="bi bi-code-slash"></i> Used in:</strong>
+                        <div class="mt-1">
+                            <template x-for="tech in metadata?.usedIn" :key="tech">
+                                <span class="badge bg-secondary metadata-badge" x-text="tech"></span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="col-md-6" x-show="metadata?.relatedConcepts">
+                        <strong><i class="bi bi-diagram-3"></i> Related Concepts:</strong>
+                        <div class="mt-1">
+                            <template x-for="concept in metadata?.relatedConcepts" :key="concept">
+                                <span class="badge bg-info metadata-badge" x-text="concept"></span>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,7 +264,7 @@
                         <input 
                             type="text" 
                             class="form-control" 
-                            placeholder="Search principles by name, acronym, definition, or problem solved..."
+                            placeholder="Search principles by name, acronym, definition, description, use cases, violations, or benefits..."
                             x-model="searchQuery"
                             @input="filterPrinciples()"
                         >
@@ -279,14 +294,27 @@
                                     <span class="problem-tag" x-text="principle.problemSolved"></span>
                                 </div>
                                 
+                                <div class="mb-3" x-show="principle.useCases && principle.useCases.length > 0">
+                                    <div class="text-muted small mb-1">
+                                        <i class="bi bi-list-check"></i> <strong>Use Cases:</strong>
+                                    </div>
+                                    <div class="d-flex flex-wrap">
+                                        <template x-for="(useCase, index) in principle.useCases.slice(0, 3)" :key="useCase">
+                                            <span class="badge bg-info benefit-badge" x-text="useCase"></span>
+                                        </template>
+                                        <span class="badge bg-secondary benefit-badge" x-show="principle.useCases.length > 3" x-text="'+' + (principle.useCases.length - 3) + ' more'"></span>
+                                    </div>
+                                </div>
+                                
                                 <div class="mb-3 flex-grow-1">
                                     <div class="text-muted small mb-1">
                                         <i class="bi bi-check-circle text-success"></i> <strong>Benefits:</strong>
                                     </div>
                                     <div class="d-flex flex-wrap">
-                                        <template x-for="benefit in principle.benefits" :key="benefit">
+                                        <template x-for="(benefit, index) in principle.benefits.slice(0, 3)" :key="benefit">
                                             <span class="badge bg-success benefit-badge" x-text="benefit"></span>
                                         </template>
+                                        <span class="badge bg-secondary benefit-badge" x-show="principle.benefits.length > 3" x-text="'+' + (principle.benefits.length - 3) + ' more'"></span>
                                     </div>
                                 </div>
                                 
@@ -334,6 +362,11 @@
                             <p class="lead" x-text="selectedPrinciple?.definition"></p>
                         </div>
                         
+                        <div class="mb-4" x-show="selectedPrinciple?.description">
+                            <h6><i class="bi bi-file-text"></i> Description</h6>
+                            <p x-text="selectedPrinciple?.description"></p>
+                        </div>
+                        
                         <div class="mb-4">
                             <h6><i class="bi bi-exclamation-triangle text-warning"></i> Problem Solved</h6>
                             <p x-text="selectedPrinciple?.problemSolved"></p>
@@ -357,6 +390,30 @@
                             </div>
                         </div>
                         
+                        <div class="mb-4" x-show="selectedPrinciple?.useCases && selectedPrinciple.useCases.length > 0">
+                            <h6><i class="bi bi-list-check"></i> Use Cases</h6>
+                            <ul class="list-group">
+                                <template x-for="useCase in selectedPrinciple?.useCases" :key="useCase">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bi bi-arrow-right-circle text-primary me-2"></i>
+                                        <span x-text="useCase"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4" x-show="selectedPrinciple?.commonViolations && selectedPrinciple.commonViolations.length > 0">
+                            <h6><i class="bi bi-exclamation-octagon text-danger"></i> Common Violations</h6>
+                            <ul class="list-group">
+                                <template x-for="violation in selectedPrinciple?.commonViolations" :key="violation">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="bi bi-x-octagon-fill text-danger me-2"></i>
+                                        <span x-text="violation"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                        
                         <div class="mb-4">
                             <h6><i class="bi bi-star-fill text-warning"></i> Benefits</h6>
                             <ul class="list-group">
@@ -367,6 +424,15 @@
                                     </li>
                                 </template>
                             </ul>
+                        </div>
+                        
+                        <div class="mb-4" x-show="selectedPrinciple?.relatedPrinciples && selectedPrinciple.relatedPrinciples.length > 0">
+                            <h6><i class="bi bi-diagram-3"></i> Related Principles & Concepts</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <template x-for="related in selectedPrinciple?.relatedPrinciples" :key="related">
+                                    <span class="badge bg-info" x-text="related"></span>
+                                </template>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -438,10 +504,14 @@
                             const nameMatch = p.name?.toLowerCase().includes(query);
                             const shortNameMatch = p.shortName?.toLowerCase().includes(query);
                             const definitionMatch = p.definition?.toLowerCase().includes(query);
+                            const descriptionMatch = p.description?.toLowerCase().includes(query);
                             const problemMatch = p.problemSolved?.toLowerCase().includes(query);
                             const badExampleMatch = p.example?.bad?.toLowerCase().includes(query);
                             const goodExampleMatch = p.example?.good?.toLowerCase().includes(query);
-                            return nameMatch || shortNameMatch || definitionMatch || problemMatch || badExampleMatch || goodExampleMatch;
+                            const useCaseMatch = p.useCases?.some(uc => uc.toLowerCase().includes(query));
+                            const violationMatch = p.commonViolations?.some(v => v.toLowerCase().includes(query));
+                            const benefitMatch = p.benefits?.some(b => b.toLowerCase().includes(query));
+                            return nameMatch || shortNameMatch || definitionMatch || descriptionMatch || problemMatch || badExampleMatch || goodExampleMatch || useCaseMatch || violationMatch || benefitMatch;
                         });
                     }
                     

@@ -4,86 +4,209 @@
         "name": "Single Responsibility Principle",
         "shortName": "SRP",
         "definition": "A class should have only one reason to change.",
-        "problemSolved": "God classes, tight coupling, difficult maintenance",
+        "description": "Every class should have a single responsibility or purpose. This means a class should have only one job to do. If a class has multiple responsibilities, it becomes harder to maintain, test, and understand. Changes to one responsibility might affect the others, leading to unexpected bugs.",
+        "problemSolved": "God classes, tight coupling, difficult maintenance, hard to test, violation of separation of concerns",
         "example": {
-          "bad": "UserService handles validation, persistence, and email",
-          "good": "UserService + UserRepository + EmailService"
+          "bad": "class UserService {\n  validateUser(user) { /* validation logic */ }\n  saveUser(user) { /* database logic */ }\n  sendEmail(user) { /* email logic */ }\n  generateReport(user) { /* reporting logic */ }\n}\n// One class doing too many things",
+          "good": "class UserValidator { validateUser(user) { } }\nclass UserRepository { saveUser(user) { } }\nclass EmailService { sendEmail(user) { } }\nclass ReportGenerator { generateReport(user) { } }\n// Each class has a single responsibility"
         },
         "benefits": [
-          "Better readability",
-          "Easier testing",
-          "Lower coupling"
-        ]
+          "Better readability and understanding",
+          "Easier testing and debugging",
+          "Lower coupling between components",
+          "Easier maintenance and refactoring",
+          "Clear separation of concerns",
+          "Improved code organization"
+        ],
+        "useCases": [
+          "Service layer separation",
+          "Repository pattern implementation",
+          "Controller/Service/Repository architecture",
+          "Microservices design",
+          "API endpoint organization"
+        ],
+        "commonViolations": [
+          "God classes with 1000+ lines",
+          "Classes mixing business logic with persistence",
+          "Classes handling both validation and processing",
+          "Services that do both data access and business logic"
+        ],
+        "relatedPrinciples": ["Separation of Concerns", "Cohesion", "Modularity"]
       },
       {
         "name": "Open/Closed Principle",
         "shortName": "OCP",
         "definition": "Software entities should be open for extension but closed for modification.",
-        "problemSolved": "Frequent changes in existing code",
+        "description": "Classes should be open for extension (new functionality) but closed for modification (existing code shouldn't change). This means you should be able to add new features without modifying existing, working code. Achieved through abstraction, interfaces, and polymorphism.",
+        "problemSolved": "Frequent changes in existing code, regression bugs, breaking existing functionality, tight coupling to specific implementations",
         "example": {
-          "bad": "if-else logic based on type",
-          "good": "Interface + polymorphism"
+          "bad": "class PaymentProcessor {\n  processPayment(type, amount) {\n    if (type === 'credit') { /* credit logic */ }\n    else if (type === 'paypal') { /* paypal logic */ }\n    else if (type === 'bitcoin') { /* bitcoin logic */ }\n    // Adding new payment type requires modifying this class\n  }\n}",
+          "good": "interface PaymentMethod {\n  process(amount);\n}\nclass CreditCard implements PaymentMethod { }\nclass PayPal implements PaymentMethod { }\nclass Bitcoin implements PaymentMethod { }\n// New payment types can be added without modifying existing code"
         },
         "benefits": [
-          "Less regression",
-          "Extensible design"
-        ]
+          "Less regression risk",
+          "Extensible design",
+          "Stable core functionality",
+          "Easier to add features",
+          "Better code reusability",
+          "Reduced testing burden"
+        ],
+        "useCases": [
+          "Plugin architectures",
+          "Strategy pattern implementation",
+          "Payment processing systems",
+          "Notification systems",
+          "Export/Import functionality",
+          "Middleware pipelines"
+        ],
+        "commonViolations": [
+          "Long if-else or switch statements based on type",
+          "Modifying existing classes to add features",
+          "Hard-coded type checking",
+          "Tight coupling to concrete implementations"
+        ],
+        "relatedPrinciples": ["Polymorphism", "Abstraction", "Strategy Pattern", "Template Method Pattern"]
       },
       {
         "name": "Liskov Substitution Principle",
         "shortName": "LSP",
-        "definition": "Subtypes must be substitutable for their base types.",
-        "problemSolved": "Broken inheritance",
+        "definition": "Subtypes must be substitutable for their base types without altering the correctness of the program.",
+        "description": "Objects of a superclass should be replaceable with objects of its subclasses without breaking the application. Derived classes must be able to substitute their base classes without the client knowing the difference. This ensures that inheritance is used correctly.",
+        "problemSolved": "Broken inheritance, unexpected behavior in subclasses, violation of polymorphism contracts, runtime errors from type mismatches",
         "example": {
-          "bad": "Square extends Rectangle with overridden setters",
-          "good": "Separate abstractions"
+          "bad": "class Rectangle {\n  setWidth(w) { this.width = w; }\n  setHeight(h) { this.height = h; }\n}\nclass Square extends Rectangle {\n  setWidth(w) { this.width = w; this.height = w; }\n  setHeight(h) { this.width = h; this.height = h; }\n}\n// Square violates Rectangle's contract - breaks LSP",
+          "good": "interface Shape {\n  getArea();\n}\nclass Rectangle implements Shape {\n  getArea() { return width * height; }\n}\nclass Square implements Shape {\n  getArea() { return side * side; }\n}\n// Both implement Shape contract correctly"
         },
         "benefits": [
           "Reliable polymorphism",
-          "Predictable behavior"
-        ]
+          "Predictable behavior",
+          "Correct inheritance usage",
+          "Type safety",
+          "Easier to reason about code",
+          "Prevents design flaws"
+        ],
+        "useCases": [
+          "Collection hierarchies",
+          "Shape/Geometry systems",
+          "Animal/Vehicle hierarchies",
+          "Database connection abstractions",
+          "Stream processing",
+          "UI component inheritance"
+        ],
+        "commonViolations": [
+          "Square extends Rectangle",
+          "Ostrich extends Bird (but can't fly)",
+          "Subclasses that throw exceptions not in base class",
+          "Subclasses with weaker preconditions or stronger postconditions",
+          "Subclasses that return null when base class doesn't"
+        ],
+        "relatedPrinciples": ["Polymorphism", "Inheritance", "Contract Design", "Design by Contract"]
       },
       {
         "name": "Interface Segregation Principle",
         "shortName": "ISP",
         "definition": "Clients should not be forced to depend on methods they do not use.",
-        "problemSolved": "Fat interfaces",
+        "description": "No client should be forced to depend on methods it doesn't use. Instead of one fat interface, create multiple smaller, specific interfaces. This prevents classes from implementing methods they don't need, reducing coupling and improving maintainability.",
+        "problemSolved": "Fat interfaces, unnecessary dependencies, forced implementation of unused methods, tight coupling, violation of SRP at interface level",
         "example": {
-          "bad": "One interface with many unrelated methods",
-          "good": "Multiple small interfaces"
+          "bad": "interface Worker {\n  work();\n  eat();\n  sleep();\n}\nclass Robot implements Worker {\n  work() { /* can work */ }\n  eat() { /* robots don't eat! */ }\n  sleep() { /* robots don't sleep! */ }\n}\n// Robot forced to implement methods it doesn't need",
+          "good": "interface Workable { work(); }\ninterface Eatable { eat(); }\ninterface Sleepable { sleep(); }\nclass Human implements Workable, Eatable, Sleepable { }\nclass Robot implements Workable { }\n// Each class implements only what it needs"
         },
         "benefits": [
           "Loose coupling",
-          "Cleaner contracts"
-        ]
+          "Cleaner contracts",
+          "No forced implementations",
+          "Better separation of concerns",
+          "Easier to understand interfaces",
+          "More flexible design"
+        ],
+        "useCases": [
+          "Role-based interfaces",
+          "Feature-based segregation",
+          "Plugin systems",
+          "Service interfaces",
+          "Repository patterns",
+          "Command interfaces"
+        ],
+        "commonViolations": [
+          "One interface with 20+ methods",
+          "Classes implementing empty methods",
+          "Interfaces mixing unrelated concerns",
+          "Forcing clients to depend on unused methods",
+          "God interfaces"
+        ],
+        "relatedPrinciples": ["Single Responsibility Principle", "Separation of Concerns", "Cohesion"]
       },
       {
         "name": "Dependency Inversion Principle",
         "shortName": "DIP",
-        "definition": "High-level modules should not depend on low-level modules; both depend on abstractions.",
-        "problemSolved": "Hard dependencies",
+        "definition": "High-level modules should not depend on low-level modules; both should depend on abstractions. Abstractions should not depend on details; details should depend on abstractions.",
+        "description": "High-level modules (business logic) should not depend on low-level modules (database, file system, etc.). Both should depend on abstractions (interfaces). This allows for flexibility, testability, and easier changes to implementation details without affecting high-level code.",
+        "problemSolved": "Hard dependencies, difficult testing, tight coupling, hard to change implementations, violation of abstraction",
         "example": {
-          "bad": "Service directly creates repository",
-          "good": "Constructor injection via interface"
+          "bad": "class UserService {\n  constructor() {\n    this.repository = new MySQLUserRepository();\n    // Hard dependency on MySQL - can't test or change easily\n  }\n}\n// High-level module depends on low-level module",
+          "good": "interface UserRepository {\n  save(user);\n  findById(id);\n}\nclass UserService {\n  constructor(repository: UserRepository) {\n    this.repository = repository;\n    // Depends on abstraction - can inject any implementation\n  }\n}\n// Both depend on abstraction"
         },
         "benefits": [
-          "Testability",
-          "Flexible architecture"
-        ]
+          "Testability (easy mocking)",
+          "Flexible architecture",
+          "Loose coupling",
+          "Easy to swap implementations",
+          "Better abstraction",
+          "Dependency injection support"
+        ],
+        "useCases": [
+          "Dependency injection frameworks",
+          "Testing with mocks",
+          "Database abstraction layers",
+          "Service layer design",
+          "Plugin architectures",
+          "Configuration management"
+        ],
+        "commonViolations": [
+          "Direct instantiation of concrete classes",
+          "High-level modules importing low-level modules",
+          "Tight coupling to specific implementations",
+          "Hard to test code",
+          "Using 'new' keyword in business logic"
+        ],
+        "relatedPrinciples": ["Dependency Injection", "Inversion of Control", "Abstraction", "Loose Coupling"]
       }
     ],
     "metadata": {
       "category": "Object Oriented Design",
       "acronym": "SOLID",
+      "description": "SOLID is a mnemonic acronym for five design principles intended to make software designs more understandable, flexible, and maintainable. These principles were introduced by Robert C. Martin (Uncle Bob) and are considered fundamental to object-oriented programming and design.",
+      "history": "The principles were introduced by Robert C. Martin in the early 2000s. The acronym was coined by Michael Feathers. These principles are derived from and extend the work done on software design principles in the 1990s.",
       "usedIn": [
         "Java",
         "Spring Boot",
         "JavaScript",
+        "TypeScript",
         "React",
         "Angular",
-        "Python"
+        "Vue.js",
+        "Python",
+        "C#",
+        ".NET",
+        "Ruby",
+        "Go"
       ],
-      "interviewImportance": "High"
+      "interviewImportance": "High",
+      "relatedConcepts": [
+        "Design Patterns",
+        "Clean Code",
+        "Refactoring",
+        "Test-Driven Development",
+        "Domain-Driven Design",
+        "Architecture Patterns"
+      ],
+      "bestPractices": [
+        "Apply principles together, not in isolation",
+        "Balance principles with pragmatism",
+        "Start simple, refactor as needed",
+        "Use SOLID to guide design decisions",
+        "Don't over-engineer simple solutions"
+      ]
     }
   }
-  
