@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Abstract Factory",
+    "category": "CREATIONAL",
+    "intent": "Create families of related objects",
+    "demo": "Light button & Dark checkbox"
+  },
+  {
+    "name": "Adapter",
+    "category": "STRUCTURAL",
+    "intent": "Convert one interface into another clients expect",
+    "demo": "legacy-paid:42"
+  },
+  {
+    "name": "Bridge",
+    "category": "STRUCTURAL",
+    "intent": "Decouple abstraction from implementation",
+    "demo": "TV on"
+  },
+  {
+    "name": "Builder",
+    "category": "CREATIONAL",
+    "intent": "Step-by-step construction of complex objects",
+    "demo": "Report{Monthly,Ops,All systems go}"
+  },
+  {
+    "name": "Chain of Responsibility",
+    "category": "BEHAVIORAL",
+    "intent": "Pass requests along chain of handlers",
+    "demo": "Tier2 resolved"
+  },
+  {
+    "name": "Command",
+    "category": "BEHAVIORAL",
+    "intent": "Encapsulate requests as objects",
+    "demo": "Light on then Light off"
+  },
+  {
+    "name": "Composite",
+    "category": "STRUCTURAL",
+    "intent": "Treat individual objects and compositions uniformly",
+    "demo": "root[notes.txt, images[logo.png]]"
+  },
+  {
+    "name": "Decorator",
+    "category": "STRUCTURAL",
+    "intent": "Add behavior to objects dynamically",
+    "demo": "Espresso+Milk"
+  },
+  {
+    "name": "Facade",
+    "category": "STRUCTURAL",
+    "intent": "Simplify complex subsystems behind a single interface",
+    "demo": "Flight->Paris & Hotel->Paris"
+  },
+  {
+    "name": "Factory Method",
+    "category": "CREATIONAL",
+    "intent": "Create objects via specialized creator methods",
+    "demo": "SMS:Code 1234 | EMAIL:Welcome"
+  },
+  {
+    "name": "Flyweight",
+    "category": "STRUCTURAL",
+    "intent": "Share objects to support large numbers efficiently",
+    "demo": "Shared instance? true, cacheSize=1"
+  },
+  {
+    "name": "Interpreter",
+    "category": "BEHAVIORAL",
+    "intent": "Evaluate sentences in a language",
+    "demo": "Result=true"
+  },
+  {
+    "name": "Iterator",
+    "category": "BEHAVIORAL",
+    "intent": "Traverse collections without exposing internals",
+    "demo": "123"
+  },
+  {
+    "name": "Mediator",
+    "category": "BEHAVIORAL",
+    "intent": "Coordinate objects via a mediator",
+    "demo": "[Bob got Hi]"
+  },
+  {
+    "name": "Memento",
+    "category": "BEHAVIORAL",
+    "intent": "Capture and restore object state",
+    "demo": "Hello"
+  },
+  {
+    "name": "Object Pool",
+    "category": "CREATIONAL",
+    "intent": "Reuse costly-to-create objects from a pool",
+    "demo": "Reused instance? true, secondStillHeld=conn-2, totalCreated=2"
+  },
+  {
+    "name": "Observer",
+    "category": "BEHAVIORAL",
+    "intent": "Notify dependents when state changes",
+    "demo": "[mobile:Storm warning, tablet:Storm warning]"
+  },
+  {
+    "name": "Prototype",
+    "category": "CREATIONAL",
+    "intent": "Clone existing instances instead of creating from scratch",
+    "demo": "Document[name=template, pages=2] | clone=Document[name=template, pages=2]"
+  },
+  {
+    "name": "Proxy",
+    "category": "STRUCTURAL",
+    "intent": "Provide a placeholder to control access to another object",
+    "demo": "Proxy->Displaying photo.jpg"
+  },
+  {
+    "name": "Singleton",
+    "category": "CREATIONAL",
+    "intent": "Ensure a class has only one instance",
+    "demo": "Same instance? true, value=cached-settings"
+  },
+  {
+    "name": "State",
+    "category": "BEHAVIORAL",
+    "intent": "Alter behavior when an object changes state",
+    "demo": "Resuming -> Pausing"
+  },
+  {
+    "name": "Strategy",
+    "category": "BEHAVIORAL",
+    "intent": "Encapsulate interchangeable algorithms",
+    "demo": "Price=90.0"
+  },
+  {
+    "name": "Template Method",
+    "category": "BEHAVIORAL",
+    "intent": "Define algorithm skeleton letting subclasses vary steps",
+    "demo": "a|b|c"
+  },
+  {
+    "name": "Visitor",
+    "category": "BEHAVIORAL",
+    "intent": "Separate operations from the object structure",
+    "demo": "circle-area,square-area"
+  }
+]
