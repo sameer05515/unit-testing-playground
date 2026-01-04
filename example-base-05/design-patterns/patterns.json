@@ -3,144 +3,288 @@
     "name": "Abstract Factory",
     "category": "CREATIONAL",
     "intent": "Create families of related objects",
-    "demo": "Light button & Dark checkbox"
+    "demo": "Light button & Dark checkbox",
+    "description": "Provides an interface for creating families of related or dependent objects without specifying their concrete classes. It's useful when you need to ensure that products from one family are used together.",
+    "useCases": ["UI component libraries", "Cross-platform applications", "Database abstraction layers", "Theme systems"],
+    "pros": ["Ensures product compatibility", "Isolates concrete classes", "Easy to add new product families", "Promotes consistency"],
+    "cons": ["Can be complex to implement", "Requires many classes", "Hard to extend with new product types"],
+    "relatedPatterns": ["Factory Method", "Builder", "Prototype"],
+    "complexity": "Medium"
   },
   {
     "name": "Adapter",
     "category": "STRUCTURAL",
     "intent": "Convert one interface into another clients expect",
-    "demo": "legacy-paid:42"
+    "demo": "legacy-paid:42",
+    "description": "Allows incompatible interfaces to work together by wrapping an object with an adapter that translates calls. Acts as a bridge between two incompatible interfaces.",
+    "useCases": ["Integrating third-party libraries", "Legacy system integration", "API versioning", "Database drivers"],
+    "pros": ["Reuses existing code", "Separates concerns", "Flexible and extensible", "Single Responsibility Principle"],
+    "cons": ["Adds complexity", "Can create many small classes", "Performance overhead in some cases"],
+    "relatedPatterns": ["Bridge", "Decorator", "Facade"],
+    "complexity": "Low"
   },
   {
     "name": "Bridge",
     "category": "STRUCTURAL",
     "intent": "Decouple abstraction from implementation",
-    "demo": "TV on"
+    "demo": "TV on",
+    "description": "Separates an object's abstraction from its implementation so the two can vary independently. Prevents a permanent binding between an abstraction and its implementation.",
+    "useCases": ["Cross-platform applications", "Database drivers", "Device drivers", "UI frameworks"],
+    "pros": ["Hides implementation details", "Improves extensibility", "Allows runtime binding", "Reduces coupling"],
+    "cons": ["Increases complexity", "Can make code harder to understand", "Requires careful design"],
+    "relatedPatterns": ["Adapter", "State", "Strategy"],
+    "complexity": "Medium"
   },
   {
     "name": "Builder",
     "category": "CREATIONAL",
     "intent": "Step-by-step construction of complex objects",
-    "demo": "Report{Monthly,Ops,All systems go}"
+    "demo": "Report{Monthly,Ops,All systems go}",
+    "description": "Constructs complex objects step by step. Allows you to produce different types and representations of an object using the same construction code.",
+    "useCases": ["SQL query builders", "HTTP request builders", "Configuration objects", "Complex data structures"],
+    "pros": ["Step-by-step construction", "Reusable construction code", "Isolates complex construction", "Allows different representations"],
+    "cons": ["Requires creating multiple classes", "More complex than direct construction", "Can be overkill for simple objects"],
+    "relatedPatterns": ["Abstract Factory", "Composite", "Prototype"],
+    "complexity": "Medium"
   },
   {
     "name": "Chain of Responsibility",
     "category": "BEHAVIORAL",
     "intent": "Pass requests along chain of handlers",
-    "demo": "Tier2 resolved"
+    "demo": "Tier2 resolved",
+    "description": "Passes requests along a chain of handlers. Each handler decides either to process the request or to pass it to the next handler in the chain.",
+    "useCases": ["Event handling systems", "Middleware pipelines", "Exception handling", "Logging systems", "Authentication/Authorization"],
+    "pros": ["Decouples sender and receiver", "Dynamic chain composition", "Flexible request handling", "Single Responsibility Principle"],
+    "cons": ["No guarantee request is handled", "Performance overhead", "Debugging can be difficult"],
+    "relatedPatterns": ["Command", "Composite", "Decorator"],
+    "complexity": "Low"
   },
   {
     "name": "Command",
     "category": "BEHAVIORAL",
     "intent": "Encapsulate requests as objects",
-    "demo": "Light on then Light off"
+    "demo": "Light on then Light off",
+    "description": "Turns a request into a stand-alone object that contains all information about the request. This transformation lets you parameterize methods with different requests, delay or queue a request's execution, and support undoable operations.",
+    "useCases": ["Undo/Redo functionality", "Macro recording", "Queue operations", "Remote procedure calls", "Transaction systems"],
+    "pros": ["Decouples invoker and receiver", "Supports undo/redo", "Can queue and log requests", "Easy to extend"],
+    "cons": ["Increases number of classes", "Can add complexity", "Memory overhead for command history"],
+    "relatedPatterns": ["Composite", "Memento", "Prototype"],
+    "complexity": "Low"
   },
   {
     "name": "Composite",
     "category": "STRUCTURAL",
     "intent": "Treat individual objects and compositions uniformly",
-    "demo": "root[notes.txt, images[logo.png]]"
+    "demo": "root[notes.txt, images[logo.png]]",
+    "description": "Composes objects into tree structures to represent part-whole hierarchies. Lets clients treat individual objects and compositions uniformly.",
+    "useCases": ["File systems", "UI component trees", "Organization hierarchies", "XML/JSON parsers", "Graphics systems"],
+    "pros": ["Uniform treatment of objects", "Easy to add new components", "Simplifies client code", "Flexible structure"],
+    "cons": ["Can make design overly general", "Hard to restrict component types", "Can be difficult to implement"],
+    "relatedPatterns": ["Decorator", "Flyweight", "Iterator", "Visitor"],
+    "complexity": "Low"
   },
   {
     "name": "Decorator",
     "category": "STRUCTURAL",
     "intent": "Add behavior to objects dynamically",
-    "demo": "Espresso+Milk"
+    "demo": "Espresso+Milk",
+    "description": "Attaches new behaviors to objects by placing these objects inside special wrapper objects that contain the behaviors. Allows you to add new functionality to objects without altering their structure.",
+    "useCases": ["Stream processing", "Middleware", "UI components", "Input/Output streams", "Caching layers"],
+    "pros": ["Adds behavior dynamically", "More flexible than inheritance", "Follows Open/Closed Principle", "Can combine behaviors"],
+    "cons": ["Can create many small objects", "Hard to debug", "Order of decorators matters", "Can be complex"],
+    "relatedPatterns": ["Adapter", "Bridge", "Composite", "Proxy"],
+    "complexity": "Low"
   },
   {
     "name": "Facade",
     "category": "STRUCTURAL",
     "intent": "Simplify complex subsystems behind a single interface",
-    "demo": "Flight->Paris & Hotel->Paris"
+    "demo": "Flight->Paris & Hotel->Paris",
+    "description": "Provides a simplified interface to a complex subsystem. Defines a higher-level interface that makes the subsystem easier to use.",
+    "useCases": ["API simplification", "Library wrappers", "Legacy system integration", "Complex framework interfaces"],
+    "pros": ["Simplifies complex systems", "Reduces coupling", "Provides convenient interface", "Shields clients from complexity"],
+    "cons": ["Can become a god object", "May hide important functionality", "Tight coupling to subsystem"],
+    "relatedPatterns": ["Adapter", "Mediator", "Singleton"],
+    "complexity": "Low"
   },
   {
     "name": "Factory Method",
     "category": "CREATIONAL",
     "intent": "Create objects via specialized creator methods",
-    "demo": "SMS:Code 1234 | EMAIL:Welcome"
+    "demo": "SMS:Code 1234 | EMAIL:Welcome",
+    "description": "Provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created. Defers instantiation to subclasses.",
+    "useCases": ["Framework development", "Plugin architectures", "Cross-platform code", "Object creation with dependencies"],
+    "pros": ["Eliminates tight coupling", "Single Responsibility Principle", "Open/Closed Principle", "Centralizes object creation"],
+    "cons": ["Requires creating many subclasses", "Can be complex for simple cases", "May require inheritance"],
+    "relatedPatterns": ["Abstract Factory", "Builder", "Prototype", "Template Method"],
+    "complexity": "Low"
   },
   {
     "name": "Flyweight",
     "category": "STRUCTURAL",
     "intent": "Share objects to support large numbers efficiently",
-    "demo": "Shared instance? true, cacheSize=1"
+    "demo": "Shared instance? true, cacheSize=1",
+    "description": "Lets you fit more objects into the available amount of RAM by sharing common parts of state between multiple objects instead of keeping all of the data in each object.",
+    "useCases": ["Text editors", "Game development", "Tree structures", "Large datasets", "Caching systems"],
+    "pros": ["Reduces memory usage", "Improves performance", "Suitable for large numbers of objects", "Shares common state"],
+    "cons": ["Increases code complexity", "Requires careful state management", "Can complicate debugging", "Thread safety concerns"],
+    "relatedPatterns": ["Composite", "State", "Strategy"],
+    "complexity": "Medium"
   },
   {
     "name": "Interpreter",
     "category": "BEHAVIORAL",
     "intent": "Evaluate sentences in a language",
-    "demo": "Result=true"
+    "demo": "Result=true",
+    "description": "Defines a grammatical representation for a language and provides an interpreter to deal with this grammar. Useful for implementing domain-specific languages.",
+    "useCases": ["Query languages", "Regular expressions", "Mathematical expressions", "Domain-specific languages", "Configuration parsers"],
+    "pros": ["Easy to extend grammar", "Implements grammar directly", "Easy to add new expressions", "Follows grammar structure"],
+    "cons": ["Complex for simple grammars", "Can be slow", "Hard to maintain", "Requires grammar knowledge"],
+    "relatedPatterns": ["Composite", "Flyweight", "Iterator", "Visitor"],
+    "complexity": "High"
   },
   {
     "name": "Iterator",
     "category": "BEHAVIORAL",
     "intent": "Traverse collections without exposing internals",
-    "demo": "123"
+    "demo": "123",
+    "description": "Lets you traverse elements of a collection without exposing its underlying representation. Provides a way to access elements sequentially without exposing the underlying structure.",
+    "useCases": ["Collection traversal", "Tree traversal", "Graph algorithms", "Database result sets", "File system navigation"],
+    "pros": ["Simplifies collection access", "Supports multiple traversals", "Hides collection structure", "Single Responsibility Principle"],
+    "cons": ["Can be overkill for simple collections", "Requires additional classes", "Performance overhead in some cases"],
+    "relatedPatterns": ["Composite", "Factory Method", "Memento"],
+    "complexity": "Low"
   },
   {
     "name": "Mediator",
     "category": "BEHAVIORAL",
     "intent": "Coordinate objects via a mediator",
-    "demo": "[Bob got Hi]"
+    "demo": "[Bob got Hi]",
+    "description": "Lets you reduce chaotic dependencies between objects by restricting direct communications between them and forcing them to collaborate only via a mediator object.",
+    "useCases": ["GUI components", "Chat applications", "Event systems", "Workflow management", "Air traffic control systems"],
+    "pros": ["Reduces coupling", "Centralizes control", "Easier to maintain", "Simplifies object protocols"],
+    "cons": ["Mediator can become complex", "Single point of failure", "Can become a god object", "Harder to reuse components"],
+    "relatedPatterns": ["Facade", "Observer", "Command"],
+    "complexity": "Medium"
   },
   {
     "name": "Memento",
     "category": "BEHAVIORAL",
     "intent": "Capture and restore object state",
-    "demo": "Hello"
+    "demo": "Hello",
+    "description": "Lets you save and restore the previous state of an object without revealing the details of its implementation. Captures and externalizes an object's internal state.",
+    "useCases": ["Undo/Redo operations", "Checkpoint systems", "Game save states", "Transaction rollback", "State snapshots"],
+    "pros": ["Preserves encapsulation", "Simplifies originator", "Easy to implement", "Supports state history"],
+    "cons": ["Can be expensive in memory", "Requires careful state management", "Can be complex for large states", "Privacy concerns"],
+    "relatedPatterns": ["Command", "State"],
+    "complexity": "Low"
   },
   {
     "name": "Object Pool",
     "category": "CREATIONAL",
     "intent": "Reuse costly-to-create objects from a pool",
-    "demo": "Reused instance? true, secondStillHeld=conn-2, totalCreated=2"
+    "demo": "Reused instance? true, secondStillHeld=conn-2, totalCreated=2",
+    "description": "Maintains a pool of reusable objects that are expensive to create. Instead of creating new objects, clients request objects from the pool and return them when done.",
+    "useCases": ["Database connections", "Thread pools", "Network connections", "Memory allocation", "Game object management"],
+    "pros": ["Improves performance", "Reduces object creation overhead", "Controls resource usage", "Manages object lifecycle"],
+    "cons": ["Requires careful management", "Can cause memory issues", "Objects must be reset", "Thread safety concerns"],
+    "relatedPatterns": ["Factory Method", "Singleton", "Prototype"],
+    "complexity": "Medium"
   },
   {
     "name": "Observer",
     "category": "BEHAVIORAL",
     "intent": "Notify dependents when state changes",
-    "demo": "[mobile:Storm warning, tablet:Storm warning]"
+    "demo": "[mobile:Storm warning, tablet:Storm warning]",
+    "description": "Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.",
+    "useCases": ["Event handling", "Model-View architectures", "Publish-Subscribe systems", "Reactive programming", "UI updates"],
+    "pros": ["Loose coupling", "Dynamic relationships", "Broadcast communication", "Open/Closed Principle"],
+    "cons": ["Unexpected updates", "Performance issues with many observers", "Memory leaks if not unsubscribed", "Update order issues"],
+    "relatedPatterns": ["Mediator", "Singleton"],
+    "complexity": "Low"
   },
   {
     "name": "Prototype",
     "category": "CREATIONAL",
     "intent": "Clone existing instances instead of creating from scratch",
-    "demo": "Document[name=template, pages=2] | clone=Document[name=template, pages=2]"
+    "demo": "Document[name=template, pages=2] | clone=Document[name=template, pages=2]",
+    "description": "Lets you copy existing objects without making your code dependent on their classes. Creates objects by cloning existing instances rather than using constructors.",
+    "useCases": ["Object initialization is expensive", "Avoiding subclass proliferation", "Runtime object specification", "Configuration objects"],
+    "pros": ["Clones objects at runtime", "Reduces subclassing", "Adds/removes objects dynamically", "Configures classes dynamically"],
+    "cons": ["Complex cloning of circular references", "Deep vs shallow copy issues", "Can be difficult to implement", "Requires cloneable interface"],
+    "relatedPatterns": ["Abstract Factory", "Composite", "Decorator"],
+    "complexity": "Low"
   },
   {
     "name": "Proxy",
     "category": "STRUCTURAL",
     "intent": "Provide a placeholder to control access to another object",
-    "demo": "Proxy->Displaying photo.jpg"
+    "demo": "Proxy->Displaying photo.jpg",
+    "description": "Provides a surrogate or placeholder for another object to control access to it. Acts as an intermediary between client and the real object.",
+    "useCases": ["Lazy loading", "Access control", "Logging", "Caching", "Remote proxies", "Virtual proxies"],
+    "pros": ["Controls object access", "Can add functionality", "Manages object lifecycle", "Can be transparent to client"],
+    "cons": ["Adds indirection", "Can complicate code", "Performance overhead", "Requires careful implementation"],
+    "relatedPatterns": ["Adapter", "Decorator", "Facade"],
+    "complexity": "Low"
   },
   {
     "name": "Singleton",
     "category": "CREATIONAL",
     "intent": "Ensure a class has only one instance",
-    "demo": "Same instance? true, value=cached-settings"
+    "demo": "Same instance? true, value=cached-settings",
+    "description": "Ensures a class has only one instance and provides a global point of access to it. Restricts instantiation to a single object.",
+    "useCases": ["Database connections", "Logging", "Configuration management", "Caching", "Thread pools"],
+    "pros": ["Controlled access to instance", "Reduced namespace pollution", "Lazy initialization possible", "Can be subclassed"],
+    "cons": ["Violates Single Responsibility Principle", "Hard to test", "Thread safety issues", "Global state problems", "Hidden dependencies"],
+    "relatedPatterns": ["Abstract Factory", "Builder", "Facade", "Prototype"],
+    "complexity": "Low"
   },
   {
     "name": "State",
     "category": "BEHAVIORAL",
     "intent": "Alter behavior when an object changes state",
-    "demo": "Resuming -> Pausing"
+    "demo": "Resuming -> Pausing",
+    "description": "Allows an object to alter its behavior when its internal state changes. The object will appear to change its class. Encapsulates state-specific behavior.",
+    "useCases": ["State machines", "Workflow systems", "Game development", "UI components", "Network protocols"],
+    "pros": ["Localizes state-specific behavior", "Makes state transitions explicit", "Eliminates conditional logic", "Easy to add new states"],
+    "cons": ["Can increase number of classes", "Requires careful state management", "Can be complex for simple cases"],
+    "relatedPatterns": ["Bridge", "Flyweight", "Singleton"],
+    "complexity": "Medium"
   },
   {
     "name": "Strategy",
     "category": "BEHAVIORAL",
     "intent": "Encapsulate interchangeable algorithms",
-    "demo": "Price=90.0"
+    "demo": "Price=90.0",
+    "description": "Defines a family of algorithms, encapsulates each one, and makes them interchangeable. Lets the algorithm vary independently from clients that use it.",
+    "useCases": ["Sorting algorithms", "Payment processing", "Validation rules", "Compression algorithms", "Routing algorithms"],
+    "pros": ["Easily switch algorithms", "Eliminates conditional statements", "Open/Closed Principle", "Encapsulates algorithms"],
+    "cons": ["Clients must know strategies", "Increases number of classes", "Can be overkill for simple cases"],
+    "relatedPatterns": ["Bridge", "Command", "Template Method"],
+    "complexity": "Low"
   },
   {
     "name": "Template Method",
     "category": "BEHAVIORAL",
     "intent": "Define algorithm skeleton letting subclasses vary steps",
-    "demo": "a|b|c"
+    "demo": "a|b|c",
+    "description": "Defines the skeleton of an algorithm in the superclass but lets subclasses override specific steps of the algorithm without changing its structure.",
+    "useCases": ["Framework development", "Data processing pipelines", "Test frameworks", "Code generators", "Algorithm variations"],
+    "pros": ["Code reuse", "Controls algorithm structure", "Eliminates code duplication", "Inversion of Control"],
+    "cons": ["Requires inheritance", "Can be limiting", "Hard to debug", "Violates Liskov Substitution Principle if misused"],
+    "relatedPatterns": ["Factory Method", "Strategy"],
+    "complexity": "Low"
   },
   {
     "name": "Visitor",
     "category": "BEHAVIORAL",
     "intent": "Separate operations from the object structure",
-    "demo": "circle-area,square-area"
+    "demo": "circle-area,square-area",
+    "description": "Lets you define a new operation without changing the classes of the elements on which it operates. Separates algorithms from the objects they operate on.",
+    "useCases": ["Compiler design", "AST traversal", "Document processing", "Type checking", "Code generation"],
+    "pros": ["Easy to add new operations", "Groups related operations", "Can accumulate state", "Visits unrelated classes"],
+    "cons": ["Hard to add new element types", "Requires element interface", "Can break encapsulation", "Complex to implement"],
+    "relatedPatterns": ["Composite", "Interpreter", "Iterator"],
+    "complexity": "High"
   }
 ]
