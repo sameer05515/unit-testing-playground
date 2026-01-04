@@ -1,0 +1,22 @@
+{
+  "name": "solid-principles-catalog",
+  "version": "1.0.0",
+  "description": "SOLID Principles Catalog - HTML + Alpine.js + Bootstrap 5",
+  "scripts": {
+    "start": "http-server -p 8083 -o",
+    "serve": "http-server -p 8083",
+    "dev": "http-server -p 8083 -o -c-1"
+  },
+  "keywords": [
+    "solid-principles",
+    "alpinejs",
+    "bootstrap",
+    "object-oriented-design"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
+

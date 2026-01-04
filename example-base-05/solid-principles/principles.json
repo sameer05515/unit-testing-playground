@@ -1,0 +1,89 @@
+{
+    "principles": [
+      {
+        "name": "Single Responsibility Principle",
+        "shortName": "SRP",
+        "definition": "A class should have only one reason to change.",
+        "problemSolved": "God classes, tight coupling, difficult maintenance",
+        "example": {
+          "bad": "UserService handles validation, persistence, and email",
+          "good": "UserService + UserRepository + EmailService"
+        },
+        "benefits": [
+          "Better readability",
+          "Easier testing",
+          "Lower coupling"
+        ]
+      },
+      {
+        "name": "Open/Closed Principle",
+        "shortName": "OCP",
+        "definition": "Software entities should be open for extension but closed for modification.",
+        "problemSolved": "Frequent changes in existing code",
+        "example": {
+          "bad": "if-else logic based on type",
+          "good": "Interface + polymorphism"
+        },
+        "benefits": [
+          "Less regression",
+          "Extensible design"
+        ]
+      },
+      {
+        "name": "Liskov Substitution Principle",
+        "shortName": "LSP",
+        "definition": "Subtypes must be substitutable for their base types.",
+        "problemSolved": "Broken inheritance",
+        "example": {
+          "bad": "Square extends Rectangle with overridden setters",
+          "good": "Separate abstractions"
+        },
+        "benefits": [
+          "Reliable polymorphism",
+          "Predictable behavior"
+        ]
+      },
+      {
+        "name": "Interface Segregation Principle",
+        "shortName": "ISP",
+        "definition": "Clients should not be forced to depend on methods they do not use.",
+        "problemSolved": "Fat interfaces",
+        "example": {
+          "bad": "One interface with many unrelated methods",
+          "good": "Multiple small interfaces"
+        },
+        "benefits": [
+          "Loose coupling",
+          "Cleaner contracts"
+        ]
+      },
+      {
+        "name": "Dependency Inversion Principle",
+        "shortName": "DIP",
+        "definition": "High-level modules should not depend on low-level modules; both depend on abstractions.",
+        "problemSolved": "Hard dependencies",
+        "example": {
+          "bad": "Service directly creates repository",
+          "good": "Constructor injection via interface"
+        },
+        "benefits": [
+          "Testability",
+          "Flexible architecture"
+        ]
+      }
+    ],
+    "metadata": {
+      "category": "Object Oriented Design",
+      "acronym": "SOLID",
+      "usedIn": [
+        "Java",
+        "Spring Boot",
+        "JavaScript",
+        "React",
+        "Angular",
+        "Python"
+      ],
+      "interviewImportance": "High"
+    }
+  }
+  
