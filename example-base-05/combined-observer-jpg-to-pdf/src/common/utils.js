@@ -223,7 +223,8 @@ const folder_names = [
   // "hawaldar-bahadur-aur-bhoot-ki-choti",
   // "parmaanu-tirachhi-topi",
   // "scd-match",
-  "Trikaldev-Kaali-Khopdi"
+  // "Trikaldev-Kaali-Khopdi",
+  "crookbond-aur-pret-dada"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
