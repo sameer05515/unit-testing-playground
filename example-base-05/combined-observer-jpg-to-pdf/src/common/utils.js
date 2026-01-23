@@ -224,7 +224,8 @@ const folder_names = [
   // "parmaanu-tirachhi-topi",
   // "scd-match",
   // "Trikaldev-Kaali-Khopdi",
-  "crookbond-aur-pret-dada"
+  // "crookbond-aur-pret-dada",
+  "bankelal-aur-ikhshamani"
 ];
 
 const comic_folder_and_file_name = folder_names[folder_names.length - 1];
