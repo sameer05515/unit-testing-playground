@@ -19,14 +19,17 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const user = userService.getCurrentUser();
-    setCurrentUser(user);
-    setLoading(false);
+    const loadUser = async () => {
+      const user = await userService.getCurrentUser();
+      setCurrentUser(user);
+      setLoading(false);
+    };
+    loadUser();
   }, []);
 
-  const handleLogin = (userId: string) => {
+  const handleLogin = async (userId: string) => {
     userService.setCurrentUser(userId);
-    const user = userService.getCurrentUser();
+    const user = await userService.getCurrentUser();
     setCurrentUser(user);
   };
 

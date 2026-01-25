@@ -1,39 +1,63 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { testService, questionService, attemptService } from '../services/dataService';
+import { testService, attemptService } from '../services/dataService';
 import { userService } from '../services/dataService';
-import type { Question } from '../types';
+import type { Question, Test, User } from '../types';
 
 export default function TestAttempt() {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
-  const currentUser = userService.getCurrentUser();
 
-  const [test, setTest] = useState(testService.getById(testId!));
+  const [test, setTest] = useState<Test | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, number>>({});
   const [timeLeft, setTimeLeft] = useState(0); // in seconds
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!test || !currentUser) {
-      navigate('/');
-      return;
+    const initializeTest = async () => {
+      try {
+        const user = await userService.getCurrentUser();
+        if (!user) {
+          navigate('/');
+          return;
+        }
+        setCurrentUser(user);
+
+        const testData = await testService.getById(testId!);
+        if (!testData) {
+          navigate('/');
+          return;
+        }
+        setTest(testData);
+
+        // Story 1: Start MCQ Test - Create attempt (backend handles random questions)
+        const attempt = await attemptService.create(testData.id, user.id);
+        setAttemptId(attempt.id);
+        setQuestions(attempt.questions);
+
+        // Start timer (Story 9: Timer Auto Submit)
+        const durationSeconds = testData.duration * 60;
+        setTimeLeft(durationSeconds);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to initialize test:', error);
+        navigate('/');
+      }
+    };
+
+    if (testId) {
+      initializeTest();
     }
+  }, [testId, navigate]);
 
-    // Story 2: Fetch Random MCQs
-    const randomQuestions = questionService.getRandom(test.questionLimit);
-    setQuestions(randomQuestions);
-
-    // Story 1: Start MCQ Test - Create attempt
-    const attempt = attemptService.create(test.id, currentUser.id, randomQuestions);
-    setAttemptId(attempt.id);
-
-    // Start timer (Story 9: Timer Auto Submit)
-    const durationSeconds = test.duration * 60;
-    setTimeLeft(durationSeconds);
+  useEffect(() => {
+    if (timeLeft <= 0 || !attemptId) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -47,33 +71,42 @@ export default function TestAttempt() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [testId]);
+  }, [timeLeft, attemptId]);
 
   const handleAutoSubmit = async () => {
     if (!attemptId) return;
     await handleFinish();
   };
 
-  const handleOptionSelect = (questionId: string, optionIndex: number) => {
+  const handleOptionSelect = async (questionId: string, optionIndex: number) => {
     if (!attemptId) return;
 
     // Story 3: Submit Answer - Auto save on click
     setSelectedOptions((prev) => ({ ...prev, [questionId]: optionIndex }));
-    attemptService.submitAnswer(attemptId, questionId, optionIndex);
+    try {
+      await attemptService.submitAnswer(attemptId, questionId, optionIndex);
+    } catch (error) {
+      console.error('Failed to submit answer:', error);
+    }
   };
 
   const handleFinish = async () => {
     if (!attemptId || isSubmitting) return;
     setIsSubmitting(true);
 
-    // Story 4: Finish Test & Score
-    const finishedAttempt = attemptService.finish(attemptId);
-    if (finishedAttempt) {
-      navigate(`/attempt/${attemptId}/result`);
+    try {
+      // Story 4: Finish Test & Score
+      const finishedAttempt = await attemptService.finish(attemptId);
+      if (finishedAttempt) {
+        navigate(`/attempt/${attemptId}/result`);
+      }
+    } catch (error) {
+      console.error('Failed to finish attempt:', error);
+      setIsSubmitting(false);
     }
   };
 
-  if (!test || questions.length === 0) {
+  if (loading || !test || questions.length === 0) {
     return <div className="loading">Loading test...</div>;
   }
 

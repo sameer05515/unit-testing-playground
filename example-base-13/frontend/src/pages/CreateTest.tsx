@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { testService, questionService, userService } from '../services/dataService';
-import type { Question } from '../types';
+import type { Question, User } from '../types';
 
 export default function CreateTest() {
   const navigate = useNavigate();
-  const currentUser = userService.getCurrentUser();
-  const allQuestions = questionService.getAll();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -17,17 +18,39 @@ export default function CreateTest() {
     questionIds: [] as string[],
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const user = await userService.getCurrentUser();
+        setCurrentUser(user);
+        
+        const questions = await questionService.getAll();
+        setAllQuestions(questions);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
 
-    // Story 6: Admin Create Test
-    const test = testService.create({
-      ...formData,
-      createdBy: currentUser.id,
-    });
+    try {
+      // Story 6: Admin Create Test
+      await testService.create({
+        ...formData,
+        createdBy: currentUser.id,
+      });
 
-    navigate('/admin');
+      navigate('/admin');
+    } catch (error) {
+      console.error('Failed to create test:', error);
+      alert('Failed to create test. Please try again.');
+    }
   };
 
   const toggleQuestion = (questionId: string) => {
@@ -47,6 +70,10 @@ export default function CreateTest() {
     if (filterTopic && q.topic !== filterTopic) return false;
     return true;
   });
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div>

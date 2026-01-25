@@ -1,10 +1,32 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { leaderboardService, testService } from '../services/dataService';
+import type { Test, LeaderboardEntry } from '../types';
 
 export default function Leaderboard() {
   const { testId } = useParams<{ testId: string }>();
-  const test = testId ? testService.getById(testId) : null;
-  const entries = testId ? leaderboardService.getByTestId(testId) : [];
+  const [test, setTest] = useState<Test | null>(null);
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        if (testId) {
+          const testData = await testService.getById(testId);
+          setTest(testData || null);
+          
+          const leaderboardData = await leaderboardService.getByTestId(testId);
+          setEntries(leaderboardData);
+        }
+      } catch (error) {
+        console.error('Failed to load leaderboard:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [testId]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -18,6 +40,10 @@ export default function Leaderboard() {
     if (rank === 3) return 'bronze';
     return 'default';
   };
+
+  if (loading) {
+    return <div className="loading">Loading leaderboard...</div>;
+  }
 
   return (
     <div>

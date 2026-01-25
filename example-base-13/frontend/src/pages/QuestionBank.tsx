@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { questionService } from '../services/dataService';
 import type { Question, Difficulty } from '../types';
 
 export default function QuestionBank() {
-  const [questions, setQuestions] = useState(questionService.getAll());
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [filterTopic, setFilterTopic] = useState<string>('');
@@ -19,6 +20,20 @@ export default function QuestionBank() {
     marks: 1,
   });
 
+  useEffect(() => {
+    const loadQuestions = async () => {
+      try {
+        const allQuestions = await questionService.getAll();
+        setQuestions(allQuestions);
+      } catch (error) {
+        console.error('Failed to load questions:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadQuestions();
+  }, []);
+
   const topics = Array.from(new Set(questions.map((q) => q.topic).filter(Boolean)));
 
   const filteredQuestions = questions.filter((q) => {
@@ -27,15 +42,22 @@ export default function QuestionBank() {
     return true;
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      questionService.update(editingId, formData);
-    } else {
-      questionService.create(formData);
+    try {
+      if (editingId) {
+        await questionService.update(editingId, formData);
+      } else {
+        await questionService.create(formData);
+      }
+      // Reload questions
+      const allQuestions = await questionService.getAll();
+      setQuestions(allQuestions);
+      resetForm();
+    } catch (error) {
+      console.error('Failed to save question:', error);
+      alert('Failed to save question. Please try again.');
     }
-    setQuestions(questionService.getAll());
-    resetForm();
   };
 
   const resetForm = () => {
@@ -64,10 +86,17 @@ export default function QuestionBank() {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this question?')) {
-      questionService.delete(id);
-      setQuestions(questionService.getAll());
+      try {
+        await questionService.delete(id);
+        // Reload questions
+        const allQuestions = await questionService.getAll();
+        setQuestions(allQuestions);
+      } catch (error) {
+        console.error('Failed to delete question:', error);
+        alert('Failed to delete question. Please try again.');
+      }
     }
   };
 

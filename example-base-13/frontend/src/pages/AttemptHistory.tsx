@@ -1,10 +1,35 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { attemptService, testService, userService } from '../services/dataService';
+import type { Attempt, Test, User } from '../types';
 
 export default function AttemptHistory() {
-  const currentUser = userService.getCurrentUser();
-  const attempts = currentUser ? attemptService.getByUserId(currentUser.id) : [];
-  const tests = testService.getAll();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [attempts, setAttempts] = useState<Attempt[]>([]);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const user = await userService.getCurrentUser();
+        setCurrentUser(user);
+        
+        if (user) {
+          const userAttempts = await attemptService.getByUserId(user.id);
+          setAttempts(userAttempts);
+        }
+        
+        const allTests = await testService.getAll();
+        setTests(allTests);
+      } catch (error) {
+        console.error('Failed to load history:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
   const getTestName = (testId: string) => {
     return tests.find((t) => t.id === testId)?.name || 'Unknown Test';
@@ -20,6 +45,10 @@ export default function AttemptHistory() {
     const secs = seconds % 60;
     return `${mins}m ${secs}s`;
   };
+
+  if (loading) {
+    return <div className="loading">Loading history...</div>;
+  }
 
   return (
     <div>

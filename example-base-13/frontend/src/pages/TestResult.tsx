@@ -1,11 +1,37 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { attemptService, testService } from '../services/dataService';
-import type { Attempt } from '../types';
+import type { Attempt, Test } from '../types';
 
 export default function TestResult() {
   const { attemptId } = useParams<{ attemptId: string }>();
-  const attempt = attemptService.getById(attemptId!);
-  const test = attempt ? testService.getById(attempt.testId) : null;
+  const [attempt, setAttempt] = useState<Attempt | null>(null);
+  const [test, setTest] = useState<Test | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        if (attemptId) {
+          const attemptData = await attemptService.getById(attemptId);
+          if (attemptData) {
+            setAttempt(attemptData);
+            const testData = await testService.getById(attemptData.testId);
+            setTest(testData || null);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load result:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [attemptId]);
+
+  if (loading) {
+    return <div className="loading">Loading results...</div>;
+  }
 
   if (!attempt || !test) {
     return <div>Attempt not found</div>;

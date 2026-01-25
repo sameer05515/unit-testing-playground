@@ -9,6 +9,37 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+// Helper function to normalize MongoDB _id to id (recursive for nested objects)
+function normalizeId<T>(obj: any): T {
+  if (!obj || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(normalizeId) as T;
+  }
+
+  const normalized: any = {};
+  
+  for (const key in obj) {
+    if (key === '_id' && !('id' in obj)) {
+      normalized.id = obj[key];
+    } else if (key !== '_id') {
+      if (Array.isArray(obj[key])) {
+        normalized[key] = obj[key].map((item: any) => 
+          typeof item === 'object' && item !== null ? normalizeId(item) : item
+        );
+      } else if (typeof obj[key] === 'object' && obj[key] !== null && !(obj[key] instanceof Date)) {
+        normalized[key] = normalizeId(obj[key]);
+      } else {
+        normalized[key] = obj[key];
+      }
+    }
+  }
+
+  return normalized as T;
+}
+
 // Helper function for API calls
 async function apiCall<T>(
   endpoint: string,
@@ -27,7 +58,10 @@ async function apiCall<T>(
     throw new Error(error.error || `HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Normalize _id to id recursively
+  return normalizeId<T>(data);
 }
 
 // User Service

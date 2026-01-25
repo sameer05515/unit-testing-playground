@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { userService } from '../services/dataService';
+import type { User } from '../types';
 import './Login.css';
 
 interface LoginProps {
@@ -8,14 +9,38 @@ interface LoginProps {
 
 export default function Login({ onLogin }: LoginProps) {
   const [selectedUserId, setSelectedUserId] = useState<string>('');
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const users = userService.getAllUsers();
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        const allUsers = await userService.getAllUsers();
+        setUsers(allUsers);
+      } catch (error) {
+        console.error('Failed to load users:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUsers();
+  }, []);
 
   const handleLogin = () => {
     if (selectedUserId) {
       onLogin(selectedUserId);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="login-container">
+        <div className="login-card">
+          <div className="loading">Loading users...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-container">
