@@ -56,6 +56,28 @@ npm start
 
 The API will be available at `http://localhost:3000`
 
+## 📚 API Documentation
+
+### Swagger UI
+Interactive API documentation with testing capabilities:
+```
+http://localhost:3000/api-docs
+```
+
+### ReDoc (Redocly)
+Beautiful, responsive API documentation:
+```
+http://localhost:3000/docs
+```
+
+### OpenAPI JSON
+Raw OpenAPI specification:
+```
+http://localhost:3000/api-docs/swagger.json
+```
+
+See [SWAGGER.md](./SWAGGER.md) for detailed documentation guide.
+
 ## 📡 API Endpoints
 
 ### Health Check

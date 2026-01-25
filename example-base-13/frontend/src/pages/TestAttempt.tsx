@@ -37,6 +37,17 @@ export default function TestAttempt() {
 
         // Story 1: Start MCQ Test - Create attempt (backend handles random questions)
         const attempt = await attemptService.create(testData.id, user.id);
+        console.log('Attempt created:', attempt);
+        if (!attempt) {
+          throw new Error('Failed to create attempt: No response from server');
+        }
+        if (!attempt.questions || !Array.isArray(attempt.questions)) {
+          console.error('Invalid attempt response:', attempt);
+          throw new Error(`Failed to create attempt: Questions array is missing or invalid. Received: ${JSON.stringify(attempt)}`);
+        }
+        if (attempt.questions.length === 0) {
+          throw new Error('Failed to create attempt: No questions were generated');
+        }
         setAttemptId(attempt.id);
         setQuestions(attempt.questions);
 

@@ -29,9 +29,27 @@ export const createAttempt = async (req, res) => {
       questions = allQuestions;
     }
 
+    if (!questions || questions.length === 0) {
+      return res.status(400).json({ error: 'No questions available for this test' });
+    }
+
+    // Convert questions to plain objects and ensure _id is converted to string
+    const questionsData = questions.map((q) => {
+      const questionId = q._id ? (q._id.toString ? q._id.toString() : String(q._id)) : (q.id || null);
+      return {
+        id: questionId,
+        text: q.text,
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        topic: q.topic || null,
+        difficulty: q.difficulty || null,
+        marks: q.marks || 1,
+      };
+    });
+
     // Initialize answers
-    const answers = questions.map((q) => ({
-      questionId: q._id,
+    const answers = questionsData.map((q) => ({
+      questionId: q.id,
       selectedOption: null,
       isCorrect: false,
       marksObtained: 0,
@@ -42,22 +60,30 @@ export const createAttempt = async (req, res) => {
       userId,
       status: 'in_progress',
       answers,
-      questions: questions.map((q) => ({
-        id: q._id,
-        text: q.text,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        topic: q.topic,
-        difficulty: q.difficulty,
-        marks: q.marks,
-      })),
+      questions: questionsData,
     });
 
     await attempt.save();
     await attempt.populate('testId', 'name description duration');
     await attempt.populate('userId', 'name email');
 
-    res.status(201).json(attempt);
+    // Convert to plain object and ensure questions array is properly formatted
+    const attemptObj = attempt.toObject();
+    
+    // Ensure questions array has proper id fields
+    if (attemptObj.questions && Array.isArray(attemptObj.questions)) {
+      attemptObj.questions = attemptObj.questions.map((q) => {
+        if (q && typeof q === 'object') {
+          return {
+            ...q,
+            id: q.id || (q._id ? String(q._id) : null),
+          };
+        }
+        return q;
+      });
+    }
+
+    res.status(201).json(attemptObj);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

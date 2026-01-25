@@ -22,8 +22,14 @@ function normalizeId<T>(obj: any): T {
   const normalized: any = {};
   
   for (const key in obj) {
-    if (key === '_id' && !('id' in obj)) {
-      normalized.id = obj[key];
+    if (key === '_id') {
+      // Convert _id to id if id doesn't exist, or ensure id is a string
+      if (!('id' in obj)) {
+        normalized.id = obj[key]?.toString() || obj[key];
+      } else {
+        // id already exists, ensure it's a string
+        normalized.id = obj.id?.toString() || obj.id;
+      }
     } else if (key !== '_id') {
       if (Array.isArray(obj[key])) {
         normalized[key] = obj[key].map((item: any) => 
@@ -35,6 +41,11 @@ function normalizeId<T>(obj: any): T {
         normalized[key] = obj[key];
       }
     }
+  }
+
+  // If object had _id but we didn't add id, add it now
+  if ('_id' in obj && !('id' in normalized)) {
+    normalized.id = obj._id?.toString() || obj._id;
   }
 
   return normalized as T;
