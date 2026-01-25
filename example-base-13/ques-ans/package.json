@@ -1,0 +1,22 @@
+{
+  "name": "ques-ans-api",
+  "version": "1.0.0",
+  "description": "Q&A System API with question and answer management",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "keywords": [
+    "express",
+    "api",
+    "qna",
+    "question-answer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}
