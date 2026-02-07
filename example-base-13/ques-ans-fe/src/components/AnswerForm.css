@@ -1,0 +1,28 @@
+.answer-form {
+  margin-bottom: 1.5rem;
+}
+
+.answer-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.answer-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.answer-form textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.answer-form .form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
