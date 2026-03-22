@@ -24,7 +24,9 @@ const DEFAULT_TIMEOUT_IN_MS = 1000;
  */
 const validateSimulationAndTimeout = ({ timeoutInMS, threshold = DEFAULT_THRESHOLD }) => {
     const calculatedTimeOut =
-        timeoutInMS && !isNaN(timeoutInMS) && timeoutInMS <= MAX_TIMEOUT_IN_MS && timeoutInMS >= MIN_TIMEOUT_IN_MS
+        Number.isFinite(timeoutInMS) &&
+        timeoutInMS <= MAX_TIMEOUT_IN_MS &&
+        timeoutInMS >= MIN_TIMEOUT_IN_MS
             ? timeoutInMS
             : DEFAULT_TIMEOUT_IN_MS;
 
@@ -149,7 +151,7 @@ export const fetchUserAttendanceForDateRange = (empCode, dateRange, timeoutInMS 
             if (result) {
                 const empData = employeeData.find(({ employeeCode }) => employeeCode === empCode);
                 if (!empData) {
-                    reject({
+                    return reject({
                         data: [],
                         randomNumber: rand,
                         message: `No Employee data found for empCode: ${empCode}.`,
@@ -162,7 +164,8 @@ export const fetchUserAttendanceForDateRange = (empCode, dateRange, timeoutInMS 
                         employeeCode,
                         name,
                         department,
-                    }))
+                    })),
+                    dateRange
                 );
 
                 if(employeeAttendanceData && employeeAttendanceData.length>0){
@@ -226,8 +229,7 @@ const generateEmployeeAttendanceData = (employees, dateRange) => {
         dateArray.forEach((date) => {
             attendanceData.push({
                 ...employee,
-                employeeCode: employee.employeeCode,
-                date: date,
+                date,
                 isPresent: Math.random() < 0.8, // 80% chance of being present
             });
         });
