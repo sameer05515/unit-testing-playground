@@ -1,0 +1,13 @@
+{
+  "name": "vocab-khajana-xhtml",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static XHTML vocab viewer; served locally via http-server",
+  "scripts": {
+    "start": "http-server . -p 8084 -c-1",
+    "serve": "http-server . -p 8084 -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
