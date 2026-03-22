@@ -9,138 +9,184 @@ const { HoliSpecialColors } = require('./holiSpecialLog');
 const getConversationMessages = require('./getConversationMessages');
 const formatUnixTimestamp = require('./formatUnixTimestamp');
 
-// Constants & Helpers
-const testDir = 'D:\\v-dir';
-const baseProcessedJsonPath = `${testDir}\\base.json`;
+const outputRootDirectory = 'D:\\v-dir';
+const baseProcessedJsonPath = path.join(outputRootDirectory, 'base.json');
 
-const printStepLog = (title = '', stepOutput = '') => {
+const getItr2OutputPath = conversationSlug =>
+  path.join(outputRootDirectory, 'itr2', conversationSlug);
+
+const printStepBanner = (title = '', detail = '') => {
   console.log('-------------------------------------');
   console.log(HoliSpecialColors.YELLOW, title);
-  console.log(HoliSpecialColors.GREEN, stepOutput, '\n');
+  console.log(HoliSpecialColors.GREEN, detail, '\n');
 };
 
-// Logging Steps
-const step0 = () =>
-  printStepLog(
+const logCgptSnapshotFileLocation = () =>
+  printStepBanner(
     '1. snapshot backup ka base-data.json kaha rakhi huyi hai??',
     Constants.CGPT_SNAPSHOT_FILE_LOCATION,
   );
 
-const step1 = () => printStepLog('2. analysis base-directory kaha rakhi huyi hai??', testDir);
+const logOutputRootDirectory = () =>
+  printStepBanner('2. analysis base-directory kaha rakhi huyi hai??', outputRootDirectory);
 
-const step2 = () => {
+const writeBaseProcessedJsonFile = () => {
   FileRelatedOperations.writeFileContentSync(
     baseProcessedJsonPath,
     JSON.stringify(JsonFileMapWithDetails),
   );
-  printStepLog('3. base.json kaha banayenge?', baseProcessedJsonPath);
+  printStepBanner('3. base.json kaha banayenge?', baseProcessedJsonPath);
 };
 
-// Core Snapshot Processor (parallelized)
+/**
+ * Merge conversations-*.json shards under a directory, write merged-conversations.json, return records.
+ */
+const mergeConversationShardFiles = directoryPath => {
+  const mergedConversations = [];
+  for (const fileName of fs.readdirSync(directoryPath)) {
+    if (!fileName.startsWith('conversations-') || !fileName.endsWith('.json')) {
+      continue;
+    }
+    const parsed = JSON.parse(
+      fs.readFileSync(path.join(directoryPath, fileName), 'utf8'),
+    );
+    const records = Array.isArray(parsed) ? parsed : [parsed];
+    mergedConversations.push(...records);
+    console.warn('Loaded:', fileName);
+  }
+  fs.writeFileSync(
+    path.join(directoryPath, 'merged-conversations.json'),
+    JSON.stringify(mergedConversations, null, 2),
+  );
+  return mergedConversations;
+};
+
+/**
+ * Load conversation records from a single JSON file or from a directory of shard files.
+ */
+const loadConversationRecords = async absolutePath => {
+  const pathStats = await FileRelatedOperations.stat(absolutePath);
+  if (!pathStats) {
+    console.warn(`Path not found: ${absolutePath}`);
+    return null;
+  }
+  if (pathStats.isFile()) {
+    return FileRelatedOperations.readJsonFile(absolutePath);
+  }
+  if (pathStats.isDirectory()) {
+    return mergeConversationShardFiles(absolutePath);
+  }
+  console.warn(`Unknown path type: ${absolutePath}`);
+  return null;
+};
+
+const buildSnapshotOutputs = (conversationRecords, processedConversation) => {
+  const messageContentsList = [];
+  const conversationSummaries = [];
+  const messagesWithoutContent = [];
+  let totalMessageCount = 0;
+
+  for (const conversation of conversationRecords) {
+    const conversationId = conversation.id || conversation.conversation_id;
+    const messages = getConversationMessages(conversation);
+
+    conversationSummaries.push({
+      id: conversationId,
+      title: conversation.title,
+      createdOn: conversation.create_time
+        ? formatUnixTimestamp(conversation.create_time)
+        : null,
+      updatedOn: conversation.update_time
+        ? formatUnixTimestamp(conversation.update_time)
+        : null,
+      msgCount: messages.length,
+      messages: messages.filter(message => message.author === 'User').map(message => message.id),
+    });
+
+    messageContentsList.push(
+      ...messages.map(message => ({
+        id: message.id,
+        content: message.content,
+        convId: conversationId,
+      })),
+    );
+    messagesWithoutContent.push(
+      ...messages.map(message => ({
+        ...message,
+        content: undefined,
+        convId: conversationId,
+      })),
+    );
+    totalMessageCount += messages.length;
+  }
+
+  const snapshotSummary = {
+    slug: processedConversation.slug,
+    convCount: conversationRecords.length,
+    totalMsgCount: totalMessageCount,
+    userName: processedConversation.createdBy,
+  };
+
+  return {
+    snapshotSummary,
+    conversationSummaries,
+    messageContentsList,
+    messagesWithoutContent,
+  };
+};
+
+const buildMessageContentsById = (messageContentsList, messagesWithoutContent) => {
+  const metadataByMessageId = new Map(
+    messagesWithoutContent.map(message => [message.id, message]),
+  );
+  return Object.fromEntries(
+    messageContentsList.map(messageContent => [
+      messageContent.id,
+      { ...(metadataByMessageId.get(messageContent.id) || {}), ...messageContent },
+    ]),
+  );
+};
+
+const writeItr2OutputJson = (conversationSlug, outputFileName, serializableData) =>
+  FileRelatedOperations.writeFileContentSync(
+    path.join(getItr2OutputPath(conversationSlug), outputFileName),
+    JSON.stringify(serializableData),
+  );
+
 const processSnapshots = async () => {
   await Promise.all(
-    JsonFileMapWithDetails.map(async det => {
+    JsonFileMapWithDetails.map(async mapDetail => {
       try {
-        const pp = ProcessedConversation.fromData(det);
-
-        const fullPath = `${Constants.CgptProjectRoot}/public/${pp.location}`;
-        const stat = await FileRelatedOperations.stat(fullPath);
-        let data;
-        if (stat && stat.isFile()) {
-          data = await FileRelatedOperations.readJsonFile(fullPath);
-        } else if (stat && stat.isDirectory()) {
-          // console.warn(`Skipping directory at: ${fullPath}`);
-          // return; // Skip further processing for this item
-
-          const folder = fullPath;
-          const merged = [];
-
-          fs.readdirSync(folder)
-            .filter(f => f.startsWith('conversations-') && f.endsWith('.json'))
-            .forEach(file => {
-              const data = JSON.parse(fs.readFileSync(path.join(folder, file)));
-              merged.push(...data);
-              console.warn('Loaded:', file);
-            });
-
-          fs.writeFileSync(
-            path.join(folder, 'merged-conversations.json'),
-            JSON.stringify(merged, null, 2),
-          );
-          data = merged;
-        } else {
-          console.warn(`Path not found or unknown type: ${fullPath}`);
-          return; // Skip on error
+        const processedConversation = ProcessedConversation.fromData(mapDetail);
+        const sourcePath = path.join(
+          Constants.CgptProjectRoot,
+          'public',
+          processedConversation.location,
+        );
+        const conversationRecords = await loadConversationRecords(sourcePath);
+        if (!conversationRecords) {
+          return;
         }
 
-        const snapshotObject = {
-          slug: pp.slug,
-          convCount: data.length,
-          totalMsgCount: 0,
-          userName: pp.createdBy,
-        };
+        const {
+          snapshotSummary,
+          conversationSummaries,
+          messageContentsList,
+          messagesWithoutContent,
+        } = buildSnapshotOutputs(conversationRecords, processedConversation);
 
-        let totalMsgCount = 0;
-        const msgContents = [];
-        const conversations = [];
-        const messagesWdoutContent = [];
+        const conversationSlug = processedConversation.slug;
 
-        for (const conversation of data) {
-          const convId = conversation.id || conversation.conversation_id;
-          const messages = getConversationMessages(conversation);
-
-          conversations.push({
-            id: convId,
-            title: conversation.title,
-            createdOn: conversation.create_time
-              ? formatUnixTimestamp(conversation.create_time)
-              : null,
-            updatedOn: conversation.update_time
-              ? formatUnixTimestamp(conversation.update_time)
-              : null,
-            msgCount: messages.length,
-            messages: messages.filter(m => m.author === 'User').map(m => m.id),
-          });
-
-          msgContents.push(...messages.map(m => ({ id: m.id, content: m.content, convId })));
-
-          messagesWdoutContent.push(...messages.map(m => ({ ...m, content: undefined, convId })));
-
-          totalMsgCount += messages.length;
-        }
-
-        snapshotObject.totalMsgCount = totalMsgCount;
-
-        const outDir = `${testDir}\\itr2\\${pp.slug}`;
         await Promise.all([
-          FileRelatedOperations.writeFileContentSync(
-            `${outDir}\\index.json`,
-            JSON.stringify(snapshotObject),
-          ),
-          FileRelatedOperations.writeFileContentSync(
-            `${outDir}\\conversations.json`,
-            JSON.stringify(conversations),
-          ),
-          FileRelatedOperations.writeFileContentSync(
-            `${outDir}\\message.json`,
-            JSON.stringify(messagesWdoutContent),
-          ),
-          FileRelatedOperations.writeFileContentSync(
-            `${outDir}\\message.contents.json`,
-            JSON.stringify(msgContents),
-          ),
+          writeItr2OutputJson(conversationSlug, 'index.json', snapshotSummary),
+          writeItr2OutputJson(conversationSlug, 'conversations.json', conversationSummaries),
+          writeItr2OutputJson(conversationSlug, 'message.json', messagesWithoutContent),
+          writeItr2OutputJson(conversationSlug, 'message.contents.json', messageContentsList),
         ]);
 
-        // Build messageContentsMap in one pass
-        const messageContentsMap = msgContents.reduce((acc, mc) => {
-          const meta = messagesWdoutContent.find(msg => msg.id === mc.id);
-          acc[mc.id] = { ...meta, ...mc };
-          return acc;
-        }, {});
-
         await FileRelatedOperations.writeFileContentSync(
-          `${outDir}\\messageContentsMap.json`,
-          JSON.stringify(messageContentsMap),
+          path.join(getItr2OutputPath(conversationSlug), 'messageContentsMap.json'),
+          JSON.stringify(buildMessageContentsById(messageContentsList, messagesWithoutContent)),
         );
       } catch (error) {
         console.error('Snapshot Error:', error);
@@ -149,40 +195,37 @@ const processSnapshots = async () => {
   );
 };
 
-// Prepare question-answer map (parallelized)
-const prepareQAMap = async () => {
+const buildQuestionAnswerMapping = messages => {
+  const answerIdsByUserMessageId = new Map();
+  let activeUserMessageId = null;
+  for (const message of messages) {
+    if (message.isUserMessage) {
+      activeUserMessageId = message.id;
+      answerIdsByUserMessageId.set(activeUserMessageId, []);
+    } else if (activeUserMessageId) {
+      answerIdsByUserMessageId.get(activeUserMessageId).push(message.id);
+    }
+  }
+  return Object.fromEntries(answerIdsByUserMessageId);
+};
+
+const buildQuestionAnswerFiles = async () => {
   try {
-    const snapshotData = await FileRelatedOperations.readJsonFile(baseProcessedJsonPath);
-
+    const snapshotRows = await FileRelatedOperations.readJsonFile(baseProcessedJsonPath);
     await Promise.all(
-      snapshotData.map(async snapshot => {
+      snapshotRows.map(async snapshotRow => {
         try {
-          const outDir = `${testDir}\\itr2\\${snapshot.slug}`;
+          const outputDirectory = getItr2OutputPath(snapshotRow.slug);
           const [, messages] = await Promise.all([
-            FileRelatedOperations.readJsonFile(`${outDir}\\conversations.json`),
-            FileRelatedOperations.readJsonFile(`${outDir}\\message.json`),
+            FileRelatedOperations.readJsonFile(path.join(outputDirectory, 'conversations.json')),
+            FileRelatedOperations.readJsonFile(path.join(outputDirectory, 'message.json')),
           ]);
-
-          const qnAMap = new Map();
-          let currentUserMessage = null;
-
-          for (const msg of messages) {
-            if (msg.isUserMessage) {
-              currentUserMessage = msg.id;
-              qnAMap.set(currentUserMessage, []);
-            } else if (currentUserMessage) {
-              qnAMap.get(currentUserMessage).push(msg.id);
-            }
-          }
-
-          const qnAMapObj = Object.fromEntries(qnAMap);
-
           FileRelatedOperations.writeFileContentSync(
-            `${outDir}\\qNa.json`,
-            JSON.stringify(qnAMapObj),
+            path.join(outputDirectory, 'qNa.json'),
+            JSON.stringify(buildQuestionAnswerMapping(messages)),
           );
-        } catch (err) {
-          console.error(`QnA Map Error for slug ${snapshot.slug}:`, err);
+        } catch (error) {
+          console.error(`QnA Map Error for slug ${snapshotRow.slug}:`, error);
         }
       }),
     );
@@ -191,87 +234,83 @@ const prepareQAMap = async () => {
   }
 };
 
-// ✅ Convert "22-Apr-2024 06:39:43" → "2024-04-22"
-const formatDate = dateString => {
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) {
-    const [day, mon, year] = dateString.split(' ')[0].split('-');
-    const months = {
-      Jan: 0,
-      Feb: 1,
-      Mar: 2,
-      Apr: 3,
-      May: 4,
-      Jun: 5,
-      Jul: 6,
-      Aug: 7,
-      Sep: 8,
-      Oct: 9,
-      Nov: 10,
-      Dec: 11,
-    };
-    return new Date(year, months[mon], day).toISOString().split('T')[0];
-  }
-  return date.toISOString().split('T')[0];
+const MONTH_ABBREV_TO_INDEX = {
+  Jan: 0,
+  Feb: 1,
+  Mar: 2,
+  Apr: 3,
+  May: 4,
+  Jun: 5,
+  Jul: 6,
+  Aug: 7,
+  Sep: 8,
+  Oct: 9,
+  Nov: 10,
+  Dec: 11,
 };
 
-const prepareDatewiseMessages = async () => {
+const formatDate = dateString => {
+  const parsedDate = new Date(dateString);
+  if (Number.isNaN(parsedDate.getTime())) {
+    const [day, monthAbbrev, year] = dateString.split(' ')[0].split('-');
+    return new Date(year, MONTH_ABBREV_TO_INDEX[monthAbbrev], day).toISOString().split('T')[0];
+  }
+  return parsedDate.toISOString().split('T')[0];
+};
+
+const buildSortedUserMessageIdsByDate = messages => {
+  const userMessagesByDate = messages
+    .filter(message => message.isUserMessage)
+    .reduce((accumulator, message) => {
+      const dateKey = formatDate(message.createdOn);
+      if (!accumulator[dateKey]) {
+        accumulator[dateKey] = [];
+      }
+      accumulator[dateKey].push({ id: message.id, createdOn: message.createdOn });
+      return accumulator;
+    }, {});
+
+  for (const dateKey of Object.keys(userMessagesByDate)) {
+    userMessagesByDate[dateKey].sort(
+      (first, second) => new Date(first.createdOn) - new Date(second.createdOn),
+    );
+    userMessagesByDate[dateKey] = userMessagesByDate[dateKey].map(entry => entry.id);
+  }
+  return userMessagesByDate;
+};
+
+const buildDatewiseMessageFiles = async () => {
   try {
-    const snapshotData = await FileRelatedOperations.readJsonFile(baseProcessedJsonPath);
-
-    // ✅ Run all snapshots concurrently
+    const snapshotRows = await FileRelatedOperations.readJsonFile(baseProcessedJsonPath);
     await Promise.all(
-      snapshotData.map(async snapshot => {
-        const outDir = path.join(testDir, 'itr2', snapshot.slug);
+      snapshotRows.map(async snapshotRow => {
+        const outputDirectory = getItr2OutputPath(snapshotRow.slug);
         const messages = await FileRelatedOperations.readJsonFile(
-          path.join(outDir, 'message.json'),
+          path.join(outputDirectory, 'message.json'),
         );
-
-        const datewiseMessages = messages
-          .filter(msg => msg.isUserMessage)
-          .reduce((acc, msg) => {
-            const date = formatDate(msg.createdOn);
-            if (!acc[date]) {
-              acc[date] = [];
-            }
-            acc[date].push({ id: msg.id, createdOn: msg.createdOn });
-            return acc;
-          }, {});
-
-        for (const date of Object.keys(datewiseMessages)) {
-          datewiseMessages[date].sort(
-            (a, b) => new Date(a.createdOn) - new Date(b.createdOn),
-          );
-          datewiseMessages[date] = datewiseMessages[date].map(entry => entry.id);
-        }
-
+        const datewiseUserMessageIds = buildSortedUserMessageIdsByDate(messages);
         FileRelatedOperations.writeFileContentSync(
-          path.join(outDir, 'datewiseMessages.json'),
-          JSON.stringify(datewiseMessages),
+          path.join(outputDirectory, 'datewiseMessages.json'),
+          JSON.stringify(datewiseUserMessageIds),
         );
       }),
     );
-
     console.log('✅ All snapshots processed successfully!');
   } catch (error) {
     console.error('❌ Error preparing datewise messages:', error);
   }
 };
 
-// Bootstrap
-const bootstrap = async () => {
-  const start = performance.now();
-
-  step0();
-  step1();
-  step2();
+const runPipeline = async () => {
+  const startedAt = performance.now();
+  logCgptSnapshotFileLocation();
+  logOutputRootDirectory();
+  writeBaseProcessedJsonFile();
   await processSnapshots();
-  await prepareQAMap();
-  await prepareDatewiseMessages();
+  await buildQuestionAnswerFiles();
+  await buildDatewiseMessageFiles();
   console.log(HoliSpecialColors.CYAN, 'All tasks completed successfully!');
-
-  const end = performance.now();
-  console.log(`Time taken: ${end - start} ms`);
+  console.log(`Time taken: ${performance.now() - startedAt} ms`);
 };
 
-bootstrap();
+runPipeline();
