@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const prepareErrorMessage = require("./prepareErrorMessage");
-const fileCache = require("./FileCache");
+const prepareErrorMessage = require('./prepareErrorMessage');
+const fileCache = require('./FileCache');
 
 class FileRelatedOperations {
   static getFileExtension(filePath) {
-    return path.extname(filePath).slice(1).toLowerCase() || "text";
+    return path.extname(filePath).slice(1).toLowerCase() || 'text';
   }
 
   static fileExists(filePath) {
@@ -23,18 +23,18 @@ class FileRelatedOperations {
         fs.mkdirSync(dirPath, { recursive: true });
       }
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error creating directory"));
+      throw new Error(prepareErrorMessage(error, 'Error creating directory'));
     }
   }
 
-  static ensureFileExists(filePath, defaultContent = "") {
+  static ensureFileExists(filePath, defaultContent = '') {
     try {
       if (!this.fileExists(filePath)) {
         this.ensureDirectoryExists(path.dirname(filePath));
-        fs.writeFileSync(filePath, defaultContent, "utf8");
+        fs.writeFileSync(filePath, defaultContent, 'utf8');
       }
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error creating file"));
+      throw new Error(prepareErrorMessage(error, 'Error creating file'));
     }
   }
 
@@ -43,21 +43,21 @@ class FileRelatedOperations {
       if (!this.fileExists(filePath)) {
         throw new Error(`File not found: ${filePath}`);
       }
-      return fs.readFileSync(filePath, "utf8");
+      return fs.readFileSync(filePath, 'utf8');
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error reading file"));
+      throw new Error(prepareErrorMessage(error, 'Error reading file'));
     }
   }
 
   static readJsonFileSync(filePath) {
     try {
-      if (this.getFileExtension(filePath) !== "json") {
+      if (this.getFileExtension(filePath) !== 'json') {
         throw new Error(`Invalid JSON file: ${filePath}`);
       }
       const content = this.readFileContentSync(filePath);
       return JSON.parse(content);
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error reading JSON file"));
+      throw new Error(prepareErrorMessage(error, 'Error reading JSON file'));
     }
   }
 
@@ -66,43 +66,40 @@ class FileRelatedOperations {
       if (!this.fileExists(filePath)) {
         throw new Error(`File not found: ${filePath}`);
       }
-      return await fs.promises.readFile(filePath, "utf8");
+      return await fs.promises.readFile(filePath, 'utf8');
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error reading file"));
+      throw new Error(prepareErrorMessage(error, 'Error reading file'));
     }
   }
 
   static async readJsonFile(filePath, useCache = true) {
     try {
-      if (this.getFileExtension(filePath) !== "json") {
+      if (this.getFileExtension(filePath) !== 'json') {
         throw new Error(`Invalid JSON file: ${filePath}`);
       }
-      
+
       // Use cache if enabled
       if (useCache) {
-        return await fileCache.getOrSet(
-          `json:${filePath}`,
-          async () => {
-            const content = await this.readFileContent(filePath);
-            return JSON.parse(content);
-          }
-        );
+        return await fileCache.getOrSet(`json:${filePath}`, async () => {
+          const content = await this.readFileContent(filePath);
+          return JSON.parse(content);
+        });
       }
-      
+
       // Direct read without cache
       const content = await this.readFileContent(filePath);
       return JSON.parse(content);
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error reading JSON file"));
+      throw new Error(prepareErrorMessage(error, 'Error reading JSON file'));
     }
   }
 
-  static writeFileContentSync(filePath, data = "") {
+  static writeFileContentSync(filePath, data = '') {
     try {
       this.ensureFileExists(filePath);
-      fs.writeFileSync(filePath, data, "utf8");
+      fs.writeFileSync(filePath, data, 'utf8');
     } catch (error) {
-      console.error("❌ Error:", error);
+      console.error('❌ Error:', error);
     }
   }
 
@@ -113,7 +110,22 @@ class FileRelatedOperations {
       }
       return fs.readdirSync(dir, options);
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error reading directory"));
+      throw new Error(prepareErrorMessage(error, 'Error reading directory'));
+    }
+  }
+
+  /**
+   * fs.stat for files or directories. Returns null if the path does not exist
+   * (so callers can branch without catching ENOENT).
+   */
+  static async stat(filePath) {
+    try {
+      return await fs.promises.stat(filePath);
+    } catch (error) {
+      if (error && (error.code === 'ENOENT' || error.code === 'ENOTDIR')) {
+        return null;
+      }
+      throw new Error(prepareErrorMessage(error, 'Error reading path stats'));
     }
   }
 
@@ -124,7 +136,7 @@ class FileRelatedOperations {
       }
       return fs.statSync(filePath);
     } catch (error) {
-      throw new Error(prepareErrorMessage(error, "Error getting file stats"));
+      throw new Error(prepareErrorMessage(error, 'Error getting file stats'));
     }
   }
 }

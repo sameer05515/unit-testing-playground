@@ -1,7 +1,9 @@
+/* eslint-disable no-console -- one-off CLI snapshot / analysis script */
 const path = require('path');
+const fs = require('fs');
 const FileRelatedOperations = require('../../FileRelatedOperations.services.v2');
 const { JsonFileMapWithDetails } = require('../services');
-const Contants = require('../../constants');
+const Constants = require('../../constants');
 const ProcessedConversation = require('../ProcessedConversation');
 const { HoliSpecialColors } = require('./holiSpecialLog');
 const getConversationMessages = require('./getConversationMessages');
@@ -19,23 +21,57 @@ const printStepLog = (title = '', stepOutput = '') => {
 
 // Logging Steps
 const step0 = () =>
-  printStepLog('1. snapshot backup ka base-data.json kaha rakhi huyi hai??', Contants.CGPT_SNAPSHOT_FILE_LOCATION);
+  printStepLog(
+    '1. snapshot backup ka base-data.json kaha rakhi huyi hai??',
+    Constants.CGPT_SNAPSHOT_FILE_LOCATION,
+  );
 
 const step1 = () => printStepLog('2. analysis base-directory kaha rakhi huyi hai??', testDir);
 
 const step2 = () => {
-  FileRelatedOperations.writeFileContentSync(baseProcessedJsonPath, JSON.stringify(JsonFileMapWithDetails));
+  FileRelatedOperations.writeFileContentSync(
+    baseProcessedJsonPath,
+    JSON.stringify(JsonFileMapWithDetails),
+  );
   printStepLog('3. base.json kaha banayenge?', baseProcessedJsonPath);
 };
 
 // Core Snapshot Processor (parallelized)
 const processSnapshots = async () => {
   await Promise.all(
-    JsonFileMapWithDetails.map(async (det) => {
+    JsonFileMapWithDetails.map(async det => {
       try {
         const pp = ProcessedConversation.fromData(det);
 
-        const data = await FileRelatedOperations.readJsonFile(`${Contants.CgptProjectRoot}/public/${pp.location}`);
+        const fullPath = `${Constants.CgptProjectRoot}/public/${pp.location}`;
+        const stat = await FileRelatedOperations.stat(fullPath);
+        let data;
+        if (stat && stat.isFile()) {
+          data = await FileRelatedOperations.readJsonFile(fullPath);
+        } else if (stat && stat.isDirectory()) {
+          // console.warn(`Skipping directory at: ${fullPath}`);
+          // return; // Skip further processing for this item
+
+          const folder = fullPath;
+          const merged = [];
+
+          fs.readdirSync(folder)
+            .filter(f => f.startsWith('conversations-') && f.endsWith('.json'))
+            .forEach(file => {
+              const data = JSON.parse(fs.readFileSync(path.join(folder, file)));
+              merged.push(...data);
+              console.warn('Loaded:', file);
+            });
+
+          fs.writeFileSync(
+            path.join(folder, 'merged-conversations.json'),
+            JSON.stringify(merged, null, 2),
+          );
+          data = merged;
+        } else {
+          console.warn(`Path not found or unknown type: ${fullPath}`);
+          return; // Skip on error
+        }
 
         const snapshotObject = {
           slug: pp.slug,
@@ -56,15 +92,19 @@ const processSnapshots = async () => {
           conversations.push({
             id: convId,
             title: conversation.title,
-            createdOn: conversation.create_time ? formatUnixTimestamp(conversation.create_time) : null,
-            updatedOn: conversation.update_time ? formatUnixTimestamp(conversation.update_time) : null,
+            createdOn: conversation.create_time
+              ? formatUnixTimestamp(conversation.create_time)
+              : null,
+            updatedOn: conversation.update_time
+              ? formatUnixTimestamp(conversation.update_time)
+              : null,
             msgCount: messages.length,
-            messages: messages.filter((m) => m.author === 'User').map((m) => m.id),
+            messages: messages.filter(m => m.author === 'User').map(m => m.id),
           });
 
-          msgContents.push(...messages.map((m) => ({ id: m.id, content: m.content, convId })));
+          msgContents.push(...messages.map(m => ({ id: m.id, content: m.content, convId })));
 
-          messagesWdoutContent.push(...messages.map((m) => ({ ...m, content: undefined, convId })));
+          messagesWdoutContent.push(...messages.map(m => ({ ...m, content: undefined, convId })));
 
           totalMsgCount += messages.length;
         }
@@ -73,15 +113,27 @@ const processSnapshots = async () => {
 
         const outDir = `${testDir}\\itr2\\${pp.slug}`;
         await Promise.all([
-          FileRelatedOperations.writeFileContentSync(`${outDir}\\index.json`, JSON.stringify(snapshotObject)),
-          FileRelatedOperations.writeFileContentSync(`${outDir}\\conversations.json`, JSON.stringify(conversations)),
-          FileRelatedOperations.writeFileContentSync(`${outDir}\\message.json`, JSON.stringify(messagesWdoutContent)),
-          FileRelatedOperations.writeFileContentSync(`${outDir}\\message.contents.json`, JSON.stringify(msgContents)),
+          FileRelatedOperations.writeFileContentSync(
+            `${outDir}\\index.json`,
+            JSON.stringify(snapshotObject),
+          ),
+          FileRelatedOperations.writeFileContentSync(
+            `${outDir}\\conversations.json`,
+            JSON.stringify(conversations),
+          ),
+          FileRelatedOperations.writeFileContentSync(
+            `${outDir}\\message.json`,
+            JSON.stringify(messagesWdoutContent),
+          ),
+          FileRelatedOperations.writeFileContentSync(
+            `${outDir}\\message.contents.json`,
+            JSON.stringify(msgContents),
+          ),
         ]);
 
         // Build messageContentsMap in one pass
         const messageContentsMap = msgContents.reduce((acc, mc) => {
-          const meta = messagesWdoutContent.find((msg) => msg.id === mc.id);
+          const meta = messagesWdoutContent.find(msg => msg.id === mc.id);
           acc[mc.id] = { ...meta, ...mc };
           return acc;
         }, {});
@@ -103,7 +155,7 @@ const prepareQAMap = async () => {
     const snapshotData = await FileRelatedOperations.readJsonFile(baseProcessedJsonPath);
 
     await Promise.all(
-      snapshotData.map(async (snapshot) => {
+      snapshotData.map(async snapshot => {
         try {
           const outDir = `${testDir}\\itr2\\${snapshot.slug}`;
           const [, messages] = await Promise.all([
@@ -125,7 +177,10 @@ const prepareQAMap = async () => {
 
           const qnAMapObj = Object.fromEntries(qnAMap);
 
-          FileRelatedOperations.writeFileContentSync(`${outDir}\\qNa.json`, JSON.stringify(qnAMapObj));
+          FileRelatedOperations.writeFileContentSync(
+            `${outDir}\\qNa.json`,
+            JSON.stringify(qnAMapObj),
+          );
         } catch (err) {
           console.error(`QnA Map Error for slug ${snapshot.slug}:`, err);
         }
@@ -137,9 +192,9 @@ const prepareQAMap = async () => {
 };
 
 // ✅ Convert "22-Apr-2024 06:39:43" → "2024-04-22"
-const formatDate = (dateString) => {
+const formatDate = dateString => {
   const date = new Date(dateString);
-  if (isNaN(date)) {
+  if (Number.isNaN(date.getTime())) {
     const [day, mon, year] = dateString.split(' ')[0].split('-');
     const months = {
       Jan: 0,
@@ -166,21 +221,29 @@ const prepareDatewiseMessages = async () => {
 
     // ✅ Run all snapshots concurrently
     await Promise.all(
-      snapshotData.map(async (snapshot) => {
+      snapshotData.map(async snapshot => {
         const outDir = path.join(testDir, 'itr2', snapshot.slug);
-        const messages = await FileRelatedOperations.readJsonFile(path.join(outDir, 'message.json'));
+        const messages = await FileRelatedOperations.readJsonFile(
+          path.join(outDir, 'message.json'),
+        );
 
-        const datewiseMessages = messages.filter((msg) => msg.isUserMessage).reduce((acc, msg) => {
-          const date = formatDate(msg.createdOn);
-          acc[date] = acc[date] || [];
-          acc[date].push(msg.id);
-          return acc;
-        }, {});
+        const datewiseMessages = messages
+          .filter(msg => msg.isUserMessage)
+          .reduce((acc, msg) => {
+            const date = formatDate(msg.createdOn);
+            if (!acc[date]) {
+              acc[date] = [];
+            }
+            acc[date].push({ id: msg.id, createdOn: msg.createdOn });
+            return acc;
+          }, {});
 
-        // ✅ Sort messages by timestamp within each date
-        Object.keys(datewiseMessages).forEach((date) => {
-          datewiseMessages[date].sort((a, b) => new Date(a.createdOn) - new Date(b.createdOn));
-        });
+        for (const date of Object.keys(datewiseMessages)) {
+          datewiseMessages[date].sort(
+            (a, b) => new Date(a.createdOn) - new Date(b.createdOn),
+          );
+          datewiseMessages[date] = datewiseMessages[date].map(entry => entry.id);
+        }
 
         FileRelatedOperations.writeFileContentSync(
           path.join(outDir, 'datewiseMessages.json'),
