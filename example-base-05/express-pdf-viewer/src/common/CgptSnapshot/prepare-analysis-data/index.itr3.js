@@ -1,32 +1,31 @@
-const path = require("path");
-const FileRelatedOperations = require("../../FileRelatedOperations.services.v2");
-const { JsonFileMapWithDetails } = require("../services");
-const Contants = require("../../constants");
-const ProcessedConversation = require("../ProcessedConversation");
-const { holiSpecialLog, HoliSpecialColors } = require("./holiSpecialLog");
-const getConversationMessages = require("./getConversationMessages");
-const formatUnixTimestamp = require("./formatUnixTimestamp");
+const path = require('path');
+const FileRelatedOperations = require('../../FileRelatedOperations.services.v2');
+const { JsonFileMapWithDetails } = require('../services');
+const Contants = require('../../constants');
+const ProcessedConversation = require('../ProcessedConversation');
+const { HoliSpecialColors } = require('./holiSpecialLog');
+const getConversationMessages = require('./getConversationMessages');
+const formatUnixTimestamp = require('./formatUnixTimestamp');
 
 // Constants & Helpers
-const testDir = "D:\\v-dir";
+const testDir = 'D:\\v-dir';
 const baseProcessedJsonPath = `${testDir}\\base.json`;
-const getIterationFolderName = (iterationName = "") => `${testDir}\\${iterationName}`;
 
-const printStepLog = (title = "", stepOutput = "") => {
-  console.log("-------------------------------------");
+const printStepLog = (title = '', stepOutput = '') => {
+  console.log('-------------------------------------');
   console.log(HoliSpecialColors.YELLOW, title);
-  console.log(HoliSpecialColors.GREEN, stepOutput, "\n");
+  console.log(HoliSpecialColors.GREEN, stepOutput, '\n');
 };
 
 // Logging Steps
 const step0 = () =>
-  printStepLog("1. snapshot backup ka base-data.json kaha rakhi huyi hai??", Contants.CGPT_SNAPSHOT_FILE_LOCATION);
+  printStepLog('1. snapshot backup ka base-data.json kaha rakhi huyi hai??', Contants.CGPT_SNAPSHOT_FILE_LOCATION);
 
-const step1 = () => printStepLog("2. analysis base-directory kaha rakhi huyi hai??", testDir);
+const step1 = () => printStepLog('2. analysis base-directory kaha rakhi huyi hai??', testDir);
 
 const step2 = () => {
   FileRelatedOperations.writeFileContentSync(baseProcessedJsonPath, JSON.stringify(JsonFileMapWithDetails));
-  printStepLog("3. base.json kaha banayenge?", baseProcessedJsonPath);
+  printStepLog('3. base.json kaha banayenge?', baseProcessedJsonPath);
 };
 
 // Core Snapshot Processor (parallelized)
@@ -50,7 +49,7 @@ const processSnapshots = async () => {
         const conversations = [];
         const messagesWdoutContent = [];
 
-        for (let conversation of data) {
+        for (const conversation of data) {
           const convId = conversation.id || conversation.conversation_id;
           const messages = getConversationMessages(conversation);
 
@@ -60,7 +59,7 @@ const processSnapshots = async () => {
             createdOn: conversation.create_time ? formatUnixTimestamp(conversation.create_time) : null,
             updatedOn: conversation.update_time ? formatUnixTimestamp(conversation.update_time) : null,
             msgCount: messages.length,
-            messages: messages.filter((m) => m.author === "User").map((m) => m.id),
+            messages: messages.filter((m) => m.author === 'User').map((m) => m.id),
           });
 
           msgContents.push(...messages.map((m) => ({ id: m.id, content: m.content, convId })));
@@ -89,12 +88,12 @@ const processSnapshots = async () => {
 
         await FileRelatedOperations.writeFileContentSync(
           `${outDir}\\messageContentsMap.json`,
-          JSON.stringify(messageContentsMap)
+          JSON.stringify(messageContentsMap),
         );
       } catch (error) {
-        console.error("Snapshot Error:", error);
+        console.error('Snapshot Error:', error);
       }
-    })
+    }),
   );
 };
 
@@ -107,7 +106,7 @@ const prepareQAMap = async () => {
       snapshotData.map(async (snapshot) => {
         try {
           const outDir = `${testDir}\\itr2\\${snapshot.slug}`;
-          const [conv, messages] = await Promise.all([
+          const [, messages] = await Promise.all([
             FileRelatedOperations.readJsonFile(`${outDir}\\conversations.json`),
             FileRelatedOperations.readJsonFile(`${outDir}\\message.json`),
           ]);
@@ -130,10 +129,10 @@ const prepareQAMap = async () => {
         } catch (err) {
           console.error(`QnA Map Error for slug ${snapshot.slug}:`, err);
         }
-      })
+      }),
     );
   } catch (error) {
-    console.error("Error preparing question answer map:", error);
+    console.error('Error preparing question answer map:', error);
   }
 };
 
@@ -141,7 +140,7 @@ const prepareQAMap = async () => {
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   if (isNaN(date)) {
-    const [day, mon, year] = dateString.split(" ")[0].split("-");
+    const [day, mon, year] = dateString.split(' ')[0].split('-');
     const months = {
       Jan: 0,
       Feb: 1,
@@ -156,9 +155,9 @@ const formatDate = (dateString) => {
       Nov: 10,
       Dec: 11,
     };
-    return new Date(year, months[mon], day).toISOString().split("T")[0];
+    return new Date(year, months[mon], day).toISOString().split('T')[0];
   }
-  return date.toISOString().split("T")[0];
+  return date.toISOString().split('T')[0];
 };
 
 const prepareDatewiseMessages = async () => {
@@ -168,8 +167,8 @@ const prepareDatewiseMessages = async () => {
     // ✅ Run all snapshots concurrently
     await Promise.all(
       snapshotData.map(async (snapshot) => {
-        const outDir = path.join(testDir, "itr2", snapshot.slug);
-        const messages = await FileRelatedOperations.readJsonFile(path.join(outDir, "message.json"));
+        const outDir = path.join(testDir, 'itr2', snapshot.slug);
+        const messages = await FileRelatedOperations.readJsonFile(path.join(outDir, 'message.json'));
 
         const datewiseMessages = messages.filter((msg) => msg.isUserMessage).reduce((acc, msg) => {
           const date = formatDate(msg.createdOn);
@@ -184,15 +183,15 @@ const prepareDatewiseMessages = async () => {
         });
 
         FileRelatedOperations.writeFileContentSync(
-          path.join(outDir, "datewiseMessages.json"),
-          JSON.stringify(datewiseMessages)
+          path.join(outDir, 'datewiseMessages.json'),
+          JSON.stringify(datewiseMessages),
         );
-      })
+      }),
     );
 
-    console.log("✅ All snapshots processed successfully!");
+    console.log('✅ All snapshots processed successfully!');
   } catch (error) {
-    console.error("❌ Error preparing datewise messages:", error);
+    console.error('❌ Error preparing datewise messages:', error);
   }
 };
 
@@ -206,7 +205,7 @@ const bootstrap = async () => {
   await processSnapshots();
   await prepareQAMap();
   await prepareDatewiseMessages();
-  console.log(HoliSpecialColors.CYAN, "All tasks completed successfully!");
+  console.log(HoliSpecialColors.CYAN, 'All tasks completed successfully!');
 
   const end = performance.now();
   console.log(`Time taken: ${end - start} ms`);
