@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const DIRECTORY_PATH =
-  "D:\\GIT\\microservices-playground\\example-base-03\\fontend\\chat-gpt-conversation\\public\\ques-and-ans";
+  "E:\\GIT\\microservices-playground\\example-base-03\\fontend\\chat-gpt-conversation\\public\\ques-and-ans";
 
 /**
  * Recursively scans a directory and returns an array of PDF file objects

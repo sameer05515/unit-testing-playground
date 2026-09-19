@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const GIT_REPO = process.env.GIT_REPO || 'D:/GIT';
+const GIT_REPO = process.env.GIT_REPO || 'E:/GIT';
 
 const CgptProjectRoot =
   process.env.CGPT_PROJECT_ROOT ||
@@ -9,7 +9,7 @@ const CgptProjectRoot =
 const CGPT_SNAPSHOT_FILE_LOCATION =
   process.env.CGPT_SNAPSHOT_FILE_LOCATION || `${CgptProjectRoot}/src/common/utils/snapshots.json`;
 
-const PDF_DIRECTORY_PATH = process.env.PDF_DIRECTORY_PATH || 'D:/prem/comics';
+const PDF_DIRECTORY_PATH = process.env.PDF_DIRECTORY_PATH || 'D:/comics';
 
 const TEST_DIR = process.env.TEST_DIR || 'D:/v-dir';
 
