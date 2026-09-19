@@ -29,7 +29,7 @@ public class KhajanaService {
     String type=wn.getAttributes().getNamedItem("type")!=null?wn.getAttributes().getNamedItem("type").getNodeValue():"unknown";
     words.add(new VocabularyWord(i,word,type,children(item,"meanings","meaning"),children(item,"examples","example")));
    }
-   words.sort(Comparator.comparing(VocabularyWord::word,String.CASE_INSENSITIVE_ORDER));
+   words.sort(Comparator.comparing(VocabularyWord::getWord,String.CASE_INSENSITIVE_ORDER));
   }catch(Exception e){throw new IllegalStateException("Unable to load khajana.xml",e);}
  }
  private List<String> children(Element p,String container,String child){
@@ -39,22 +39,22 @@ public class KhajanaService {
   return List.copyOf(out);
  }
  public List<VocabularyWord> all(){return List.copyOf(words);}
- public Optional<VocabularyWord> findById(int id){return words.stream().filter(w->w.id()==id).findFirst();}
- public List<String> types(){return words.stream().map(VocabularyWord::type).filter(Objects::nonNull).filter(s->!s.isBlank()).distinct().sorted().toList();}
+ public Optional<VocabularyWord> findById(int id){return words.stream().filter(w->w.getId()==id).findFirst();}
+ public List<String> types(){return words.stream().map(VocabularyWord::getType).filter(Objects::nonNull).filter(s->!s.isBlank()).distinct().sorted().toList();}
  public List<VocabularyWord> search(String q,String type){
   String query=q==null?"":q.trim().toLowerCase(Locale.ROOT), pos=type==null?"":type.trim().toLowerCase(Locale.ROOT);
   return words.stream().filter(w->{
-   boolean text=query.isBlank()||w.word().toLowerCase(Locale.ROOT).contains(query)||w.meanings().stream().anyMatch(m->m.toLowerCase(Locale.ROOT).contains(query))||w.examples().stream().anyMatch(e->e.toLowerCase(Locale.ROOT).contains(query));
-   return text&&(pos.isBlank()||w.type().equalsIgnoreCase(pos));
+   boolean text=query.isBlank()||w.getWord().toLowerCase(Locale.ROOT).contains(query)||w.getMeanings().stream().anyMatch(m->m.toLowerCase(Locale.ROOT).contains(query))||w.getExamples().stream().anyMatch(e->e.toLowerCase(Locale.ROOT).contains(query));
+   return text&&(pos.isBlank()||w.getType().equalsIgnoreCase(pos));
   }).toList();
  }
  public VocabularyWord randomWord(){return words.get(random.nextInt(words.size()));}
  public VocabularyWord wordOfDay(){long day=Math.floorDiv(System.currentTimeMillis(),86400000L);return words.get((int)(day%words.size()));}
  public List<VocabularyWord> quizWords(int n){List<VocabularyWord> x=new ArrayList<>(words);Collections.shuffle(x);return x.stream().limit(n).toList();}
  public List<String> quizOptions(VocabularyWord correct){
-  LinkedHashSet<String> o=new LinkedHashSet<>(); if(!correct.meanings().isEmpty())o.add(correct.meanings().get(0));
+  LinkedHashSet<String> o=new LinkedHashSet<>(); if(!correct.getMeanings().isEmpty())o.add(correct.getMeanings().get(0));
   List<VocabularyWord> x=new ArrayList<>(words);Collections.shuffle(x);
-  for(VocabularyWord w:x){if(!w.meanings().isEmpty())o.add(w.meanings().get(0));if(o.size()>=4)break;}
+  for(VocabularyWord w:x){if(!w.getMeanings().isEmpty())o.add(w.getMeanings().get(0));if(o.size()>=4)break;}
   return o.stream().limit(4).toList();
  }
 }

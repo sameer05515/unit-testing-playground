@@ -24,6 +24,6 @@ public class KhajanaController {
  @GetMapping("/api/word-of-day") @ResponseBody public VocabularyWord wordOfDay(){return service.wordOfDay();}
  @GetMapping("/api/random") @ResponseBody public VocabularyWord random(){return service.randomWord();}
  @GetMapping("/api/quiz") @ResponseBody public List<Map<String,Object>> quiz(@RequestParam(defaultValue="10")int count){
-  int n=Math.max(1,Math.min(count,20)); return service.quizWords(n).stream().map(w->Map.of("id",w.id(),"word",w.word(),"type",w.type(),"meaning",w.meanings().isEmpty()?"":w.meanings().get(0),"options",service.quizOptions(w))).toList();
+  int n=Math.max(1,Math.min(count,20)); return service.quizWords(n).stream().map(w->Map.of("id",w.getId(),"word",w.getWord(),"type",w.getType(),"meaning",w.getMeanings().isEmpty()?"":w.getMeanings().get(0),"options",service.quizOptions(w))).toList();
  }
 }
