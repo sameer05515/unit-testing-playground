@@ -1,0 +1,11 @@
+* { box-sizing: border-box; }
+html, body, #app { margin: 0; width: 100%; height: 100%; }
+body { font-family: Arial, sans-serif; background: #111827; color: #e5e7eb; }
+#app { display: flex; flex-direction: column; }
+header { height: 72px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; background: #1f2937; }
+h1 { margin: 0; font-size: 21px; }
+select { padding: 9px 12px; border-radius: 6px; border: 1px solid #4b5563; background: #111827; color: white; }
+#sceneContainer { flex: 1; min-height: 0; position: relative; }
+canvas { display: block; width: 100%; height: 100%; }
+footer { min-height: 48px; padding: 10px 20px; background: #1f2937; color: #cbd5e1; }
+.hint { position: absolute; top: 15px; left: 15px; padding: 10px 12px; background: rgba(0,0,0,.55); border-radius: 6px; }
