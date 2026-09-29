@@ -1,0 +1,71 @@
+{
+  "realm": "microservices-demo",
+  "enabled": true,
+
+  "clients": [
+    {
+      "clientId": "todo-api",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true
+    },
+    {
+      "clientId": "order-service",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "order-secret",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ],
+
+  "roles": {
+    "realm": [
+      {
+        "name": "USER"
+      },
+      {
+        "name": "ADMIN"
+      }
+    ]
+  },
+
+  "users": [
+    {
+      "username": "prem",
+      "enabled": true,
+      "email": "prem@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "prem123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER",
+        "ADMIN"
+      ]
+    }
+  ]
+}
