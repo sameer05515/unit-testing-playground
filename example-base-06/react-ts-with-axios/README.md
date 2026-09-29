@@ -1,6 +1,37 @@
-# Getting Started with Create React App
+# Cryptocurrency Portfolio Tracker
+
+A React TypeScript application for tracking cryptocurrency portfolios using Axios for API calls and Tailwind CSS v4 for styling.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Features
+
+- View cryptocurrency prices from CoinGecko API
+- Add multiple cryptocurrencies to your portfolio
+- Track portfolio value in real-time
+- Beautiful, modern UI with Tailwind CSS v4
+- Dark mode support
+- Responsive design
+
+## Tailwind CSS v4 Setup
+
+This project uses Tailwind CSS v4 with the new CSS-first configuration approach:
+
+- **CSS Import**: Uses `@import "tailwindcss"` in `src/index.css`
+- **PostCSS**: Configured via `postcss.config.js`
+- **No Config File**: Tailwind v4 uses automatic content detection
+
+## Installation
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Start the development server:
+```bash
+npm start
+```
 
 ## Available Scripts
 

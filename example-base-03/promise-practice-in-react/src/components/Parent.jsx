@@ -34,10 +34,6 @@ export const Parent = () => {
         }
 
       />
-      <div>
-
-
-      </div>
     </>
   );
 };

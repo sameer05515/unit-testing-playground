@@ -1,0 +1,63 @@
+Issue Type,Summary,Description,Story Points,Parent,Labels,Priority
+Epic,EPIC: Frog Productivity Tracker,"Core productivity tracking application for managing daily tasks using the Eat That Frog methodology",,,"Epic,Productivity",High
+Story,STORY 1: Create Frog Task,"Build functionality to create new tasks with priority management",3,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",High
+Sub-task,FE-1: Build input + add button UI,"Create user interface with input field and add button for task creation",,STORY 1: Create Frog Task,"Frontend,UI",Medium
+Sub-task,FE-2: Client-side validation,"Implement validation for task input (required fields, length limits, etc.)",,STORY 1: Create Frog Task,"Frontend,Validation",Medium
+Sub-task,BE-1: POST /api/tasks endpoint,"Create REST API endpoint to handle task creation requests",,STORY 1: Create Frog Task,"Backend,API",High
+Sub-task,BE-2: JPA entity mapping,"Define JPA entity for Task with proper annotations and relationships",,STORY 1: Create Frog Task,"Backend,Database",High
+Sub-task,BE-3: Save priority logic,"Implement business logic to save and manage task priorities",,STORY 1: Create Frog Task,"Backend,Logic",High
+Sub-task,QA-1: Add unit + API tests,"Write unit tests for service layer and API integration tests for POST endpoint",,STORY 1: Create Frog Task,"QA,Testing",Medium
+Story,STORY 2: View Task List,"Display all tasks in a sorted list view",2,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",High
+Sub-task,FE-1: Task list UI rendering,"Create component to render list of tasks with proper styling",,STORY 2: View Task List,"Frontend,UI",Medium
+Sub-task,FE-2: Load on page refresh,"Implement logic to fetch and display tasks when page loads",,STORY 2: View Task List,"Frontend,Data-Fetching",Medium
+Sub-task,BE-1: GET /api/tasks sorted,"Create REST API endpoint to retrieve tasks sorted by priority",,STORY 2: View Task List,"Backend,API",High
+Sub-task,QA-1: Response validation tests,"Write tests to validate API response structure and sorting order",,STORY 2: View Task List,"QA,Testing",Medium
+Story,STORY 3: Complete Task,"Mark tasks as completed with toggle functionality",2,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",High
+Sub-task,FE-1: Toggle UI interaction,"Create UI element (checkbox/button) to toggle task completion status",,STORY 3: Complete Task,"Frontend,UI",Medium
+Sub-task,BE-1: PUT /tasks/{id}/toggle,"Create REST API endpoint to toggle task completion status",,STORY 3: Complete Task,"Backend,API",High
+Sub-task,BE-2: Persist done state,"Implement database update logic to persist completion status",,STORY 3: Complete Task,"Backend,Database",High
+Sub-task,QA-1: Toggle scenario tests,"Write tests covering toggle scenarios (complete/incomplete transitions)",,STORY 3: Complete Task,"QA,Testing",Medium
+Story,STORY 4: Reorder Tasks,"Allow users to drag and drop tasks to reorder by priority",5,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",Medium
+Sub-task,FE-1: Drag & drop UX,"Implement drag and drop functionality using a library (e.g., react-beautiful-dnd)",,STORY 4: Reorder Tasks,"Frontend,UX",High
+Sub-task,FE-2: Update priority client side,"Update task priorities in the UI immediately after reordering",,STORY 4: Reorder Tasks,"Frontend,State-Management",High
+Sub-task,BE-1: PUT /tasks/reorder API,"Create REST API endpoint to handle bulk priority updates",,STORY 4: Reorder Tasks,"Backend,API",High
+Sub-task,BE-2: Bulk update transaction,"Implement transactional bulk update for task priorities",,STORY 4: Reorder Tasks,"Backend,Database",High
+Sub-task,QA-1: Order persistence test,"Write tests to verify task order persists correctly after reordering",,STORY 4: Reorder Tasks,"QA,Testing",Medium
+Story,STORY 5: Delete Task,"Remove tasks from the system",1,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",Medium
+Sub-task,FE-1: Delete icon UX,"Add delete icon/button to each task with confirmation dialog",,STORY 5: Delete Task,"Frontend,UI",Medium
+Sub-task,BE-1: DELETE /tasks/{id},"Create REST API endpoint to delete a task by ID",,STORY 5: Delete Task,"Backend,API",High
+Sub-task,QA-1: Deletion test,"Write tests to verify task deletion and cascade behavior",,STORY 5: Delete Task,"QA,Testing",Medium
+Story,STORY 6: Daily Reset,"Clear all completed tasks at the end of the day",2,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",Low
+Sub-task,FE-1: Finish day button,"Create UI button to trigger daily reset action",,STORY 6: Daily Reset,"Frontend,UI",Medium
+Sub-task,BE-1: DELETE /tasks/clear,"Create REST API endpoint to clear completed tasks",,STORY 6: Daily Reset,"Backend,API",High
+Sub-task,BE-2: Business rule validation,"Implement validation to ensure reset only clears completed tasks",,STORY 6: Daily Reset,"Backend,Logic",High
+Sub-task,QA-1: Reset scenario test,"Write tests to verify reset behavior and edge cases",,STORY 6: Daily Reset,"QA,Testing",Medium
+Story,STORY 7: Streak Counter,"Track consecutive days of task completion",3,EPIC: Frog Productivity Tracker,"Story,Backend,Frontend",Medium
+Sub-task,BE-1: Streak entity/table,"Create database entity and table to track user streaks",,STORY 7: Streak Counter,"Backend,Database",High
+Sub-task,BE-2: Increment logic,"Implement logic to increment streak on daily completion",,STORY 7: Streak Counter,"Backend,Logic",High
+Sub-task,BE-3: Persist daily completion,"Save daily completion status to maintain streak history",,STORY 7: Streak Counter,"Backend,Database",High
+Sub-task,FE-1: Show streak UI,"Display current streak count in the user interface",,STORY 7: Streak Counter,"Frontend,UI",Medium
+Sub-task,QA-1: Multi-day flow test,"Write tests to verify streak calculation across multiple days",,STORY 7: Streak Counter,"QA,Testing",Medium
+Story,STORY 8: CSV Export,"Export task data to CSV format",2,EPIC: Frog Productivity Tracker,"Story,Frontend",Low
+Sub-task,FE-1: CSV generator logic,"Implement client-side logic to convert task data to CSV format",,STORY 8: CSV Export,"Frontend,Export",Medium
+Sub-task,FE-2: Download button,"Create UI button to trigger CSV download",,STORY 8: CSV Export,"Frontend,UI",Medium
+Sub-task,QA-1: File format validation,"Write tests to verify CSV format correctness and data integrity",,STORY 8: CSV Export,"QA,Testing",Medium
+Epic,EPIC 2: Platform Enhancements,"Advanced features and platform improvements for scalability and user experience",,,"Epic,Enhancement",Medium
+Story,STORY 9: Authentication,"Implement user authentication and authorization",8,EPIC 2: Platform Enhancements,"Story,Backend,Frontend,Security",High
+Sub-task,BE-1: User entity,"Create JPA entity for User with authentication fields",,STORY 9: Authentication,"Backend,Database",High
+Sub-task,BE-2: JWT auth filter,"Implement JWT authentication filter for securing API endpoints",,STORY 9: Authentication,"Backend,Security",High
+Sub-task,BE-3: Login/Register APIs,"Create REST API endpoints for user registration and login",,STORY 9: Authentication,"Backend,API",High
+Sub-task,FE-1: Auth screens,"Create login and registration UI screens",,STORY 9: Authentication,"Frontend,UI",Medium
+Sub-task,FE-2: Token storage,"Implement secure token storage (localStorage/sessionStorage) and management",,STORY 9: Authentication,"Frontend,Security",Medium
+Sub-task,QA-1: Security tests,"Write security tests for authentication flows and token validation",,STORY 9: Authentication,"QA,Security",High
+Story,STORY 10: Analytics Dashboard,"Provide insights and statistics on task completion",5,EPIC 2: Platform Enhancements,"Story,Backend,Frontend,Analytics",Medium
+Sub-task,BE-1: Stats aggregation APIs,"Create REST API endpoints to aggregate task statistics",,STORY 10: Analytics Dashboard,"Backend,API",High
+Sub-task,BE-2: Date-based queries,"Implement database queries to filter stats by date ranges",,STORY 10: Analytics Dashboard,"Backend,Database",High
+Sub-task,FE-1: Chart UI,"Create chart components to visualize task completion trends",,STORY 10: Analytics Dashboard,"Frontend,UI,Charts",Medium
+Sub-task,FE-2: Filters,"Implement UI filters for date range and task category selection",,STORY 10: Analytics Dashboard,"Frontend,UI",Medium
+Sub-task,QA-1: Data accuracy tests,"Write tests to verify statistical calculations and data accuracy",,STORY 10: Analytics Dashboard,"QA,Testing",Medium
+Story,STORY 11: Mobile UX,"Optimize user experience for mobile devices",3,EPIC 2: Platform Enhancements,"Story,Frontend,Mobile",Low
+Sub-task,FE-1: Responsive layout,"Implement responsive CSS to adapt UI for mobile screen sizes",,STORY 11: Mobile UX,"Frontend,Responsive",Medium
+Sub-task,FE-2: Swipe delete,"Add swipe gesture support for deleting tasks on mobile",,STORY 11: Mobile UX,"Frontend,Mobile",Medium
+Sub-task,FE-3: Touch drag reorder,"Implement touch-friendly drag and drop for task reordering",,STORY 11: Mobile UX,"Frontend,Mobile",Medium
+Sub-task,QA-1: Mobile testing,"Write tests and perform manual testing on various mobile devices",,STORY 11: Mobile UX,"QA,Mobile",Medium

@@ -1,0 +1,21 @@
+{
+  "name": "design-patterns-catalog",
+  "version": "1.0.0",
+  "description": "Design Patterns Catalog - HTML + Alpine.js + Bootstrap 5",
+  "scripts": {
+    "start": "http-server -p 8082 -o",
+    "serve": "http-server -p 8082",
+    "dev": "http-server -p 8082 -o -c-1"
+  },
+  "keywords": [
+    "design-patterns",
+    "alpinejs",
+    "bootstrap"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
+

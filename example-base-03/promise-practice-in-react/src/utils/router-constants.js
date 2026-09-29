@@ -132,16 +132,17 @@ const componentMap = {
 };
 
 export const generateRoutes = (config = routeConfig) => {
-    return config.map((route, index) => {
+    return config.map((route) => {
         const Element = componentMap[route.element];
+        const routeKey = route.path || "*";
         if (route.children) {
             return (
-                <Route key={index} path={route.path} element={<Element />}>
+                <Route key={routeKey} path={route.path} element={<Element />}>
                     {generateRoutes(route.children)}
                 </Route>
             );
         }
-        return <Route key={index} path={route.path} element={<Element />} />;
+        return <Route key={routeKey} path={route.path} element={<Element />} />;
     });
 };
 
@@ -164,7 +165,7 @@ const getChildRouteNames = (parentRouteName = "/") => {
         const parentRoute = routeConfig.find((rc) => rc.path === parentRouteName);
         if (parentRoute && parentRoute.children) {
             childComponentNameObj = parentRoute.children
-                .filter((ch) => ch.displayInCombo && ch.displayInCombo === true)
+                .filter((ch) => ch.displayInCombo)
                 .reduce((acc, rcc) => {
                     acc[rcc.element] = rcc.path;
                     return acc;

@@ -1,32 +1,38 @@
-const FileRelatedOperations = require("../../FileRelatedOperations.services.v2");
-const { JsonFileMapWithDetails } = require("../services");
-const Contants = require("../../constants");
-const ProcessedConversation = require("../ProcessedConversation");
-const { holiSpecialLog, HoliSpecialColors } = require("./holiSpecialLog");
-const getConversationMessages = require("./getConversationMessages");
-const formatUnixTimestamp = require("./formatUnixTimestamp");
+const FileRelatedOperations = require('../../FileRelatedOperations.services.v2');
+const { JsonFileMapWithDetails } = require('../services');
+const Contants = require('../../constants');
+const ProcessedConversation = require('../ProcessedConversation');
+const { holiSpecialLog, HoliSpecialColors } = require('./holiSpecialLog');
+const getConversationMessages = require('./getConversationMessages');
+const formatUnixTimestamp = require('./formatUnixTimestamp');
 
-const testDir = "D:\\v-dir";
+const testDir = 'D:\\v-dir';
 const baseProcessedJsonPath = `${testDir}\\base.json`;
-const getIterationFolderName = (iterationName = "") => `${testDir}\\${iterationName}`;
+const getIterationFolderName = (iterationName = '') => `${testDir}\\${iterationName}`;
 
-const printStepLog = (title = "", stepOutput = "") => {
-  console.log("-------------------------------------");
+const printStepLog = (title = '', stepOutput = '') => {
+  console.log('-------------------------------------');
   console.log(HoliSpecialColors.YELLOW, title);
-  console.log(HoliSpecialColors.GREEN, stepOutput, "\n");
+  console.log(HoliSpecialColors.GREEN, stepOutput, '\n');
 };
 
 const step0 = () => {
-  printStepLog("1. snapshot backup ka base-data.json kaha rakhi huyi hai??", Contants.CGPT_SNAPSHOT_FILE_LOCATION);
+  printStepLog(
+    '1. snapshot backup ka base-data.json kaha rakhi huyi hai??',
+    Contants.CGPT_SNAPSHOT_FILE_LOCATION
+  );
 };
 
 const step1 = () => {
-  printStepLog("2. analysis base-directory kaha rakhi huyi hai??", testDir);
+  printStepLog('2. analysis base-directory kaha rakhi huyi hai??', testDir);
 };
 
 const step2 = () => {
-  FileRelatedOperations.writeFileContentSync(baseProcessedJsonPath, JSON.stringify(JsonFileMapWithDetails));
-  printStepLog("3. base.json kaha banayenge?", baseProcessedJsonPath);
+  FileRelatedOperations.writeFileContentSync(
+    baseProcessedJsonPath,
+    JSON.stringify(JsonFileMapWithDetails)
+  );
+  printStepLog('3. base.json kaha banayenge?', baseProcessedJsonPath);
 };
 
 const step111 = async () => {
@@ -34,10 +40,12 @@ const step111 = async () => {
   for (let det of JsonFileMapWithDetails) {
     try {
       const pp = ProcessedConversation.fromData(det);
-      if (pp?.createdBy !== "PREMENDRA") {
+      if (pp?.createdBy !== 'PREMENDRA') {
         continue;
       }
-      const data = await FileRelatedOperations.readJsonFile(`${Contants.CgptProjectRoot}/public/${pp.location}`);
+      const data = await FileRelatedOperations.readJsonFile(
+        `${Contants.CgptProjectRoot}/public/${pp.location}`
+      );
       let totalMsgCount = 0;
 
       const snapshotObject = {
@@ -54,16 +62,20 @@ const step111 = async () => {
         const convObj = {
           id: conversation.id || conversation.conversation_id,
           title: conversation.title,
-          createdOn: conversation.create_time ? formatUnixTimestamp(conversation.create_time) : null,
-          updatedOn: conversation.update_time ? formatUnixTimestamp(conversation.update_time) : null,
+          createdOn: conversation.create_time
+            ? formatUnixTimestamp(conversation.create_time)
+            : null,
+          updatedOn: conversation.update_time
+            ? formatUnixTimestamp(conversation.update_time)
+            : null,
           messages: [],
         };
         snapshotObject.conversations.push(convObj);
         const messages = getConversationMessages(conversation);
         convObj.msgCount = messages.length || 0;
-        convObj.messages.push(...messages.filter((m) => m.author === "User").map((m) => m.id));
+        convObj.messages.push(...messages.filter(m => m.author === 'User').map(m => m.id));
         snapshotObject.messages.push(
-          ...messages.map((m) => ({
+          ...messages.map(m => ({
             ...m,
             content: undefined,
             convId: convObj.id,
@@ -71,7 +83,7 @@ const step111 = async () => {
           }))
         );
         msgContents.push(
-          ...messages.map((m) => ({
+          ...messages.map(m => ({
             id: m.id,
             content: m.content,
             convId: convObj.id,
@@ -83,7 +95,10 @@ const step111 = async () => {
       // console.log({ slug: pp.slug, convCount: data.length, msgCount, userName: pp.createdBy });
       // const snapshotObject = { slug: pp.slug, convCount: data.length, msgCount, userName: pp.createdBy };
       snapshotObject.totalMsgCount = totalMsgCount;
-      FileRelatedOperations.writeFileContentSync(`${testDir}\\itr1\\${pp.slug}.json`, JSON.stringify(snapshotObject));
+      FileRelatedOperations.writeFileContentSync(
+        `${testDir}\\itr1\\${pp.slug}.json`,
+        JSON.stringify(snapshotObject)
+      );
       FileRelatedOperations.writeFileContentSync(
         `${testDir}\\itr1\\${pp.slug}.contents.json`,
         JSON.stringify(msgContents)

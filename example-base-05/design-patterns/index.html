@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Patterns Catalog</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='30' r='8' fill='%230d6efd'/%3E%3Ccircle cx='30' cy='60' r='8' fill='%230d6efd'/%3E%3Ccircle cx='70' cy='60' r='8' fill='%230d6efd'/%3E%3Ccircle cx='50' cy='80' r='8' fill='%230d6efd'/%3E%3Cline x1='50' y1='38' x2='30' y2='52' stroke='%230d6efd' stroke-width='2'/%3E%3Cline x1='50' y1='38' x2='70' y2='52' stroke='%230d6efd' stroke-width='2'/%3E%3Cline x1='30' y1='68' x2='50' y2='72' stroke='%230d6efd' stroke-width='2'/%3E%3Cline x1='70' y1='68' x2='50' y2='72' stroke='%230d6efd' stroke-width='2'/%3E%3C/svg%3E">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --transition-speed: 0.3s;
+        }
+        
+        body {
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        
+        .category-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .pattern-card {
+            transition: transform 0.2s, box-shadow 0.2s, background-color var(--transition-speed), color var(--transition-speed);
+            height: 100%;
+        }
+        
+        .pattern-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        [data-bs-theme="dark"] .pattern-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .demo-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            background-color: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            border-left: 3px solid #0d6efd;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        
+        [data-bs-theme="dark"] .demo-text {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-left-color: #60a5fa;
+        }
+        
+        .stats-badge {
+            font-size: 0.85rem;
+        }
+        
+        .category-creational {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        [data-bs-theme="dark"] .category-creational {
+            background-color: #1e3a5f;
+            color: #93c5fd;
+        }
+        
+        .category-structural {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        [data-bs-theme="dark"] .category-structural {
+            background-color: #1e3d2e;
+            color: #86efac;
+        }
+        
+        .category-behavioral {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        [data-bs-theme="dark"] .category-behavioral {
+            background-color: #4a3d1e;
+            color: #fde047;
+        }
+        
+        .complexity-badge {
+            font-size: 0.7rem;
+        }
+        
+        .complexity-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        [data-bs-theme="dark"] .complexity-low {
+            background-color: #1e3d2e;
+            color: #86efac;
+        }
+        
+        .complexity-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        [data-bs-theme="dark"] .complexity-medium {
+            background-color: #4a3d1e;
+            color: #fde047;
+        }
+        
+        .complexity-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        [data-bs-theme="dark"] .complexity-high {
+            background-color: #4a1e1e;
+            color: #fca5a5;
+        }
+        
+        .detail-list {
+            font-size: 0.9rem;
+        }
+        
+        .detail-list li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .related-pattern-badge {
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .related-pattern-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .theme-toggle-btn {
+            transition: transform 0.3s ease;
+        }
+        
+        .theme-toggle-btn:hover {
+            transform: rotate(15deg);
+        }
+        
+        [data-bs-theme="dark"] .navbar {
+            background-color: #1e293b !important;
+        }
+        
+        [data-bs-theme="dark"] .modal-content {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+        
+        [data-bs-theme="dark"] .modal-header {
+            border-bottom-color: #334155;
+        }
+        
+        [data-bs-theme="dark"] .modal-footer {
+            border-top-color: #334155;
+        }
+        
+        [data-bs-theme="dark"] .card {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        
+        [data-bs-theme="dark"] .form-control {
+            background-color: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+        
+        [data-bs-theme="dark"] .form-control:focus {
+            background-color: #334155;
+            border-color: #60a5fa;
+            color: #e2e8f0;
+        }
+        
+        [data-bs-theme="dark"] .input-group-text {
+            background-color: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+        
+        [data-bs-theme="dark"] .btn-outline-primary {
+            border-color: #475569;
+            color: #93c5fd;
+        }
+        
+        [data-bs-theme="dark"] .btn-outline-primary:hover,
+        [data-bs-theme="dark"] .btn-outline-primary:active,
+        [data-bs-theme="dark"] .btn-outline-primary:focus {
+            background-color: #1e40af;
+            border-color: #1e40af;
+            color: #fff;
+        }
+        
+        [data-bs-theme="dark"] .btn-check:checked + .btn-outline-primary {
+            background-color: #1e40af;
+            border-color: #1e40af;
+            color: #fff;
+        }
+        
+        [data-bs-theme="dark"] .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        [data-bs-theme="dark"] .text-muted {
+            color: #94a3b8 !important;
+        }
+        
+        [data-bs-theme="dark"] .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div x-data="patternApp()" x-init="initTheme(); loadPatterns()">
+        <!-- Header -->
+        <nav class="navbar navbar-dark bg-primary mb-4">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="bi bi-diagram-3"></i> Design Patterns Catalog
+                </span>
+                <div class="d-flex align-items-center text-white gap-3">
+                    <span class="stats-badge">
+                        <i class="bi bi-grid-3x3-gap"></i> 
+                        <span x-text="filteredPatterns.length"></span> patterns
+                    </span>
+                    <button 
+                        class="btn btn-outline-light btn-sm theme-toggle-btn"
+                        @click="toggleTheme()"
+                        :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+                    >
+                        <i class="bi" :class="isDarkMode ? 'bi-sun-fill' : 'bi-moon-fill'"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <!-- Filters and Search -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Search patterns by name, intent, description, or use cases..."
+                            x-model="searchQuery"
+                            @input="filterPatterns()"
+                        >
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-group w-100" role="group">
+                        <input 
+                            type="radio" 
+                            class="btn-check" 
+                            name="categoryFilter" 
+                            id="filter-all" 
+                            value=""
+                            x-model="selectedCategory"
+                            @change="filterPatterns()"
+                            checked
+                        >
+                        <label class="btn btn-outline-primary" for="filter-all">
+                            All (<span x-text="patterns.length"></span>)
+                        </label>
+                        
+                        <input 
+                            type="radio" 
+                            class="btn-check" 
+                            name="categoryFilter" 
+                            id="filter-creational" 
+                            value="CREATIONAL"
+                            x-model="selectedCategory"
+                            @change="filterPatterns()"
+                        >
+                        <label class="btn btn-outline-primary" for="filter-creational">
+                            Creational (<span x-text="getCategoryCount('CREATIONAL')"></span>)
+                        </label>
+                        
+                        <input 
+                            type="radio" 
+                            class="btn-check" 
+                            name="categoryFilter" 
+                            id="filter-structural" 
+                            value="STRUCTURAL"
+                            x-model="selectedCategory"
+                            @change="filterPatterns()"
+                        >
+                        <label class="btn btn-outline-primary" for="filter-structural">
+                            Structural (<span x-text="getCategoryCount('STRUCTURAL')"></span>)
+                        </label>
+                        
+                        <input 
+                            type="radio" 
+                            class="btn-check" 
+                            name="categoryFilter" 
+                            id="filter-behavioral" 
+                            value="BEHAVIORAL"
+                            x-model="selectedCategory"
+                            @change="filterPatterns()"
+                        >
+                        <label class="btn btn-outline-primary" for="filter-behavioral">
+                            Behavioral (<span x-text="getCategoryCount('BEHAVIORAL')"></span>)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patterns Grid -->
+            <div class="row g-4" x-show="filteredPatterns.length > 0">
+                <template x-for="pattern in filteredPatterns" :key="pattern.name">
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card pattern-card h-100 shadow-sm">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title mb-0" x-text="pattern.name"></h5>
+                                    <div class="d-flex flex-column align-items-end gap-1">
+                                        <span 
+                                            class="badge category-badge"
+                                            :class="{
+                                                'category-creational': pattern.category === 'CREATIONAL',
+                                                'category-structural': pattern.category === 'STRUCTURAL',
+                                                'category-behavioral': pattern.category === 'BEHAVIORAL'
+                                            }"
+                                            x-text="pattern.category"
+                                        ></span>
+                                        <span 
+                                            class="badge complexity-badge"
+                                            :class="{
+                                                'complexity-low': pattern.complexity === 'Low',
+                                                'complexity-medium': pattern.complexity === 'Medium',
+                                                'complexity-high': pattern.complexity === 'High'
+                                            }"
+                                            x-text="pattern.complexity"
+                                        ></span>
+                                    </div>
+                                </div>
+                                
+                                <p class="card-text text-muted small mb-2" x-text="pattern.intent"></p>
+                                
+                                <div class="mb-3 flex-grow-1">
+                                    <div class="text-muted small mb-1">
+                                        <i class="bi bi-code-slash"></i> <strong>Demo:</strong>
+                                    </div>
+                                    <div class="demo-text" x-text="pattern.demo"></div>
+                                </div>
+                                
+                                <div class="mt-auto">
+                                    <button 
+                                        class="btn btn-sm btn-outline-primary w-100" 
+                                        @click="selectedPattern = pattern; showModal = true"
+                                    >
+                                        <i class="bi bi-info-circle"></i> View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- No Results Message -->
+            <div x-show="filteredPatterns.length === 0" class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No patterns found matching your criteria.</p>
+                <button class="btn btn-outline-primary" @click="clearFilters()">
+                    <i class="bi bi-x-circle"></i> Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Pattern Details Modal -->
+        <div class="modal fade" :class="{ 'show': showModal, 'd-block': showModal }" 
+             x-show="showModal" @click.self="showModal = false" 
+             :style="isDarkMode ? 'background-color: rgba(0,0,0,0.7);' : 'background-color: rgba(0,0,0,0.5);'" 
+             x-transition>
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" @click.stop>
+                <div class="modal-content" x-show="selectedPattern">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span x-text="selectedPattern?.name"></span>
+                            <span 
+                                class="badge category-badge ms-2"
+                                :class="{
+                                    'category-creational': selectedPattern?.category === 'CREATIONAL',
+                                    'category-structural': selectedPattern?.category === 'STRUCTURAL',
+                                    'category-behavioral': selectedPattern?.category === 'BEHAVIORAL'
+                                }"
+                                x-text="selectedPattern?.category"
+                            ></span>
+                            <span 
+                                class="badge complexity-badge ms-2"
+                                :class="{
+                                    'complexity-low': selectedPattern?.complexity === 'Low',
+                                    'complexity-medium': selectedPattern?.complexity === 'Medium',
+                                    'complexity-high': selectedPattern?.complexity === 'High'
+                                }"
+                                x-text="selectedPattern?.complexity"
+                            ></span>
+                        </h5>
+                        <button type="button" class="btn-close" @click="showModal = false"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <h6><i class="bi bi-bullseye"></i> Intent</h6>
+                            <p class="text-muted" x-text="selectedPattern?.intent"></p>
+                        </div>
+                        
+                        <div class="mb-3" x-show="selectedPattern?.description">
+                            <h6><i class="bi bi-file-text"></i> Description</h6>
+                            <p x-text="selectedPattern?.description"></p>
+                        </div>
+                        
+                        <div class="mb-3" x-show="selectedPattern?.useCases && selectedPattern.useCases.length > 0">
+                            <h6><i class="bi bi-list-check"></i> Use Cases</h6>
+                            <ul class="detail-list">
+                                <template x-for="useCase in selectedPattern?.useCases" :key="useCase">
+                                    <li x-text="useCase"></li>
+                                </template>
+                            </ul>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3" x-show="selectedPattern?.pros && selectedPattern.pros.length > 0">
+                                <h6><i class="bi bi-check-circle text-success"></i> Pros</h6>
+                                <ul class="detail-list">
+                                    <template x-for="pro in selectedPattern?.pros" :key="pro">
+                                        <li class="text-success" x-text="pro"></li>
+                                    </template>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3" x-show="selectedPattern?.cons && selectedPattern.cons.length > 0">
+                                <h6><i class="bi bi-x-circle text-danger"></i> Cons</h6>
+                                <ul class="detail-list">
+                                    <template x-for="con in selectedPattern?.cons" :key="con">
+                                        <li class="text-danger" x-text="con"></li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3" x-show="selectedPattern?.relatedPatterns && selectedPattern.relatedPatterns.length > 0">
+                            <h6><i class="bi bi-diagram-3"></i> Related Patterns</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <template x-for="related in selectedPattern?.relatedPatterns" :key="related">
+                                    <span 
+                                        class="badge bg-secondary related-pattern-badge"
+                                        @click="searchRelatedPattern(related)"
+                                        x-text="related"
+                                    ></span>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6><i class="bi bi-code-slash"></i> Demo</h6>
+                            <div class="demo-text" x-text="selectedPattern?.demo"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="showModal = false">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function patternApp() {
+            return {
+                patterns: [],
+                filteredPatterns: [],
+                searchQuery: '',
+                selectedCategory: '',
+                selectedPattern: null,
+                showModal: false,
+                isDarkMode: false,
+                
+                initTheme() {
+                    // Check localStorage for saved theme preference
+                    const savedTheme = localStorage.getItem('theme');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    
+                    // Use saved theme, or system preference, or default to light
+                    this.isDarkMode = savedTheme === 'dark' || (!savedTheme && prefersDark);
+                    this.applyTheme();
+                },
+                
+                toggleTheme() {
+                    this.isDarkMode = !this.isDarkMode;
+                    this.applyTheme();
+                    // Save preference to localStorage
+                    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+                },
+                
+                applyTheme() {
+                    const html = document.documentElement;
+                    if (this.isDarkMode) {
+                        html.setAttribute('data-bs-theme', 'dark');
+                    } else {
+                        html.removeAttribute('data-bs-theme');
+                    }
+                },
+                
+                async loadPatterns() {
+                    try {
+                        const response = await fetch('patterns.json');
+                        this.patterns = await response.json();
+                        this.filteredPatterns = this.patterns;
+                    } catch (error) {
+                        console.error('Error loading patterns:', error);
+                        alert('Failed to load patterns.json. Please ensure the file exists.');
+                    }
+                },
+                
+                filterPatterns() {
+                    let filtered = this.patterns;
+                    
+                    // Filter by category
+                    if (this.selectedCategory) {
+                        filtered = filtered.filter(p => p.category === this.selectedCategory);
+                    }
+                    
+                    // Filter by search query
+                    if (this.searchQuery.trim()) {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(p => {
+                            const nameMatch = p.name?.toLowerCase().includes(query);
+                            const intentMatch = p.intent?.toLowerCase().includes(query);
+                            const demoMatch = p.demo?.toLowerCase().includes(query);
+                            const descMatch = p.description?.toLowerCase().includes(query);
+                            const useCaseMatch = p.useCases?.some(uc => uc.toLowerCase().includes(query));
+                            return nameMatch || intentMatch || demoMatch || descMatch || useCaseMatch;
+                        });
+                    }
+                    
+                    this.filteredPatterns = filtered;
+                },
+                
+                getCategoryCount(category) {
+                    return this.patterns.filter(p => p.category === category).length;
+                },
+                
+                clearFilters() {
+                    this.searchQuery = '';
+                    this.selectedCategory = '';
+                    document.getElementById('filter-all').checked = true;
+                    this.filterPatterns();
+                },
+                
+                searchRelatedPattern(patternName) {
+                    this.searchQuery = patternName;
+                    this.selectedCategory = '';
+                    document.getElementById('filter-all').checked = true;
+                    this.showModal = false;
+                    this.filterPatterns();
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

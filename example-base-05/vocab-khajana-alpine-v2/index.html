@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khajana — Vocabulary Learning</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>[x-cloak]{display:none!important}</style>
+</head>
+
+<body x-data="app()" x-init="init()"
+      :class="dark ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-800'"
+      class="min-h-screen transition-colors">
+
+<header class="sticky top-0 z-30 border-b backdrop-blur"
+        :class="dark ? 'border-slate-800 bg-slate-950/95' : 'border-slate-200 bg-white/95'">
+  <div class="mx-auto max-w-7xl px-4 py-4">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-2xl font-bold text-indigo-500">📚 Khajana</h1>
+        <p class="text-sm opacity-60">Vocabulary learning dashboard</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button @click="showBookmarks = !showBookmarks"
+                class="rounded-xl border px-3 py-2 text-sm"
+                :class="dark ? 'border-slate-700' : 'border-slate-300'">
+          ⭐ <span x-text="favorites.length"></span>
+        </button>
+        <button @click="showRecent = !showRecent"
+                class="rounded-xl border px-3 py-2 text-sm"
+                :class="dark ? 'border-slate-700' : 'border-slate-300'">
+          🕘 Recent
+        </button>
+        <button @click="dark = !dark"
+                class="rounded-xl border px-3 py-2 text-sm"
+                :class="dark ? 'border-slate-700' : 'border-slate-300'">
+          <span x-text="dark ? '☀️ Light' : '🌙 Dark'"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-4 grid gap-3 lg:grid-cols-[1fr_190px_auto_auto]">
+      <input x-model.debounce.150ms="query" @keydown.escape="query=''"
+             @keydown.arrowdown.prevent="focusFirstCard()"
+             type="search" placeholder="Search word, meaning or example..."
+             class="rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-300"
+             :class="dark ? 'border-slate-700 bg-slate-900' : 'border-slate-300 bg-slate-50'">
+
+      <select x-model="partOfSpeech"
+              class="rounded-xl border px-4 py-3 outline-none"
+              :class="dark ? 'border-slate-700 bg-slate-900' : 'border-slate-300 bg-slate-50'">
+        <option value="">All parts of speech</option>
+        <template x-for="type in types" :key="type">
+          <option :value="type" x-text="type"></option>
+        </template>
+      </select>
+
+      <button @click="randomWord()"
+              class="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-700">
+        🎲 Random
+      </button>
+
+      <button @click="startQuiz()"
+              class="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700">
+        🧠 Quiz
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-7xl px-4 py-6">
+
+  <!-- Word of the Day -->
+  <section class="mb-6 overflow-hidden rounded-2xl border p-6 shadow-sm"
+           :class="dark ? 'border-indigo-900 bg-slate-900' : 'border-indigo-100 bg-white'">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-indigo-500">Word of the Day</p>
+        <h2 class="mt-1 text-3xl font-black" x-text="wordOfDay?.word"></h2>
+        <span class="text-sm italic opacity-60" x-text="wordOfDay?.type"></span>
+      </div>
+      <button @click="selectWord(wordOfDay)"
+              class="rounded-xl bg-indigo-600 px-4 py-2 font-semibold text-white">
+        Explore →
+      </button>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <template x-for="meaning in (wordOfDay?.meanings || [])" :key="meaning">
+        <span class="rounded-full px-3 py-1 text-sm"
+              :class="dark ? 'bg-slate-800' : 'bg-indigo-50'"
+              x-text="meaning"></span>
+      </template>
+    </div>
+  </section>
+
+  <!-- Stats / progress -->
+  <section class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+    <template x-for="stat in stats" :key="stat.label">
+      <div class="rounded-2xl border p-4"
+           :class="dark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'">
+        <div class="text-2xl font-bold" x-text="stat.value"></div>
+        <div class="mt-1 text-xs opacity-60" x-text="stat.label"></div>
+      </div>
+    </template>
+  </section>
+
+  <!-- Recent / bookmarks -->
+  <section x-show="showBookmarks || showRecent" x-cloak class="mb-6 rounded-2xl border p-5"
+           :class="dark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold" x-text="showBookmarks ? '⭐ Bookmarks' : '🕘 Recently Viewed'"></h2>
+      <button @click="showBookmarks=false;showRecent=false" class="opacity-50">✕</button>
+    </div>
+
+    <div x-show="showBookmarks" class="mt-4 flex flex-wrap gap-2">
+      <template x-for="id in favorites" :key="id">
+        <button @click="selectWord(findById(id))"
+                class="rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700"
+                x-text="findById(id)?.word"></button>
+      </template>
+      <span x-show="!favorites.length" class="text-sm opacity-60">No bookmarks yet.</span>
+    </div>
+
+    <div x-show="showRecent" class="mt-4 flex flex-wrap gap-2">
+      <template x-for="id in recent" :key="id">
+        <button @click="selectWord(findById(id))"
+                class="rounded-lg px-3 py-2 text-sm"
+                :class="dark ? 'bg-slate-800' : 'bg-slate-100'"
+                x-text="findById(id)?.word"></button>
+      </template>
+      <span x-show="!recent.length" class="text-sm opacity-60">No recently viewed words.</span>
+    </div>
+  </section>
+
+  <!-- Detail -->
+  <section x-show="selected" x-cloak class="mb-6 rounded-2xl border p-6 shadow-sm"
+           :class="dark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'">
+    <div class="flex justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold uppercase text-indigo-700"
+                x-text="selected?.type"></span>
+          <span class="text-xs opacity-50" x-text="'Word #' + (selectedIndex + 1)"></span>
+        </div>
+        <h2 class="mt-2 text-4xl font-black" x-text="selected?.word"></h2>
+      </div>
+      <div class="flex gap-2">
+        <button @click="speak(selected)"
+                class="h-10 rounded-lg bg-indigo-600 px-3 text-white" title="Pronounce">🔊</button>
+        <button @click="toggleFavorite(selected)"
+                class="h-10 rounded-lg px-3"
+                :class="isFavorite(selected?.id) ? 'bg-amber-100 text-amber-600' : 'bg-slate-100'">
+          <span x-text="isFavorite(selected?.id) ? '★' : '☆'"></span>
+        </button>
+        <button @click="selected=null" class="h-10 rounded-lg bg-slate-100 px-3">✕</button>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <h3 class="mb-3 font-bold">Meanings</h3>
+      <ul class="space-y-2">
+        <template x-for="(meaning,i) in (selected?.meanings || [])" :key="i">
+          <li class="flex gap-3 rounded-xl p-3"
+              :class="dark ? 'bg-slate-800' : 'bg-slate-50'">
+            <b class="text-indigo-500" x-text="(i+1)+'.'"></b>
+            <span x-text="meaning"></span>
+          </li>
+        </template>
+      </ul>
+    </div>
+
+    <div class="mt-6" x-show="selected?.examples?.length">
+      <h3 class="mb-3 font-bold">Example</h3>
+      <template x-for="example in (selected?.examples || [])" :key="example">
+        <blockquote class="rounded-xl border-l-4 border-indigo-400 p-4 italic"
+                    :class="dark ? 'bg-slate-800' : 'bg-indigo-50'"
+                    x-text="example"></blockquote>
+      </template>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section x-show="!selected" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <template x-for="item in paginatedWords" :key="item.id">
+      <article tabindex="0"
+               @click="selectWord(item)"
+               @keydown.enter="selectWord(item)"
+               @keydown.space.prevent="selectWord(item)"
+               class="group cursor-pointer rounded-2xl border p-5 shadow-sm outline-none transition hover:-translate-y-0.5 hover:border-indigo-400 focus:ring-2 focus:ring-indigo-400"
+               :class="dark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'">
+        <div class="flex items-start justify-between gap-2">
+          <h2 class="text-xl font-bold group-hover:text-indigo-500" x-text="item.word"></h2>
+          <button @click.stop="toggleFavorite(item)"
+                  class="text-xl" :title="isFavorite(item.id) ? 'Remove bookmark' : 'Bookmark'">
+            <span x-text="isFavorite(item.id) ? '★' : '☆'"></span>
+          </button>
+        </div>
+        <span class="mt-2 inline-block rounded-full px-2 py-1 text-xs"
+              :class="dark ? 'bg-slate-800' : 'bg-slate-100'"
+              x-text="item.type"></span>
+        <p class="mt-3 text-sm opacity-75 line-clamp-2" x-text="item.meanings.join('; ')"></p>
+        <button @click.stop="speak(item)" class="mt-4 text-sm text-indigo-500">🔊 Pronounce</button>
+      </article>
+    </template>
+  </section>
+
+  <div x-show="!selected && !paginatedWords.length"
+       class="rounded-2xl border p-10 text-center"
+       :class="dark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'">
+    🔎 No words found.
+  </div>
+
+  <div x-show="!selected && totalPages > 1" class="mt-8 flex justify-center gap-2">
+    <button @click="page--" :disabled="page===1" class="rounded-lg border px-4 py-2 disabled:opacity-40">Previous</button>
+    <span class="rounded-lg bg-indigo-600 px-4 py-2 text-white">
+      <span x-text="page"></span> / <span x-text="totalPages"></span>
+    </span>
+    <button @click="page++" :disabled="page===totalPages" class="rounded-lg border px-4 py-2 disabled:opacity-40">Next</button>
+  </div>
+</main>
+
+<!-- Quiz modal -->
+<div x-show="quiz.active" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+  <div class="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl p-6"
+       :class="dark ? 'bg-slate-900' : 'bg-white'">
+    <div class="flex justify-between">
+      <div>
+        <p class="text-xs font-bold uppercase text-emerald-500">Vocabulary Quiz</p>
+        <h2 class="text-2xl font-black">Meaning Challenge</h2>
+      </div>
+      <button @click="quiz.active=false" class="opacity-50">✕</button>
+    </div>
+
+    <div x-show="!quiz.finished" class="mt-6">
+      <div class="mb-4 flex justify-between text-sm opacity-60">
+        <span>Question <span x-text="quiz.index+1"></span> / 10</span>
+        <span>Score: <span x-text="quiz.score"></span></span>
+      </div>
+
+      <div class="rounded-xl bg-indigo-50 p-5 text-indigo-950">
+        <p class="text-sm font-semibold">What is the meaning of:</p>
+        <h3 class="mt-2 text-3xl font-black" x-text="quiz.current?.word"></h3>
+        <span class="text-sm italic" x-text="quiz.current?.type"></span>
+      </div>
+
+      <div class="mt-5 grid gap-3">
+        <template x-for="(option,i) in quiz.options" :key="i">
+          <button @click="answerQuiz(option)"
+                  :disabled="quiz.answered"
+                  class="rounded-xl border p-4 text-left transition"
+                  :class="quizOptionClass(option)"
+                  x-text="option"></button>
+        </template>
+      </div>
+
+      <div x-show="quiz.answered" class="mt-5 rounded-xl p-4"
+           :class="quiz.correct ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'">
+        <p class="font-bold" x-text="quiz.correct ? 'Correct! 🎉' : 'Not quite.'"></p>
+        <p class="mt-1 text-sm">Correct answer: <span class="font-semibold" x-text="quiz.current.meanings[0]"></span></p>
+        <button @click="nextQuiz()" class="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-white">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <div x-show="quiz.finished" class="py-10 text-center">
+      <div class="text-5xl">🏆</div>
+      <h2 class="mt-4 text-3xl font-black">Quiz Complete!</h2>
+      <p class="mt-2 text-lg">Score: <b x-text="quiz.score"></b> / 10</p>
+      <p class="mt-2 text-sm opacity-60">Your progress is saved in localStorage.</p>
+      <button @click="startQuiz()" class="mt-6 rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<footer class="mx-auto max-w-7xl px-4 pb-8 pt-2 text-center text-xs opacity-50">
+  Keyboard: ↑/↓ search navigation • Enter/Space open word • Esc clear search
+</footer>
+
+<script>
+function app() {
+  return {
+    words: [],
+    query: '',
+    partOfSpeech: '',
+    page: 1,
+    pageSize: 24,
+    selected: null,
+    selectedIndex: -1,
+    favorites: JSON.parse(localStorage.getItem('khajana.favorites') || '[]'),
+    recent: JSON.parse(localStorage.getItem('khajana.recent') || '[]'),
+    progress: JSON.parse(localStorage.getItem('khajana.progress') || '{"viewed":0,"quizAttempts":0,"quizCorrect":0}'),
+    dark: localStorage.getItem('khajana.dark') === 'true',
+    showBookmarks: false,
+    showRecent: false,
+    loading: true,
+    error: '',
+    wordOfDay: null,
+    quiz: {
+      active: false, finished: false, index: 0, score: 0,
+      current: null, options: [], answered: false, selected: null, correct: false, questions: []
+    },
+
+    async init() {
+      this.$watch('dark', v => localStorage.setItem('khajana.dark', v));
+      this.$watch('favorites', v => localStorage.setItem('khajana.favorites', JSON.stringify(v)));
+      try {
+        const response = await fetch('data/khajana.xml');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const xml = new DOMParser().parseFromString(await response.text(), 'application/xml');
+        if (xml.querySelector('parsererror')) throw new Error('Invalid XML');
+
+        this.words = [...xml.querySelectorAll('myword')].map((node,id) => ({
+          id,
+          word: node.querySelector(':scope > word')?.textContent.trim() || '',
+          type: node.querySelector(':scope > word')?.getAttribute('type') || 'unknown',
+          meanings: [...node.querySelectorAll(':scope > meanings > meaning')].map(x => x.textContent.trim()).filter(Boolean),
+          examples: [...node.querySelectorAll(':scope > examples > example')].map(x => x.textContent.trim()).filter(Boolean)
+        })).filter(x => x.word);
+
+        const day = Math.floor(Date.now() / 86400000);
+        this.wordOfDay = this.words[day % this.words.length];
+        this.loading = false;
+      } catch (e) {
+        this.loading = false;
+        this.error = 'Unable to load data/khajana.xml. Run the project using a local HTTP server.';
+        console.error(e);
+      }
+    },
+
+    get types() { return [...new Set(this.words.map(x=>x.type))].sort(); },
+
+    get filteredWords() {
+      const q = this.query.trim().toLowerCase();
+      return this.words.filter(x => {
+        const hay = [x.word,x.type,...x.meanings,...x.examples].join(' ').toLowerCase();
+        return (!q || hay.includes(q)) && (!this.partOfSpeech || x.type === this.partOfSpeech);
+      });
+    },
+
+    get totalPages() { return Math.max(1, Math.ceil(this.filteredWords.length / this.pageSize)); },
+
+    get paginatedWords() {
+      if (this.page > this.totalPages) this.page = this.totalPages;
+      const start=(this.page-1)*this.pageSize;
+      return this.filteredWords.slice(start,start+this.pageSize);
+    },
+
+    get stats() {
+      const attempted=this.progress.quizAttempts || 0;
+      return [
+        {label:'Total words',value:this.words.length},
+        {label:'Bookmarks',value:this.favorites.length},
+        {label:'Recently viewed',value:this.recent.length},
+        {label:'Quiz attempts',value:attempted},
+        {label:'Quiz accuracy',value:attempted ? Math.round((this.progress.quizCorrect/attempted)*100)+'%' : '0%'}
+      ];
+    },
+
+    findById(id) { return this.words.find(x=>x.id===id); },
+
+    isFavorite(id) { return this.favorites.includes(id); },
+
+    toggleFavorite(item) {
+      if (!item) return;
+      if (this.isFavorite(item.id)) this.favorites=this.favorites.filter(x=>x!==item.id);
+      else this.favorites=[item.id,...this.favorites];
+    },
+
+    selectWord(item) {
+      if (!item) return;
+      this.selected=item;
+      this.selectedIndex=this.words.findIndex(x=>x.id===item.id);
+      this.recent=[item.id,...this.recent.filter(x=>x!==item.id)].slice(0,20);
+      localStorage.setItem('khajana.recent',JSON.stringify(this.recent));
+      this.progress.viewed=(this.progress.viewed||0)+1;
+      localStorage.setItem('khajana.progress',JSON.stringify(this.progress));
+      window.scrollTo({top:0,behavior:'smooth'});
+    },
+
+    randomWord() {
+      if (this.words.length) this.selectWord(this.words[Math.floor(Math.random()*this.words.length)]);
+    },
+
+    speak(item) {
+      if (!item || !('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(item.word);
+      u.lang='en-US';
+      u.rate=0.82;
+      speechSynthesis.speak(u);
+    },
+
+    focusFirstCard() {
+      this.$nextTick(() => document.querySelector('article[tabindex="0"]')?.focus());
+    },
+
+    startQuiz() {
+      const pool=[...this.words].sort(()=>Math.random()-0.5);
+      this.quiz.questions=pool.slice(0,10);
+      this.quiz={...this.quiz,active:true,finished:false,index:0,score:0,answered:false,selected:null,correct:false,current:null,options:[],questions:this.quiz.questions};
+      this.prepareQuizQuestion();
+    },
+
+    prepareQuizQuestion() {
+      const q=this.quiz.questions[this.quiz.index];
+      if (!q) { this.quiz.finished=true; return; }
+      const correct=q.meanings[0];
+      const others=[...new Set(this.words.filter(x=>x.id!==q.id).map(x=>x.meanings[0]).filter(Boolean))]
+        .sort(()=>Math.random()-0.5).slice(0,3);
+      this.quiz.current=q;
+      this.quiz.options=[correct,...others].sort(()=>Math.random()-0.5);
+      this.quiz.answered=false;
+      this.quiz.selected=null;
+      this.quiz.correct=false;
+    },
+
+    answerQuiz(option) {
+      if (this.quiz.answered) return;
+      this.quiz.selected=option;
+      this.quiz.correct=option===this.quiz.current.meanings[0];
+      this.quiz.answered=true;
+      if (this.quiz.correct) this.quiz.score++;
+      this.progress.quizAttempts=(this.progress.quizAttempts||0)+1;
+      if (this.quiz.correct) this.progress.quizCorrect=(this.progress.quizCorrect||0)+1;
+      localStorage.setItem('khajana.progress',JSON.stringify(this.progress));
+    },
+
+    quizOptionClass(option) {
+      if (!this.quiz.answered) return this.dark ? 'border-slate-700 hover:border-indigo-400' : 'border-slate-300 hover:border-indigo-400';
+      if (option===this.quiz.current.meanings[0]) return 'border-emerald-500 bg-emerald-50 text-emerald-800';
+      if (option===this.quiz.selected) return 'border-red-500 bg-red-50 text-red-800';
+      return this.dark ? 'border-slate-800 opacity-50' : 'border-slate-200 opacity-50';
+    },
+
+    nextQuiz() {
+      this.quiz.index++;
+      if (this.quiz.index>=this.quiz.questions.length) this.quiz.finished=true;
+      else this.prepareQuizQuestion();
+    }
+  }
+}
+</script>
+</body>
+</html>

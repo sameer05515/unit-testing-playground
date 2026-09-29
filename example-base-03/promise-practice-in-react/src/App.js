@@ -5,13 +5,7 @@ import { generateRoutes } from './utils/router-constants';
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* <Route path="/" element={<Parent />} >
-          <Route path="child1" element={<Child1 />} />
-          <Route path="child2" element={<Child2 />} />
-        </Route> */}
-        {generateRoutes()}
-      </Routes>
+      <Routes>{generateRoutes()}</Routes>
     </Router>
   );
 };
