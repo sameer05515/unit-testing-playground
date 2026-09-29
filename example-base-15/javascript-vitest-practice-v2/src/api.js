@@ -1,0 +1,2 @@
+export async function fetchUsers(){const response=await fetch("https://example.com/api/users");if(!response.ok)throw new Error(`API request failed: ${response.status}`);return response.json()}
+export async function createUser(user){const response=await fetch("https://example.com/api/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(user)});if(!response.ok)throw new Error(`Create user failed: ${response.status}`);return response.json()}

@@ -1,0 +1,2 @@
+import {NotFoundError,ValidationError} from "./errors.js";
+export class UserService{constructor(userRepository){this.userRepository=userRepository}async getUser(id){if(!id)throw new ValidationError("User id is required");const user=await this.userRepository.findById(id);if(!user)throw new NotFoundError(`User ${id} not found`);return user}async createUser(user){if(!user?.name)throw new ValidationError("Name is required");if(!user?.email)throw new ValidationError("Email is required");return this.userRepository.save(user)}}

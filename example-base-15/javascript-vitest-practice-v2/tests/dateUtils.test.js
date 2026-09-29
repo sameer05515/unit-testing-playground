@@ -1,0 +1,2 @@
+import {describe,expect,it,vi} from "vitest"; import {getGreeting,getCurrentYear} from "../src/dateUtils.js";
+describe("dateUtils",()=>{it.each([[8,"Good morning"],[12,"Good afternoon"],[18,"Good evening"]])("hour %s",(h,e)=>expect(getGreeting(h)).toBe(e));it("mocks system time",()=>{vi.useFakeTimers();vi.setSystemTime(new Date("2030-01-01"));expect(getCurrentYear()).toBe(2030);vi.useRealTimers()})});

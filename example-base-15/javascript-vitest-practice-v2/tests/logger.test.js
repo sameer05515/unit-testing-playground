@@ -1,0 +1,2 @@
+import {describe,expect,it,vi} from "vitest"; import * as logger from "../src/logger.js";
+describe("logger",()=>{it("spies on console.log",()=>{const spy=vi.spyOn(console,"log").mockImplementation(()=>{});logger.logInfo("Application started");expect(spy).toHaveBeenCalledWith("[INFO] Application started");spy.mockRestore()});it("spies on console.error",()=>{const spy=vi.spyOn(console,"error").mockImplementation(()=>{});logger.logError("Failed");expect(spy).toHaveBeenCalledWith("[ERROR] Failed");spy.mockRestore()})});

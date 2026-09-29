@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest"; import {add,subtract,multiply,divide} from "../src/calculator.js";
+describe("Calculator",()=>{it("adds",()=>expect(add(2,3)).toBe(5));it("subtracts",()=>expect(subtract(10,4)).toBe(6));it("multiplies",()=>expect(multiply(4,5)).toBe(20));it("divides",()=>expect(divide(20,4)).toBe(5));it("throws on zero",()=>expect(()=>divide(10,0)).toThrow("Cannot divide by zero"))});

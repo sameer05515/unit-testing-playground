@@ -1,0 +1,1 @@
+export async function calculateOrderTotal(items,discountService){const subtotal=items.reduce((total,item)=>total+item.price*item.quantity,0);const discount=await discountService.getDiscount(subtotal);return subtotal-discount}

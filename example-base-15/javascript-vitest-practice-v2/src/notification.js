@@ -1,0 +1,1 @@
+export function sendNotification(message,sender){if(!message)throw new Error("Message is required");sender(message);return true} export function delayedNotification(message,callback,delay=1000){setTimeout(()=>callback(message),delay)}

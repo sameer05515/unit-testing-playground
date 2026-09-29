@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest"; import {isEven,factorial,filterAdults} from "../src/mathUtils.js";
+describe("mathUtils",()=>{it.each([[2,true],[4,true],[7,false],[0,true]])("isEven(%s) => %s",(input,expected)=>expect(isEven(input)).toBe(expected));it("factorial",()=>expect(factorial(5)).toBe(120));it("factorial zero",()=>expect(factorial(0)).toBe(1));it("factorial negative",()=>expect(()=>factorial(-1)).toThrow("non-negative"));it("filters adults",()=>expect(filterAdults([{age:25},{age:16},{age:30}])).toEqual([{age:25},{age:30}]))});

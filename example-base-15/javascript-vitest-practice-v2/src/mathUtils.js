@@ -1,0 +1,1 @@
+export function isEven(n){return n%2===0} export function factorial(n){if(n<0)throw new Error("Number must be non-negative");if(n===0||n===1)return 1;return n*factorial(n-1)} export function filterAdults(users){return users.filter(u=>u.age>=18)}
