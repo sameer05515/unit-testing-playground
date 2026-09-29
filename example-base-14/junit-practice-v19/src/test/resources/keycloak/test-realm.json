@@ -1,0 +1,79 @@
+{
+  "realm": "junit-demo",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "junit-api",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "USER"
+      },
+      {
+        "name": "ADMIN"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "prem",
+      "enabled": true,
+      "email": "prem@example.com",
+      "firstName": "Prem",
+      "lastName": "Kumar",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "prem123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@example.com",
+      "firstName": "Admin",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER",
+        "ADMIN"
+      ]
+    },
+    {
+      "username": "report",
+      "enabled": true,
+      "email": "report@example.com",
+      "firstName": "Report",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "report123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    }
+  ]
+}
