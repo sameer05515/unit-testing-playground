@@ -1,0 +1,49 @@
+{
+  "realm": "v22-demo",
+  "enabled": true,
+
+  "clients": [
+    {
+      "clientId": "v22-ui",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "protocol": "openid-connect"
+    }
+  ],
+
+  "roles": {
+    "realm": [
+      { "name": "USER" },
+      { "name": "ADMIN" }
+    ]
+  },
+
+  "users": [
+    {
+      "username": "prem",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "prem123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER", "ADMIN"]
+    }
+  ]
+}
