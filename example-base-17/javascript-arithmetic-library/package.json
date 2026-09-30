@@ -1,0 +1,31 @@
+{
+  "name": "javascript-arithmetic-library",
+  "version": "1.0.0",
+  "description": "A simple JavaScript library for arithmetic operations.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "build": "npm run clean && npm run build:js",
+    "build:js": "mkdirp dist && cp src/index.js dist/index.js",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "mkdirp": "^3.0.1",
+    "rimraf": "^6.0.1"
+  },
+  "keywords": [
+    "javascript",
+    "library",
+    "arithmetic",
+    "math"
+  ],
+  "license": "MIT"
+}
