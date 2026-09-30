@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company & Project Explorer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: "0 10px 30px rgba(15, 23, 42, 0.07)"
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800"
+      x-data="app()"
+      x-init="loadData()">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+      <div>
+        <h1 class="text-xl font-bold tracking-tight text-slate-900">
+          Company & Project Explorer
+        </h1>
+        <p class="text-xs text-slate-500">Alpine.js + Tailwind CSS + JSON</p>
+      </div>
+
+      <div class="hidden items-center gap-2 sm:flex">
+        <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+          <span x-text="companies.length"></span> Companies
+        </span>
+        <span class="rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
+          <span x-text="projects.length"></span> Projects
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+
+    <!-- Loading -->
+    <template x-if="loading">
+      <div class="rounded-2xl bg-white p-10 text-center shadow-soft">
+        <div class="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600"></div>
+        <p class="text-sm text-slate-500">Loading data...</p>
+      </div>
+    </template>
+
+    <template x-if="error">
+      <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+        <strong>Unable to load data.</strong>
+        <p class="mt-1 text-sm" x-text="error"></p>
+        <p class="mt-2 text-xs">Run the app through a local HTTP server instead of opening index.html directly.</p>
+      </div>
+    </template>
+
+    <template x-if="!loading && !error">
+
+      <div>
+        <!-- Dashboard cards -->
+        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-2xl bg-white p-5 shadow-soft">
+            <p class="text-sm text-slate-500">Companies</p>
+            <p class="mt-2 text-3xl font-bold text-slate-900" x-text="companies.length"></p>
+          </div>
+
+          <div class="rounded-2xl bg-white p-5 shadow-soft">
+            <p class="text-sm text-slate-500">Projects</p>
+            <p class="mt-2 text-3xl font-bold text-slate-900" x-text="projects.length"></p>
+          </div>
+
+          <div class="rounded-2xl bg-white p-5 shadow-soft">
+            <p class="text-sm text-slate-500">In Progress</p>
+            <p class="mt-2 text-3xl font-bold text-amber-600" x-text="countStatus('IN_PROGRESS')"></p>
+          </div>
+
+          <div class="rounded-2xl bg-white p-5 shadow-soft">
+            <p class="text-sm text-slate-500">Completed</p>
+            <p class="mt-2 text-3xl font-bold text-emerald-600" x-text="countStatus('COMPLETED')"></p>
+          </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="mt-6 flex flex-wrap gap-2">
+          <button @click="tab='overview'"
+                  :class="tab === 'overview' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600'"
+                  class="rounded-lg px-4 py-2 text-sm font-medium shadow-sm">
+            Overview
+          </button>
+          <button @click="tab='companies'"
+                  :class="tab === 'companies' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600'"
+                  class="rounded-lg px-4 py-2 text-sm font-medium shadow-sm">
+            Companies
+          </button>
+          <button @click="tab='projects'"
+                  :class="tab === 'projects' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600'"
+                  class="rounded-lg px-4 py-2 text-sm font-medium shadow-sm">
+            Projects
+          </button>
+          <button @click="tab='details'"
+                  :class="tab === 'details' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600'"
+                  class="rounded-lg px-4 py-2 text-sm font-medium shadow-sm">
+            Project Details
+          </button>
+        </div>
+
+        <!-- Overview -->
+        <section x-show="tab === 'overview'" class="mt-6 space-y-6">
+
+          <!-- Status distribution -->
+          <div class="rounded-2xl bg-white p-6 shadow-soft">
+            <div class="mb-5 flex items-center justify-between">
+              <div>
+                <h2 class="font-semibold text-slate-900">Project Status</h2>
+                <p class="text-sm text-slate-500">Current project distribution</p>
+              </div>
+              <span class="text-sm text-slate-400" x-text="projects.length + ' total'"></span>
+            </div>
+
+            <div class="space-y-4">
+              <template x-for="item in statusSummary()" :key="item.status">
+                <div>
+                  <div class="mb-1 flex justify-between text-sm">
+                    <span class="font-medium" x-text="formatStatus(item.status)"></span>
+                    <span class="text-slate-500" x-text="item.count"></span>
+                  </div>
+                  <div class="h-2 overflow-hidden rounded-full bg-slate-100">
+                    <div class="h-full rounded-full"
+                         :class="statusBarClass(item.status)"
+                         :style="`width:${item.percent}%`"></div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Company/project overview -->
+          <div class="rounded-2xl bg-white p-6 shadow-soft">
+            <div class="mb-5">
+              <h2 class="font-semibold text-slate-900">Company Overview</h2>
+              <p class="text-sm text-slate-500">Projects grouped by company</p>
+            </div>
+
+            <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              <template x-for="company in companies" :key="company.id">
+                <button @click="openCompany(company)"
+                        class="group rounded-xl border border-slate-200 p-4 text-left transition hover:border-blue-300 hover:bg-blue-50">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 class="font-semibold text-slate-900 group-hover:text-blue-700"
+                          x-text="company.name.trim()"></h3>
+                      <p class="mt-1 text-xs text-slate-500" x-text="company.location"></p>
+                    </div>
+                    <span class="rounded-full bg-slate-100 px-2 py-1 text-xs"
+                          x-text="companyProjectCount(company.id) + ' projects'"></span>
+                  </div>
+                  <p class="mt-3 text-xs text-slate-500" x-text="company.industry"></p>
+                </button>
+              </template>
+            </div>
+          </div>
+        </section>
+
+        <!-- Companies -->
+        <section x-show="tab === 'companies'" class="mt-6">
+          <div class="rounded-2xl bg-white shadow-soft">
+            <div class="border-b border-slate-200 p-5">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 class="font-semibold text-slate-900">Companies</h2>
+                  <p class="text-sm text-slate-500">Search and inspect company projects.</p>
+                </div>
+                <input x-model="companySearch"
+                       type="search"
+                       placeholder="Search companies..."
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 sm:w-72">
+              </div>
+            </div>
+
+            <div class="divide-y divide-slate-100">
+              <template x-for="company in filteredCompanies()" :key="company.id">
+                <div class="flex flex-col gap-4 p-5 transition hover:bg-slate-50 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h3 class="font-semibold text-slate-900" x-text="company.name.trim()"></h3>
+                    <p class="mt-1 text-sm text-slate-500">
+                      <span x-text="company.industry"></span>
+                      ·
+                      <span x-text="company.location"></span>
+                    </p>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700"
+                          x-text="companyProjectCount(company.id) + ' projects'"></span>
+                    <button @click="openCompany(company)"
+                            class="rounded-lg bg-slate-900 px-3 py-2 text-xs font-medium text-white hover:bg-slate-700">
+                      View
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section x-show="tab === 'projects'" class="mt-6">
+          <div class="rounded-2xl bg-white shadow-soft">
+            <div class="border-b border-slate-200 p-5">
+              <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h2 class="font-semibold text-slate-900">Projects</h2>
+                  <p class="text-sm text-slate-500">Filter projects by company, status or search text.</p>
+                </div>
+
+                <div class="flex flex-col gap-2 sm:flex-row">
+                  <input x-model="projectSearch"
+                         type="search"
+                         placeholder="Search projects..."
+                         class="rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500">
+
+                  <select x-model="projectStatus"
+                          class="rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none">
+                    <option value="">All Statuses</option>
+                    <option value="PLANNED">Planned</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="ON_HOLD">On Hold</option>
+                  </select>
+
+                  <select x-model="projectCompany"
+                          class="rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none">
+                    <option value="">All Companies</option>
+                    <template x-for="company in companies" :key="company.id">
+                      <option :value="company.id" x-text="company.name.trim()"></option>
+                    </template>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+                  <tr>
+                    <th class="px-5 py-3">Project</th>
+                    <th class="px-5 py-3">Company</th>
+                    <th class="px-5 py-3">Status</th>
+                    <th class="px-5 py-3">Timeline</th>
+                    <th class="px-5 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <template x-for="project in filteredProjects()" :key="project.id">
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-5 py-4">
+                        <div class="font-medium text-slate-900" x-text="project.name"></div>
+                        <div class="mt-1 max-w-md truncate text-xs text-slate-500"
+                             x-text="project.description || 'No description'"></div>
+                      </td>
+                      <td class="px-5 py-4 text-slate-600" x-text="companyName(project.companyId)"></td>
+                      <td class="px-5 py-4">
+                        <span class="rounded-full px-2.5 py-1 text-xs font-medium"
+                              :class="statusClass(project.status)"
+                              x-text="formatStatus(project.status)"></span>
+                      </td>
+                      <td class="px-5 py-4 text-xs text-slate-500">
+                        <span x-text="project.startDate || '—'"></span>
+                        <span> → </span>
+                        <span x-text="project.endDate || '—'"></span>
+                      </td>
+                      <td class="px-5 py-4 text-right">
+                        <button @click="openProject(project)"
+                                class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-100">
+                          Details
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <div x-show="filteredProjects().length === 0" class="p-8 text-center text-sm text-slate-500">
+              No projects match your filters.
+            </div>
+          </div>
+        </section>
+
+        <!-- Details -->
+        <section x-show="tab === 'details'" class="mt-6">
+          <div class="rounded-2xl bg-white shadow-soft">
+            <div class="border-b border-slate-200 p-5">
+              <h2 class="font-semibold text-slate-900">Project Details</h2>
+              <p class="text-sm text-slate-500">Technology, team size, budget and client information.</p>
+            </div>
+
+            <div class="grid gap-4 p-5 md:grid-cols-2">
+              <template x-for="detail in projectDetails" :key="detail.id">
+                <article class="rounded-xl border border-slate-200 p-5">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <p class="text-xs uppercase tracking-wide text-slate-400">Project</p>
+                      <h3 class="mt-1 font-semibold text-slate-900"
+                          x-text="projectName(detail.projectId)"></h3>
+                    </div>
+                    <span class="rounded-lg bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+                      Detail
+                    </span>
+                  </div>
+
+                  <dl class="mt-5 grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <dt class="text-xs text-slate-400">Technology</dt>
+                      <dd class="mt-1 font-medium text-slate-700" x-text="detail.technology"></dd>
+                    </div>
+                    <div>
+                      <dt class="text-xs text-slate-400">Team Size</dt>
+                      <dd class="mt-1 font-medium text-slate-700" x-text="detail.teamSize"></dd>
+                    </div>
+                    <div>
+                      <dt class="text-xs text-slate-400">Budget</dt>
+                      <dd class="mt-1 font-medium text-slate-700" x-text="formatCurrency(detail.budget)"></dd>
+                    </div>
+                    <div>
+                      <dt class="text-xs text-slate-400">Client</dt>
+                      <dd class="mt-1 font-medium text-slate-700" x-text="detail.clientName"></dd>
+                    </div>
+                  </dl>
+
+                  <div class="mt-5 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
+                    <span class="font-medium">Notes:</span>
+                    <span x-text="detail.notes || '—'"></span>
+                  </div>
+                </article>
+              </template>
+            </div>
+
+            <div x-show="projectDetails.length === 0" class="p-8 text-center text-sm text-slate-500">
+              No project details available.
+            </div>
+          </div>
+        </section>
+      </div>
+    </template>
+  </main>
+
+  <!-- Company modal -->
+  <div x-show="companyModal"
+       x-cloak
+       @keydown.escape.window="companyModal=false"
+       class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+       @click.self="companyModal=false">
+
+    <div class="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      <template x-if="selectedCompany">
+        <div>
+          <div class="flex items-start justify-between border-b border-slate-200 p-6">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900" x-text="selectedCompany.name.trim()"></h2>
+              <p class="mt-1 text-sm text-slate-500">
+                <span x-text="selectedCompany.industry"></span>
+                ·
+                <span x-text="selectedCompany.location"></span>
+              </p>
+            </div>
+            <button @click="companyModal=false" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
+          </div>
+
+          <div class="p-6">
+            <h3 class="mb-3 font-semibold text-slate-900">Projects</h3>
+
+            <div class="space-y-3">
+              <template x-for="project in companyProjects(selectedCompany.id)" :key="project.id">
+                <button @click="openProject(project)"
+                        class="block w-full rounded-xl border border-slate-200 p-4 text-left hover:border-blue-300 hover:bg-blue-50">
+                  <div class="flex items-center justify-between gap-3">
+                    <span class="font-medium text-slate-900" x-text="project.name"></span>
+                    <span class="rounded-full px-2 py-1 text-xs"
+                          :class="statusClass(project.status)"
+                          x-text="formatStatus(project.status)"></span>
+                  </div>
+                  <p class="mt-1 text-xs text-slate-500" x-text="project.description || 'No description'"></p>
+                </button>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Project modal -->
+  <div x-show="projectModal"
+       x-cloak
+       @keydown.escape.window="projectModal=false"
+       class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+       @click.self="projectModal=false">
+
+    <div class="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      <template x-if="selectedProject">
+        <div>
+          <div class="flex items-start justify-between border-b border-slate-200 p-6">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-slate-400"
+                 x-text="companyName(selectedProject.companyId)"></p>
+              <h2 class="mt-1 text-xl font-bold text-slate-900" x-text="selectedProject.name"></h2>
+              <div class="mt-2">
+                <span class="rounded-full px-2.5 py-1 text-xs font-medium"
+                      :class="statusClass(selectedProject.status)"
+                      x-text="formatStatus(selectedProject.status)"></span>
+              </div>
+            </div>
+            <button @click="projectModal=false" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
+          </div>
+
+          <div class="space-y-6 p-6">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">Description</h3>
+              <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600"
+                 x-text="selectedProject.description || 'No description available.'"></p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div class="rounded-xl bg-slate-50 p-4">
+                <p class="text-xs text-slate-400">Start Date</p>
+                <p class="mt-1 font-medium" x-text="selectedProject.startDate || '—'"></p>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-4">
+                <p class="text-xs text-slate-400">End Date</p>
+                <p class="mt-1 font-medium" x-text="selectedProject.endDate || '—'"></p>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-4">
+                <p class="text-xs text-slate-400">Details</p>
+                <p class="mt-1 font-medium" x-text="projectDetailCount(selectedProject.id)"></p>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="mb-3 text-sm font-semibold text-slate-900">Project Details</h3>
+
+              <template x-if="projectDetailCount(selectedProject.id) === 0">
+                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                  No project detail record exists for this project.
+                </p>
+              </template>
+
+              <div class="space-y-3">
+                <template x-for="detail in projectDetailsFor(selectedProject.id)" :key="detail.id">
+                  <div class="rounded-xl border border-slate-200 p-4">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <p class="text-xs text-slate-400">Technology</p>
+                        <p class="mt-1 text-sm font-medium" x-text="detail.technology"></p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-slate-400">Team Size</p>
+                        <p class="mt-1 text-sm font-medium" x-text="detail.teamSize"></p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-slate-400">Budget</p>
+                        <p class="mt-1 text-sm font-medium" x-text="formatCurrency(detail.budget)"></p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-slate-400">Client</p>
+                        <p class="mt-1 text-sm font-medium" x-text="detail.clientName"></p>
+                      </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600">
+                      <strong>Notes:</strong>
+                      <span x-text="detail.notes || '—'"></span>
+                    </p>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script src="./assets/app.js"></script>
+</body>
+</html>
