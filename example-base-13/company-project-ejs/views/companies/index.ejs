@@ -1,0 +1,39 @@
+<%- include("../partials/header", { title: "Companies" }) %>
+
+<div class="page-header">
+  <div>
+    <h1>Companies</h1>
+    <p>CRUD for company records.</p>
+  </div>
+  <a class="btn" href="/companies/new">+ New Company</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th><th>Industry</th><th>Location</th><th>Projects</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% companies.forEach(company => { %>
+    <tr>
+      <td><a href="/companies/<%= company.id %>"><%= company.name %></a></td>
+      <td><%= company.industry || "-" %></td>
+      <td><%= company.location || "-" %></td>
+      <td><%= projects.filter(p => p.companyId === company.id).length %></td>
+      <td class="actions">
+        <a href="/companies/<%= company.id %>/edit">Edit</a>
+        <form method="post" action="/companies/<%= company.id %>?_method=DELETE" onsubmit="return confirm('Delete this company and its projects?')">
+          <button class="link-danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<% if (!companies.length) { %>
+  <div class="empty">No companies found.</div>
+<% } %>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,47 @@
+<%- include("../partials/header", { title: mode === "create" ? "New Project Detail" : "Edit Project Detail" }) %>
+
+<div class="form-card">
+  <h1><%= mode === "create" ? "New Project Detail" : "Edit Project Detail" %></h1>
+
+  <form method="post" action="<%= mode === 'create' ? '/project-details' : '/project-details/' + detail.id + '?_method=PUT' %>">
+    <label>Project
+      <select name="projectId" required>
+        <option value="">Select project</option>
+        <% projects.forEach(project => { %>
+          <option value="<%= project.id %>" <%= detail.projectId === project.id ? "selected" : "" %>>
+            <%= project.name %>
+          </option>
+        <% }) %>
+      </select>
+    </label>
+
+    <label>Technology
+      <input name="technology" value="<%= detail.technology || '' %>" placeholder="Java, Spring Boot, React">
+    </label>
+
+    <div class="two-col">
+      <label>Team Size
+        <input type="number" min="0" name="teamSize" value="<%= detail.teamSize ?? 0 %>">
+      </label>
+
+      <label>Budget
+        <input type="number" min="0" step="0.01" name="budget" value="<%= detail.budget ?? 0 %>">
+      </label>
+    </div>
+
+    <label>Client Name
+      <input name="clientName" value="<%= detail.clientName || '' %>">
+    </label>
+
+    <label>Notes
+      <textarea name="notes" rows="5"><%= detail.notes || '' %></textarea>
+    </label>
+
+    <div class="form-actions">
+      <a class="btn secondary" href="/project-details">Cancel</a>
+      <button class="btn" type="submit">Save</button>
+    </div>
+  </form>
+</div>
+
+<%- include("../partials/footer") %>

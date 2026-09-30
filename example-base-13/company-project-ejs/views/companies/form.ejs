@@ -1,0 +1,26 @@
+<%- include("../partials/header", { title: mode === "create" ? "New Company" : "Edit Company" }) %>
+
+<div class="form-card">
+  <h1><%= mode === "create" ? "New Company" : "Edit Company" %></h1>
+
+  <form method="post" action="<%= mode === 'create' ? '/companies' : '/companies/' + company.id + '?_method=PUT' %>">
+    <label>Name
+      <input name="name" value="<%= company.name || '' %>" required>
+    </label>
+
+    <label>Industry
+      <input name="industry" value="<%= company.industry || '' %>">
+    </label>
+
+    <label>Location
+      <input name="location" value="<%= company.location || '' %>">
+    </label>
+
+    <div class="form-actions">
+      <a class="btn secondary" href="/companies">Cancel</a>
+      <button class="btn" type="submit">Save</button>
+    </div>
+  </form>
+</div>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,23 @@
+<%- include("partials/header", { title: "Dashboard" }) %>
+
+<section class="hero">
+  <h1>Company & Project Manager</h1>
+  <p>CRUD application using Node.js, Express, EJS and a JSON data store.</p>
+</section>
+
+<div class="cards">
+  <a class="card" href="/companies">
+    <h2>Companies</h2>
+    <p>Manage company records.</p>
+  </a>
+  <a class="card" href="/projects">
+    <h2>Projects</h2>
+    <p>Manage projects and their company relationships.</p>
+  </a>
+  <a class="card" href="/project-details">
+    <h2>Project Details</h2>
+    <p>Manage project technology, team, budget and notes.</p>
+  </a>
+</div>
+
+<%- include("partials/footer") %>

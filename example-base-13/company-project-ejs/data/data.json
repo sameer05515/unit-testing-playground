@@ -1,0 +1,35 @@
+{
+  "companies": [
+    {
+      "id": "cmp-001",
+      "name": "ABC Technologies",
+      "industry": "Information Technology",
+      "location": "Gurugram",
+      "createdAt": "2026-09-30T05:00:00.000Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "prj-001",
+      "companyId": "cmp-001",
+      "name": "Employee Management System",
+      "description": "Internal employee management application",
+      "status": "IN_PROGRESS",
+      "startDate": "2026-09-01",
+      "endDate": "2026-12-31",
+      "createdAt": "2026-09-30T05:00:00.000Z"
+    }
+  ],
+  "projectDetails": [
+    {
+      "id": "dtl-001",
+      "projectId": "prj-001",
+      "technology": "Java, Spring Boot, React",
+      "teamSize": 5,
+      "budget": 1500000,
+      "clientName": "ABC Technologies",
+      "notes": "Phase 1 implementation",
+      "createdAt": "2026-09-30T05:00:00.000Z"
+    }
+  ]
+}

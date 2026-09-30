@@ -1,0 +1,50 @@
+<%- include("../partials/header", { title: mode === "create" ? "New Project" : "Edit Project" }) %>
+
+<div class="form-card">
+  <h1><%= mode === "create" ? "New Project" : "Edit Project" %></h1>
+
+  <form method="post" action="<%= mode === 'create' ? '/projects' : '/projects/' + project.id + '?_method=PUT' %>">
+    <label>Company
+      <select name="companyId" required>
+        <option value="">Select company</option>
+        <% companies.forEach(company => { %>
+          <option value="<%= company.id %>" <%= project.companyId === company.id ? "selected" : "" %>>
+            <%= company.name %>
+          </option>
+        <% }) %>
+      </select>
+    </label>
+
+    <label>Project Name
+      <input name="name" value="<%= project.name || '' %>" required>
+    </label>
+
+    <label>Description
+      <textarea name="description" rows="4"><%= project.description || '' %></textarea>
+    </label>
+
+    <label>Status
+      <select name="status">
+        <% ["PLANNED", "IN_PROGRESS", "COMPLETED", "ON_HOLD"].forEach(status => { %>
+          <option value="<%= status %>" <%= project.status === status ? "selected" : "" %>><%= status %></option>
+        <% }) %>
+      </select>
+    </label>
+
+    <div class="two-col">
+      <label>Start Date
+        <input type="date" name="startDate" value="<%= project.startDate || '' %>">
+      </label>
+      <label>End Date
+        <input type="date" name="endDate" value="<%= project.endDate || '' %>">
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <a class="btn secondary" href="/projects">Cancel</a>
+      <button class="btn" type="submit">Save</button>
+    </div>
+  </form>
+</div>
+
+<%- include("../partials/footer") %>

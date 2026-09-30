@@ -1,0 +1,26 @@
+<%- include("../partials/header", { title: company.name }) %>
+
+<div class="page-header">
+  <div>
+    <h1><%= company.name %></h1>
+    <p><%= company.industry || "No industry" %> · <%= company.location || "No location" %></p>
+  </div>
+  <a class="btn" href="/companies/<%= company.id %>/edit">Edit Company</a>
+</div>
+
+<h2>Projects</h2>
+<table>
+  <thead><tr><th>Name</th><th>Status</th><th>Dates</th><th>Action</th></tr></thead>
+  <tbody>
+  <% projects.forEach(project => { %>
+    <tr>
+      <td><a href="/projects/<%= project.id %>"><%= project.name %></a></td>
+      <td><span class="badge"><%= project.status %></span></td>
+      <td><%= project.startDate || "-" %> → <%= project.endDate || "-" %></td>
+      <td><a href="/projects/<%= project.id %>">View</a></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<%- include("../partials/footer") %>

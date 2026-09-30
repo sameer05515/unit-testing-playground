@@ -1,0 +1,40 @@
+<%- include("../partials/header", { title: "Projects" }) %>
+
+<div class="page-header">
+  <div>
+    <h1>Projects</h1>
+    <p>Projects are linked to a company.</p>
+  </div>
+  <a class="btn" href="/projects/new">+ New Project</a>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Name</th><th>Company</th><th>Status</th><th>Details</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  <% projects.forEach(project => {
+       const company = companies.find(c => c.id === project.companyId);
+       const detailCount = details.filter(d => d.projectId === project.id).length;
+  %>
+    <tr>
+      <td><a href="/projects/<%= project.id %>"><%= project.name %></a></td>
+      <td><%= company ? company.name : "Unknown" %></td>
+      <td><span class="badge"><%= project.status %></span></td>
+      <td><%= detailCount %></td>
+      <td class="actions">
+        <a href="/projects/<%= project.id %>/edit">Edit</a>
+        <form method="post" action="/projects/<%= project.id %>?_method=DELETE" onsubmit="return confirm('Delete this project and its details?')">
+          <button class="link-danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<% if (!projects.length) { %>
+  <div class="empty">No projects found.</div>
+<% } %>
+
+<%- include("../partials/footer") %>

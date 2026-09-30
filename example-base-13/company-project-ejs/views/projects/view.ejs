@@ -1,0 +1,35 @@
+<%- include("../partials/header", { title: project.name }) %>
+
+<div class="page-header">
+  <div>
+    <h1><%= project.name %></h1>
+    <p><%= company ? company.name : "Unknown Company" %> · <span class="badge"><%= project.status %></span></p>
+  </div>
+  <a class="btn" href="/projects/<%= project.id %>/edit">Edit Project</a>
+</div>
+
+<div class="detail-grid">
+  <div><strong>Description</strong><p><%= project.description || "-" %></p></div>
+  <div><strong>Start</strong><p><%= project.startDate || "-" %></p></div>
+  <div><strong>End</strong><p><%= project.endDate || "-" %></p></div>
+</div>
+
+<h2>Project Details</h2>
+<table>
+  <thead><tr><th>Technology</th><th>Team Size</th><th>Budget</th><th>Client</th><th>Notes</th></tr></thead>
+  <tbody>
+  <% details.forEach(detail => { %>
+    <tr>
+      <td><%= detail.technology %></td>
+      <td><%= detail.teamSize %></td>
+      <td>₹<%= Number(detail.budget).toLocaleString("en-IN") %></td>
+      <td><%= detail.clientName %></td>
+      <td><%= detail.notes || "-" %></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+
+<a class="btn" href="/project-details/new">+ Add Project Detail</a>
+
+<%- include("../partials/footer") %>
