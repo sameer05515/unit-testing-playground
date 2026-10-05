@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self';script-src 'self';style-src 'self'">
+<title>Electron REST API Client V1</title><link rel="stylesheet" href="./styles.css"></head>
+<body>
+<header><b>⚡ REST Client</b><small>V1</small></header>
+<main>
+<section class="request">
+<div class="requestline">
+<select id="method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option></select>
+<input id="url" value="https://jsonplaceholder.typicode.com/posts/1" placeholder="Request URL">
+<button id="send" class="send">Send</button>
+</div>
+<div class="title"><span>Headers</span><button id="add">+ Add Header</button></div>
+<div id="headers"></div>
+<div class="title"><span>Request Body</span><small>JSON</small></div>
+<textarea id="body" placeholder='{"name":"Prem"}'></textarea>
+</section>
+<section class="response">
+<div class="responseTop"><b>Response</b><span id="status">No request</span><span id="meta"></span></div>
+<div class="tabs"><button id="bodyTab" class="active">Body</button><button id="headersTab">Headers</button></div>
+<pre id="responseBody">Send a request to see the response.</pre>
+<pre id="responseHeaders" class="hidden"></pre>
+</section>
+</main>
+<footer><span id="message">Ready</span><span>Ctrl + Enter → Send</span></footer>
+<script src="./renderer.js"></script></body></html>
