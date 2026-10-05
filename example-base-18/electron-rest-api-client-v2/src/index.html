@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self';script-src 'self';style-src 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electron REST API Client V2</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">⚡ REST Client</div><span class="version">V2</span>
+  <div class="top-actions">
+    <button id="newBtn">＋ New</button>
+    <button id="saveBtn">💾 Save</button>
+    <button id="importBtn">↓ Import</button>
+    <button id="exportBtn">↑ Export</button>
+    <button id="themeBtn">☀</button>
+  </div>
+</header>
+
+<div class="tabs" id="tabs"></div>
+
+<main class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-title"><span>Collections</span><button id="newCollectionBtn">＋</button></div>
+    <div id="collections" class="collections"></div>
+    <div class="history-title">History</div>
+    <div id="history" class="history"></div>
+  </aside>
+
+  <section class="workspace">
+    <div class="request-line">
+      <select id="method">
+        <option>GET</option><option>POST</option><option>PUT</option>
+        <option>PATCH</option><option>DELETE</option><option>HEAD</option>
+      </select>
+      <input id="url" value="https://jsonplaceholder.typicode.com/posts/1" placeholder="https://api.example.com/users">
+      <button id="sendBtn" class="send">Send</button>
+    </div>
+
+    <div class="request-tabs">
+      <button data-tab="params">Params</button>
+      <button data-tab="headers" class="active">Headers</button>
+      <button data-tab="body">Body</button>
+      <button data-tab="auth">Authorization</button>
+    </div>
+
+    <section id="paramsTab" class="tab-content hidden">
+      <div class="section-head"><span>Query Parameters</span><button id="addParamBtn">＋ Add Parameter</button></div>
+      <div id="params"></div>
+    </section>
+
+    <section id="headersTab" class="tab-content">
+      <div class="section-head"><span>Headers</span><button id="addHeaderBtn">＋ Add Header</button></div>
+      <div id="headers"></div>
+    </section>
+
+    <section id="bodyTab" class="tab-content hidden">
+      <div class="section-head">
+        <span>Request Body</span>
+        <select id="bodyType"><option value="json">JSON</option><option value="text">Text</option></select>
+      </div>
+      <textarea id="requestBody" spellcheck="false" placeholder='{
+  "name": "Prem",
+  "role": "developer"
+}'></textarea>
+      <button id="formatJsonBtn" class="small-btn">Format JSON</button>
+    </section>
+
+    <section id="authTab" class="tab-content hidden">
+      <div class="auth-grid">
+        <label>Auth Type<select id="authType">
+          <option value="none">No Auth</option>
+          <option value="bearer">Bearer Token</option>
+          <option value="basic">Basic Auth</option>
+        </select></label>
+        <div id="bearerBox"><label>Token<input id="bearerToken" type="password" placeholder="token"></label></div>
+        <div id="basicBox" class="hidden">
+          <label>Username<input id="basicUser"></label>
+          <label>Password<input id="basicPassword" type="password"></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="response-section">
+      <div class="response-head">
+        <div><strong>Response</strong><span id="responseStatus">No request</span></div>
+        <div><span id="duration">-</span><span id="size">-</span></div>
+      </div>
+      <div class="response-tabs">
+        <button id="responseBodyTab" class="active">Body</button>
+        <button id="responseHeadersTab">Headers</button>
+      </div>
+      <pre id="responseBody">Send a request to see the response.</pre>
+      <pre id="responseHeaders" class="hidden"></pre>
+    </section>
+  </section>
+</main>
+
+<footer><span id="message">Ready</span><span>Ctrl + Enter → Send | Ctrl + S → Save</span></footer>
+<script src="./renderer.js"></script>
+</body>
+</html>
