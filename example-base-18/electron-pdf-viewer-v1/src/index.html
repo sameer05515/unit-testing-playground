@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; worker-src 'self' blob:;"
+  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electron PDF Viewer</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <header class="toolbar">
+    <div class="toolbar-left">
+      <button id="openBtn" title="Open PDF">📂 Open</button>
+      <span id="fileName" class="file-name">No PDF opened</span>
+    </div>
+
+    <div class="toolbar-center">
+      <button id="prevBtn" title="Previous page">◀</button>
+
+      <input
+        id="pageNumber"
+        type="number"
+        min="1"
+        value="1"
+        title="Page number"
+      />
+
+      <span id="pageCount">/ 0</span>
+
+      <button id="nextBtn" title="Next page">▶</button>
+    </div>
+
+    <div class="toolbar-right">
+      <button id="zoomOutBtn" title="Zoom out">−</button>
+      <span id="zoomValue">100%</span>
+      <button id="zoomInBtn" title="Zoom in">+</button>
+      <button id="fitBtn" title="Fit page width">Fit Width</button>
+    </div>
+  </header>
+
+  <main id="viewerContainer" class="viewer-container">
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">📄</div>
+      <h1>PDF Viewer</h1>
+      <p>Open a PDF file to start reading.</p>
+      <button id="emptyOpenBtn">Open PDF</button>
+    </div>
+
+    <canvas id="pdfCanvas" hidden></canvas>
+  </main>
+
+  <footer class="status-bar">
+    <span id="status">Ready</span>
+  </footer>
+
+  <script type="module" src="./renderer.js"></script>
+</body>
+</html>

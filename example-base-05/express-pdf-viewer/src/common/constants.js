@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const GIT_REPO = process.env.GIT_REPO || 'E:/GIT';
+const GIT_REPO = process.env.GIT_REPO || 'D:/GIT';
 
 const CgptProjectRoot =
   process.env.CGPT_PROJECT_ROOT ||
