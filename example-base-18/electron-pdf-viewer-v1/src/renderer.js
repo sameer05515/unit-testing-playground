@@ -1,7 +1,7 @@
 import * as pdfjsLib from "../node_modules/pdfjs-dist/build/pdf.mjs";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "../node_modules/pdfjs-dist/build/pdf.worker.mjs";
+  new URL("../node_modules/pdfjs-dist/build/pdf.worker.mjs", import.meta.url).toString();
 
 const openBtn = document.getElementById("openBtn");
 const emptyOpenBtn = document.getElementById("emptyOpenBtn");
@@ -26,27 +26,25 @@ let currentPage = 1;
 let scale = 1.0;
 
 async function openPdf() {
-  const filePath = await window.electronAPI.openPdf();
+  const pdfFile = await window.electronAPI.openPdf();
 
-  if (!filePath) {
+  if (!pdfFile) {
     return;
   }
 
   try {
     status.textContent = "Loading PDF...";
 
-    const response = await fetch(`file://${filePath.replace(/\\/g, "/")}`);
-    const buffer = await response.arrayBuffer();
-
+    // The PDF is read by Electron's main process and transferred to the
+    // renderer. This avoids file:// fetch/CORS issues on Windows.
     pdfDocument = await pdfjsLib.getDocument({
-      data: new Uint8Array(buffer)
+      data: new Uint8Array(pdfFile.data)
     }).promise;
 
     currentPage = 1;
     scale = 1.0;
 
-    const name = filePath.split(/[\\/]/).pop();
-    fileName.textContent = name;
+    fileName.textContent = pdfFile.fileName;
 
     pageCount.textContent = `/ ${pdfDocument.numPages}`;
     pageNumber.max = pdfDocument.numPages;

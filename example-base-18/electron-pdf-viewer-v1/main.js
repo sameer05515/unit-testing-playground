@@ -1,4 +1,5 @@
 const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const fs = require("fs/promises");
 const path = require("path");
 
 let mainWindow;
@@ -12,7 +13,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      sandbox: false
     }
   });
 
@@ -26,16 +28,25 @@ app.whenReady().then(() => {
     const result = await dialog.showOpenDialog(mainWindow, {
       title: "Open PDF",
       properties: ["openFile"],
-      filters: [
-        { name: "PDF Files", extensions: ["pdf"] }
-      ]
+      filters: [{ name: "PDF Files", extensions: ["pdf"] }]
     });
 
     if (result.canceled || result.filePaths.length === 0) {
       return null;
     }
 
-    return result.filePaths[0];
+    const filePath = result.filePaths[0];
+
+    try {
+      const data = await fs.readFile(filePath);
+      return {
+        filePath,
+        fileName: path.basename(filePath),
+        data
+      };
+    } catch (error) {
+      throw new Error(`Unable to read PDF: ${error.message}`);
+    }
   });
 
   app.on("activate", () => {
