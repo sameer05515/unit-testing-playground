@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; worker-src 'self' blob:;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electron PDF Viewer V2</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="toolbar">
+  <div class="toolbar-left">
+    <button id="openBtn" class="primary">📂 Open</button>
+    <button id="recentBtn">🕘 Recent</button>
+    <span id="fileName" class="file-name">No PDF opened</span>
+  </div>
+  <div class="toolbar-center">
+    <button id="prevBtn">◀</button>
+    <input id="pageNumber" type="number" min="1" value="1">
+    <span id="pageCount">/ 0</span>
+    <button id="nextBtn">▶</button>
+  </div>
+  <div class="toolbar-right">
+    <button id="zoomOutBtn">−</button>
+    <span id="zoomValue">100%</span>
+    <button id="zoomInBtn">+</button>
+    <button id="fitBtn">Fit Width</button>
+    <button id="themeBtn" title="Toggle theme">☀</button>
+  </div>
+</header>
+
+<div id="searchBar" class="search-bar hidden">
+  <input id="searchInput" placeholder="Search in PDF..." autocomplete="off">
+  <span id="searchInfo">0 results</span>
+  <button id="prevMatchBtn">▲</button>
+  <button id="nextMatchBtn">▼</button>
+  <button id="closeSearchBtn">✕</button>
+</div>
+
+<main class="app">
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header"><span>Pages</span><button id="sidebarBtn">☰</button></div>
+    <div id="thumbnails" class="thumbnails"></div>
+  </aside>
+
+  <section class="viewer-area">
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">📄</div>
+      <h1>Electron PDF Viewer</h1>
+      <p>Open a PDF to start reading.</p>
+      <button id="emptyOpenBtn" class="primary">Open PDF</button>
+    </div>
+    <div id="viewerContainer" class="viewer-container" hidden>
+      <canvas id="pdfCanvas"></canvas>
+    </div>
+  </section>
+
+  <aside id="recentPanel" class="recent-panel hidden">
+    <div class="recent-header"><strong>Recent PDFs</strong><button id="closeRecentBtn">✕</button></div>
+    <div id="recentList"></div>
+    <button id="clearRecentBtn" class="clear-btn">Clear Recent</button>
+  </aside>
+</main>
+
+<footer class="status-bar">
+  <span id="status">Ready</span>
+  <span>Ctrl + F Search</span>
+</footer>
+
+<script type="module" src="./renderer.js"></script>
+</body>
+</html>

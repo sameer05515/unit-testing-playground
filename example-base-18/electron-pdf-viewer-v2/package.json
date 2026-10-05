@@ -1,0 +1,9 @@
+{
+  "name": "electron-pdf-viewer-v2",
+  "version": "2.0.0",
+  "description": "Desktop PDF viewer built with Electron and PDF.js",
+  "main": "main.js",
+  "scripts": { "start": "electron ." },
+  "devDependencies": { "electron": "38.2.0" },
+  "dependencies": { "pdfjs-dist": "4.10.38" }
+}
