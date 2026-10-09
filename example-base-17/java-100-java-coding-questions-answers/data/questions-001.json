@@ -1,6 +1,6 @@
 [
   {
-    "id": 101,
+    "id": "129ec3f4-d2d2-47fd-ac2f-b47edfe585a1",
     "category": "Collections and HashMap",
     "title": "Implement a thread-safe word frequency counter",
     "question": "Write a Java method that counts word occurrences in a text using ConcurrentHashMap and LongAdder.",
@@ -15,7 +15,7 @@
     "complexity": "Expected O(n) time for n words; O(u) space for u distinct words."
   },
   {
-    "id": 102,
+    "id": "04d1c0fc-a310-43e1-841d-da184260f283",
     "category": "Java 8 and Stream API",
     "title": "Find the third-highest distinct salary",
     "question": "Given a list of employees, find the third-highest distinct salary using Java Streams.",
@@ -30,7 +30,7 @@
     "complexity": "O(n log n) time due to sorting; O(n) additional space."
   },
   {
-    "id": 103,
+    "id": "25d3eee0-6b08-40f6-98dc-aa35a6eb5ddb",
     "category": "String Coding Questions",
     "title": "Check whether two strings are isomorphic",
     "question": "Write a Java program to determine whether two strings are isomorphic: each character in one string must map consistently to one character in the other.",
@@ -45,7 +45,7 @@
     "complexity": "O(n) time and O(k) space, where k is the number of distinct characters."
   },
   {
-    "id": 104,
+    "id": "60de8c6a-e7d2-4651-899c-d6b581b05b45",
     "category": "Array Coding Questions",
     "title": "Find the longest subarray with sum K",
     "question": "Given an integer array that may contain negative values, find the length of the longest contiguous subarray whose sum equals K.",
@@ -60,7 +60,7 @@
     "complexity": "Expected O(n) time and O(n) space."
   },
   {
-    "id": 105,
+    "id": "06dc24ba-8037-4fb9-962b-a4cbfd7d932a",
     "category": "Searching, Sorting, and Algorithms",
     "title": "Search in a row-wise and column-wise sorted matrix",
     "question": "Find a target in a matrix where every row and every column is sorted in ascending order.",
@@ -75,7 +75,7 @@
     "complexity": "O(rows + columns) time and O(1) extra space."
   },
   {
-    "id": 106,
+    "id": "793842f8-4d57-4377-a619-54ed754ca780",
     "category": "Linked Lists, Stacks, and Queues",
     "title": "Merge two sorted singly linked lists",
     "question": "Merge two sorted linked lists into one sorted list by reusing existing nodes.",
@@ -89,7 +89,7 @@
     "complexity": "O(m + n) time and O(1) extra space, excluding the reused nodes."
   },
   {
-    "id": 107,
+    "id": "1e8bfc7e-5c95-4b9c-ba7a-12520528d3d0",
     "category": "Searching, Sorting, and Algorithms",
     "title": "Find the minimum number of coins for an amount",
     "question": "Given coin denominations and an amount, find the minimum number of coins needed. Assume unlimited coins and return -1 if the amount cannot be formed.",
@@ -104,7 +104,7 @@
     "complexity": "O(amount × numberOfCoins) time and O(amount) space."
   },
   {
-    "id": 108,
+    "id": "6bccd179-5d2a-43ab-8013-aa5bb330d1c7",
     "category": "Java 8 and Stream API",
     "title": "Partition employees into salary bands",
     "question": "Using Java Streams, group employees into two groups: salary at least a threshold and salary below the threshold.",
@@ -119,7 +119,7 @@
     "complexity": "O(n) time and O(n) space for the collected lists."
   },
   {
-    "id": 109,
+    "id": "bff006e4-0646-409f-9d8b-ef369326b20c",
     "category": "String Coding Questions",
     "title": "Validate balanced brackets of three types",
     "question": "Write a Java program to validate whether (), {}, and [] are correctly balanced and nested.",
@@ -133,7 +133,7 @@
     "complexity": "O(n) time and O(n) space."
   },
   {
-    "id": 110,
+    "id": "3547dcb2-71db-4ca6-b325-7323e50b0b38",
     "category": "Basic Java Programs",
     "title": "Check whether a number is a power of two",
     "question": "Write a Java method that checks whether a positive integer is a power of two.",

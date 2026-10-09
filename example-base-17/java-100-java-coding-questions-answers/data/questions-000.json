@@ -4,699 +4,699 @@
     "question": "Reverse a string",
     "answer": "static String reverse(String s) { return new StringBuilder(s).reverse().toString(); }",
     "explanation": "StringBuilder reverses the UTF-16 char sequence in O(n) time.",
-    "id": 1
+    "id": "9281cdc5-81a4-41db-b69c-9deac98323a9"
   },
   {
     "category": "Basic Java Programs",
     "question": "Check whether a string is a palindrome",
     "answer": "static boolean isPalindrome(String s) {\n    String x = s.toLowerCase(Locale.ROOT);\n    for (int i=0,j=x.length()-1; i<j; i++,j--) if (x.charAt(i)!=x.charAt(j)) return false;\n    return true;\n}",
     "explanation": "Case-insensitive; spaces and punctuation are still considered. Normalize them if required.",
-    "id": 2
+    "id": "bdfb8c9f-4077-4889-bbed-7965f51fa979"
   },
   {
     "category": "Basic Java Programs",
     "question": "Check whether a number is prime",
     "answer": "static boolean isPrime(int n) {\n    if (n < 2) return false;\n    if (n % 2 == 0) return n == 2;\n    for (int i=3; i<=n/i; i+=2) if (n%i==0) return false;\n    return true;\n}",
     "explanation": "Tests odd divisors only through sqrt(n), O(√n).",
-    "id": 3
+    "id": "0084c60a-a2f7-4baf-87fb-d8bb1a9fa5fe"
   },
   {
     "category": "Basic Java Programs",
     "question": "Print all prime numbers between 1 and N",
     "answer": "static List<Integer> primesUpTo(int n) {\n    boolean[] composite = new boolean[Math.max(0,n+1)];\n    for (int p=2; p<=n/p; p++) if (!composite[p])\n        for (int j=p*p; j<=n; j+=p) composite[j]=true;\n    List<Integer> out=new ArrayList<>();\n    for(int i=2;i<=n;i++) if(!composite[i]) out.add(i);\n    return out;\n}",
     "explanation": "Sieve of Eratosthenes, approximately O(n log log n).",
-    "id": 4
+    "id": "da2c2922-f6fd-492d-bb41-5d5d6921fd36"
   },
   {
     "category": "Basic Java Programs",
     "question": "Calculate factorial of a number",
     "answer": "static BigInteger factorial(int n) {\n    if(n<0) throw new IllegalArgumentException(\"n must be >= 0\");\n    BigInteger r=BigInteger.ONE;\n    for(int i=2;i<=n;i++) r=r.multiply(BigInteger.valueOf(i));\n    return r;\n}",
     "explanation": "BigInteger prevents integer overflow.",
-    "id": 5
+    "id": "80b5193a-8c3f-462a-b653-6f9dbf924eb2"
   },
   {
     "category": "Basic Java Programs",
     "question": "Generate the Fibonacci series",
     "answer": "static List<Long> fibonacci(int count) {\n    List<Long> out=new ArrayList<>(); long a=0,b=1;\n    for(int i=0;i<count;i++){out.add(a); long next=a+b; a=b; b=next;}\n    return out;\n}",
     "explanation": "Returns the first count terms starting at 0. Long eventually overflows.",
-    "id": 6
+    "id": "f6163e91-92c8-42b4-b74f-171a71f51761"
   },
   {
     "category": "Basic Java Programs",
     "question": "Check whether a number is an Armstrong number",
     "answer": "static boolean isArmstrong(int n) {\n    if(n<0) return false; String s=Integer.toString(n); int p=s.length(); long sum=0;\n    for(char c:s.toCharArray()) sum+=(long)Math.pow(c-'0',p);\n    return sum==n;\n}",
     "explanation": "For example, 153 = 1³ + 5³ + 3³.",
-    "id": 7
+    "id": "e1f441be-976a-449e-b81e-f6344b1844d8"
   },
   {
     "category": "Basic Java Programs",
     "question": "Check whether a number is a palindrome",
     "answer": "static boolean isNumberPalindrome(int n) {\n    if(n<0) return false; int original=n; long rev=0;\n    while(n>0){rev=rev*10+n%10; n/=10;} return rev==original;\n}",
     "explanation": "Negative values are treated as non-palindromes; zero is a palindrome.",
-    "id": 8
+    "id": "9e8dd08f-7e0a-47d8-8599-a7d8de6f9ed9"
   },
   {
     "category": "Basic Java Programs",
     "question": "Swap two numbers without a third variable",
     "answer": "static int[] swap(int a,int b) { a^=b; b^=a; a^=b; return new int[]{a,b}; }",
     "explanation": "XOR works for integers but a temporary variable is usually clearer in production code.",
-    "id": 9
+    "id": "e0a51a15-360a-44f3-8675-2b7f7a30a35d"
   },
   {
     "category": "Basic Java Programs",
     "question": "Find the greatest of three numbers",
     "answer": "static int maxOfThree(int a,int b,int c) { return Math.max(a,Math.max(b,c)); }",
     "explanation": "Uses the standard Math.max method.",
-    "id": 10
+    "id": "5dafc0a4-1b2f-4cb9-928d-7a7b6e5bb110"
   },
   {
     "category": "Basic Java Programs",
     "question": "Sum the digits of a number",
     "answer": "static int sumDigits(int n) {\n    long v=Math.abs((long)n); int sum=0;\n    while(v>0){sum+=(int)(v%10);v/=10;} return sum;\n}",
     "explanation": "Casting to long handles Integer.MIN_VALUE safely; zero returns 0.",
-    "id": 11
+    "id": "c8043fdc-4297-4f4a-ba72-b3ccb7e091f9"
   },
   {
     "category": "Basic Java Programs",
     "question": "Count the digits in a number",
     "answer": "static int countDigits(int n) {\n    long v=Math.abs((long)n); int count=1;\n    while(v>=10){v/=10;count++;} return count;\n}",
     "explanation": "The sign is not counted; zero has one digit.",
-    "id": 12
+    "id": "b12fe4a2-7f5c-4404-9ca8-68fa842682f6"
   },
   {
     "category": "Basic Java Programs",
     "question": "Reverse an integer",
     "answer": "static int reverseInt(int n) {\n    long r=0; while(n!=0){r=r*10+n%10;n/=10;}\n    if(r<Integer.MIN_VALUE||r>Integer.MAX_VALUE) throw new ArithmeticException(\"overflow\");\n    return (int)r;\n}",
     "explanation": "Uses long during reversal and detects int overflow.",
-    "id": 13
+    "id": "6369dc53-3c12-42e1-8b17-8e2e54d157fa"
   },
   {
     "category": "Basic Java Programs",
     "question": "Find GCD and LCM of two numbers",
     "answer": "static long gcd(long a,long b){a=Math.abs(a);b=Math.abs(b);while(b!=0){long r=a%b;a=b;b=r;}return a;}\nstatic long lcm(long a,long b){return a==0||b==0?0:Math.abs((a/gcd(a,b))*b);}",
     "explanation": "Euclid’s algorithm computes GCD. LCM may overflow long for very large values.",
-    "id": 14
+    "id": "430c1bab-f5d9-4e7c-85c3-c1cba6f2f8fe"
   },
   {
     "category": "Basic Java Programs",
     "question": "Convert decimal to binary",
     "answer": "static String toBinary(int n) { return Integer.toBinaryString(n); }",
     "explanation": "Negative integers use Java’s 32-bit two’s-complement representation.",
-    "id": 15
+    "id": "5c873e03-70dd-4433-b977-74de71a777bb"
   },
   {
     "category": "String Coding Questions",
     "question": "Find duplicate characters in a string",
     "answer": "static Set<Character> duplicateChars(String s){\n    Set<Character> seen=new HashSet<>(), dup=new LinkedHashSet<>();\n    for(char c:s.toCharArray()) if(!seen.add(c)) dup.add(c); return dup;\n}",
     "explanation": "LinkedHashSet preserves the order in which duplicates are first detected.",
-    "id": 16
+    "id": "c35abda2-72b2-47e6-9938-d69fa7166fc5"
   },
   {
     "category": "String Coding Questions",
     "question": "Find the first non-repeating character",
     "answer": "static Optional<Character> firstUnique(String s){\n    Map<Character,Integer> m=new LinkedHashMap<>(); for(char c:s.toCharArray()) m.merge(c,1,Integer::sum);\n    return m.entrySet().stream().filter(e->e.getValue()==1).map(Map.Entry::getKey).findFirst();\n}",
     "explanation": "Returns Optional.empty() when every character repeats.",
-    "id": 17
+    "id": "338e4f04-c819-4f66-9f69-c9d8d89ede3a"
   },
   {
     "category": "String Coding Questions",
     "question": "Find the first repeating character",
     "answer": "static Optional<Character> firstRepeating(String s){\n    Set<Character> seen=new HashSet<>(); for(char c:s.toCharArray()) if(!seen.add(c)) return Optional.of(c);\n    return Optional.empty();\n}",
     "explanation": "Scans left-to-right and returns the first character encountered for a second time.",
-    "id": 18
+    "id": "367eebd6-fc7d-4ce8-8810-435f2beb4535"
   },
   {
     "category": "String Coding Questions",
     "question": "Count occurrences of each character",
     "answer": "static Map<Character,Long> charFrequency(String s){\n    Map<Character,Long> m=new LinkedHashMap<>(); for(char c:s.toCharArray()) m.merge(c,1L,Long::sum); return m;\n}",
     "explanation": "Counts Java char values; use codePoints() for full Unicode code-point handling.",
-    "id": 19
+    "id": "a7eb05de-66d3-4b2d-912d-11bd59ea7b01"
   },
   {
     "category": "String Coding Questions",
     "question": "Check whether two strings are anagrams",
     "answer": "static boolean areAnagrams(String a,String b){\n    char[] x=a.replaceAll(\"\\\\s+\",\"\").toLowerCase(Locale.ROOT).toCharArray();\n    char[] y=b.replaceAll(\"\\\\s+\",\"\").toLowerCase(Locale.ROOT).toCharArray();\n    if(x.length!=y.length)return false; Arrays.sort(x);Arrays.sort(y);return Arrays.equals(x,y);\n}",
     "explanation": "Ignores case and whitespace, but not punctuation. O(n log n).",
-    "id": 20
+    "id": "d0072ee1-c147-4df6-ad18-d416d09e2eef"
   },
   {
     "category": "String Coding Questions",
     "question": "Remove duplicate characters from a string",
     "answer": "static String removeDuplicateChars(String s){\n    StringBuilder out=new StringBuilder(); Set<Character> seen=new LinkedHashSet<>();\n    for(char c:s.toCharArray()) if(seen.add(c)) out.append(c); return out.toString();\n}",
     "explanation": "Keeps first occurrences in original order.",
-    "id": 21
+    "id": "ec5d0eeb-b323-4445-bc5e-2bf650f20db9"
   },
   {
     "category": "String Coding Questions",
     "question": "Count vowels and consonants in a string",
     "answer": "static int[] countVowelsConsonants(String s){\n    int v=0,c=0; for(char ch:s.toLowerCase(Locale.ROOT).toCharArray()) if(ch>='a'&&ch<='z'){if(\"aeiou\".indexOf(ch)>=0)v++;else c++;}\n    return new int[]{v,c};\n}",
     "explanation": "Returns {vowels, consonants}; ignores non-English letters, digits, and punctuation.",
-    "id": 22
+    "id": "170cf5ac-406f-43f6-9c43-92d00b6ee73a"
   },
   {
     "category": "String Coding Questions",
     "question": "Reverse each word in a sentence",
     "answer": "static String reverseEachWord(String s){\n    return Arrays.stream(s.split(\" \",-1)).map(w->new StringBuilder(w).reverse().toString()).collect(Collectors.joining(\" \"));\n}",
     "explanation": "Preserves runs of spaces through empty split elements.",
-    "id": 23
+    "id": "8daf0419-977f-4891-b55d-d318d56d393b"
   },
   {
     "category": "String Coding Questions",
     "question": "Reverse the order of words in a sentence",
     "answer": "static String reverseWordOrder(String s){\n    String t=s.trim(); if(t.isEmpty())return \"\"; List<String> words=new ArrayList<>(Arrays.asList(t.split(\"\\\\s+\")));\n    Collections.reverse(words); return String.join(\" \",words);\n}",
     "explanation": "Normalizes whitespace to single spaces.",
-    "id": 24
+    "id": "c22269df-e73e-43f5-8c6a-615e28b5ee78"
   },
   {
     "category": "String Coding Questions",
     "question": "Find the longest word in a sentence",
     "answer": "static Optional<String> longestWord(String s){\n    return Arrays.stream(s.split(\"\\\\s+\")).filter(w->!w.isEmpty()).max(Comparator.comparingInt(String::length));\n}",
     "explanation": "Returns an Optional because the input may contain no words.",
-    "id": 25
+    "id": "04cb1b52-7c8d-4a8d-8ae4-5c0fcbcff2a2"
   },
   {
     "category": "String Coding Questions",
     "question": "Find the longest substring without repeating characters",
     "answer": "static int longestUniqueLength(String s){\n    Map<Character,Integer> last=new HashMap<>(); int start=0,best=0;\n    for(int i=0;i<s.length();i++){char c=s.charAt(i); if(last.containsKey(c))start=Math.max(start,last.get(c)+1); last.put(c,i); best=Math.max(best,i-start+1);} return best;\n}",
     "explanation": "Sliding window, O(n) time. Returns the length.",
-    "id": 26
+    "id": "dbeaf760-a32f-4c0b-9d52-7f66dcede002"
   },
   {
     "category": "String Coding Questions",
     "question": "Find all permutations of a string",
     "answer": "static List<String> permutations(String s){List<String> out=new ArrayList<>(); permute(s.toCharArray(),0,out); return out;}\nstatic void permute(char[] a,int i,List<String> out){if(i==a.length){out.add(new String(a));return;} for(int j=i;j<a.length;j++){char t=a[i];a[i]=a[j];a[j]=t;permute(a,i+1,out);t=a[i];a[i]=a[j];a[j]=t;}}",
     "explanation": "O(n!) outputs; repeated input characters can produce duplicate permutations.",
-    "id": 27
+    "id": "50ae4301-1564-4075-b7ec-fc9afd87601e"
   },
   {
     "category": "String Coding Questions",
     "question": "Check whether one string is a rotation of another",
     "answer": "static boolean isRotation(String a,String b){return a!=null&&b!=null&&a.length()==b.length()&&(a+a).contains(b);}",
     "explanation": "Equal length plus substring-of-doubled-string check.",
-    "id": 28
+    "id": "fa6a0b01-115a-4b4a-a37a-503a838ebe2d"
   },
   {
     "category": "String Coding Questions",
     "question": "Find the most frequent character in a string",
     "answer": "static Optional<Character> mostFrequent(String s){\n    Map<Character,Integer> m=new LinkedHashMap<>(); for(char c:s.toCharArray())m.merge(c,1,Integer::sum);\n    return m.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey);\n}",
     "explanation": "An empty string returns Optional.empty().",
-    "id": 29
+    "id": "1d165c14-1013-4051-b793-c48f0716283d"
   },
   {
     "category": "String Coding Questions",
     "question": "Remove all whitespace from a string",
     "answer": "static String removeWhitespace(String s){return s.replaceAll(\"\\\\s+\",\"\");}",
     "explanation": "For specialized Unicode whitespace requirements, use an explicit character predicate.",
-    "id": 30
+    "id": "7829f84b-8530-49b6-9464-64ecd28464ea"
   },
   {
     "category": "String Coding Questions",
     "question": "Count words in a sentence",
     "answer": "static int countWords(String s){String t=s.trim();return t.isEmpty()?0:t.split(\"\\\\s+\").length;}",
     "explanation": "Treats whitespace sequences as separators.",
-    "id": 31
+    "id": "0adc8b3f-2e15-497c-8a5c-2095fa7b2c8e"
   },
   {
     "category": "String Coding Questions",
     "question": "Find duplicate words in a sentence",
     "answer": "static Set<String> duplicateWords(String s){\n    Map<String,Integer> m=new LinkedHashMap<>(); for(String w:s.toLowerCase(Locale.ROOT).split(\"[^\\\\p{L}\\\\p{N}]+\")) if(!w.isEmpty())m.merge(w,1,Integer::sum);\n    return m.entrySet().stream().filter(e->e.getValue()>1).map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedHashSet::new));\n}",
     "explanation": "Ignores case and punctuation; returns each duplicated word once.",
-    "id": 32
+    "id": "14172833-a7a9-4cec-916e-f41a02860890"
   },
   {
     "category": "String Coding Questions",
     "question": "Compress a string using character counts",
     "answer": "static String compress(String s){\n    StringBuilder out=new StringBuilder(); for(int i=0;i<s.length();){char c=s.charAt(i);int j=i;while(j<s.length()&&s.charAt(j)==c)j++;out.append(c).append(j-i);i=j;} return out.toString();\n}",
     "explanation": "Example: aaabbc → a3b2c1. The compressed form can be longer than the input.",
-    "id": 33
+    "id": "26407987-455f-4691-bd46-12b66507da6c"
   },
   {
     "category": "String Coding Questions",
     "question": "Check whether a string contains only digits",
     "answer": "static boolean onlyDigits(String s){if(s==null||s.isEmpty())return false;for(char c:s.toCharArray())if(!Character.isDigit(c))return false;return true;}",
     "explanation": "Character.isDigit includes Unicode digits. Use ASCII comparisons if required.",
-    "id": 34
+    "id": "82584462-7c19-4fcb-907b-b37a92a348d4"
   },
   {
     "category": "String Coding Questions",
     "question": "Find the longest palindromic substring",
     "answer": "static String longestPalindrome(String s){\n    if(s.isEmpty())return \"\"; int start=0,best=1;\n    for(int i=0;i<s.length();i++){int a=expand(s,i,i),b=expand(s,i,i+1),len=Math.max(a,b);if(len>best){best=len;start=i-(len-1)/2;}}\n    return s.substring(start,start+best);\n}\nstatic int expand(String s,int l,int r){while(l>=0&&r<s.length()&&s.charAt(l)==s.charAt(r)){l--;r++;}return r-l-1;}",
     "explanation": "Expand-around-center algorithm: O(n²) time and O(1) extra space.",
-    "id": 35
+    "id": "b3d850dd-a665-436e-a392-7f14f6a3c2cf"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the largest and smallest elements in an array",
     "answer": "static int[] minMax(int[] a){if(a.length==0)throw new IllegalArgumentException(\"empty array\");int min=a[0],max=a[0];for(int n:a){min=Math.min(min,n);max=Math.max(max,n);}return new int[]{min,max};}",
     "explanation": "One pass: O(n) time, O(1) extra space.",
-    "id": 36
+    "id": "16ca0210-ac82-4f8e-b8f2-4809bf85ea07"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the second-largest element in an array",
     "answer": "static OptionalInt secondLargest(int[] a){int max=0,second=0;boolean hm=false,hs=false;for(int x:a){if(!hm||x>max){if(hm){second=max;hs=true;}max=x;hm=true;}else if(x<max&&(!hs||x>second)){second=x;hs=true;}}return hs?OptionalInt.of(second):OptionalInt.empty();}",
     "explanation": "Returns the second distinct-largest value; OptionalInt.empty() if it does not exist.",
-    "id": 37
+    "id": "e425d8af-e378-4694-a133-416fd9615ca2"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the second-smallest element in an array",
     "answer": "static OptionalInt secondSmallest(int[] a){int min=0,second=0;boolean hm=false,hs=false;for(int x:a){if(!hm||x<min){if(hm){second=min;hs=true;}min=x;hm=true;}else if(x>min&&(!hs||x<second)){second=x;hs=true;}}return hs?OptionalInt.of(second):OptionalInt.empty();}",
     "explanation": "Returns the second distinct-smallest value.",
-    "id": 38
+    "id": "8e6903b6-8405-4271-8f45-47a69d2c51b7"
   },
   {
     "category": "Array Coding Questions",
     "question": "Reverse an array in place",
     "answer": "static void reverse(int[] a){for(int i=0,j=a.length-1;i<j;i++,j--){int t=a[i];a[i]=a[j];a[j]=t;}}",
     "explanation": "Two pointers, O(n) time and O(1) extra space.",
-    "id": 39
+    "id": "26db827b-d61b-44f6-a70d-6e22ff0bdcf2"
   },
   {
     "category": "Array Coding Questions",
     "question": "Sort an array without built-in sorting methods",
     "answer": "static void bubbleSort(int[] a){for(int i=0;i<a.length-1;i++){boolean changed=false;for(int j=0;j<a.length-1-i;j++)if(a[j]>a[j+1]){int t=a[j];a[j]=a[j+1];a[j+1]=t;changed=true;}if(!changed)break;}}",
     "explanation": "Bubble sort: O(n²) worst-case time; early exit helps nearly sorted inputs.",
-    "id": 40
+    "id": "6a237898-ff66-41e2-a761-3dc71eed324f"
   },
   {
     "category": "Array Coding Questions",
     "question": "Remove duplicates from an array",
     "answer": "static int[] unique(int[] a){return Arrays.stream(a).distinct().toArray();}",
     "explanation": "Streams preserve encounter order for an ordered int stream.",
-    "id": 41
+    "id": "77587fa2-ea49-412a-9123-b0d9f718ae41"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find duplicate elements in an array",
     "answer": "static Set<Integer> duplicates(int[] a){Set<Integer> seen=new HashSet<>(),dup=new LinkedHashSet<>();for(int x:a)if(!seen.add(x))dup.add(x);return dup;}",
     "explanation": "Expected O(n) time using hash sets.",
-    "id": 42
+    "id": "d99ca9a0-bfef-415c-940d-b5af4b37c5b7"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the missing number from 1 to N",
     "answer": "static int missingNumber(int[] a,int n){long expected=(long)n*(n+1)/2;for(int x:a)expected-=x;return Math.toIntExact(expected);}",
     "explanation": "Assumes values are distinct and exactly one value from 1..N is missing.",
-    "id": 43
+    "id": "b31abf63-0313-4673-ab48-9c19a393696f"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find pairs whose sum equals a target",
     "answer": "static List<int[]> twoSumPairs(int[] a,int target){List<int[]> out=new ArrayList<>();Set<Integer> seen=new HashSet<>();for(int x:a){int need=target-x;if(seen.contains(need))out.add(new int[]{need,x});seen.add(x);}return out;}",
     "explanation": "Expected O(n) time; emits pairs as encountered and can emit value pairs multiple times if duplicates occur.",
-    "id": 44
+    "id": "771d66ef-069a-486d-a340-83a7108234c7"
   },
   {
     "category": "Array Coding Questions",
     "question": "Move all zeros to the end of an array",
     "answer": "static void moveZeros(int[] a){int write=0;for(int x:a)if(x!=0)a[write++]=x;while(write<a.length)a[write++]=0;}",
     "explanation": "Stable for non-zero elements; O(n) time.",
-    "id": 45
+    "id": "0289edff-d69a-4ea7-bad1-3097eb2dd6ca"
   },
   {
     "category": "Array Coding Questions",
     "question": "Rotate an array to the left by K positions",
     "answer": "static void rotateLeft(int[] a,int k){if(a.length==0)return;k=Math.floorMod(k,a.length);reverseRange(a,0,k-1);reverseRange(a,k,a.length-1);reverseRange(a,0,a.length-1);}\nstatic void reverseRange(int[] a,int l,int r){while(l<r){int t=a[l];a[l++]=a[r];a[r--]=t;}}",
     "explanation": "Three reversals, O(n) time and O(1) extra space.",
-    "id": 46
+    "id": "918c1cad-1321-4fb1-93dc-7625c575e1dc"
   },
   {
     "category": "Array Coding Questions",
     "question": "Rotate an array to the right by K positions",
     "answer": "static void rotateRight(int[] a,int k){if(a.length==0)return;k=Math.floorMod(k,a.length);rotateLeft(a,a.length-k);}",
     "explanation": "Reuses left rotation; handles k larger than array length.",
-    "id": 47
+    "id": "0c26538a-87bc-430d-9117-db2c96ca5e11"
   },
   {
     "category": "Array Coding Questions",
     "question": "Merge two sorted arrays",
     "answer": "static int[] mergeSorted(int[] a,int[] b){int[] r=new int[a.length+b.length];int i=0,j=0,k=0;while(i<a.length&&j<b.length)r[k++]=a[i]<=b[j]?a[i++]:b[j++];while(i<a.length)r[k++]=a[i++];while(j<b.length)r[k++]=b[j++];return r;}",
     "explanation": "Two-pointer merge in O(n+m) time.",
-    "id": 48
+    "id": "e7cee54c-6918-447a-9f31-de361268a083"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the intersection of two arrays",
     "answer": "static int[] intersection(int[] a,int[] b){Set<Integer> s=new HashSet<>();for(int x:a)s.add(x);Set<Integer> out=new LinkedHashSet<>();for(int x:b)if(s.contains(x))out.add(x);return out.stream().mapToInt(Integer::intValue).toArray();}",
     "explanation": "Returns distinct common values, in the order first seen in the second array.",
-    "id": 49
+    "id": "f96ee37c-9f12-4109-b59c-69cd8c594fc9"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the union of two arrays",
     "answer": "static int[] union(int[] a,int[] b){Set<Integer> s=new LinkedHashSet<>();for(int x:a)s.add(x);for(int x:b)s.add(x);return s.stream().mapToInt(Integer::intValue).toArray();}",
     "explanation": "Returns unique values preserving encounter order.",
-    "id": 50
+    "id": "fa537e37-e345-4e48-9986-7fc2063982fa"
   },
   {
     "category": "Array Coding Questions",
     "question": "Maximum sum of a contiguous subarray",
     "answer": "static int maxSubarraySum(int[] a){if(a.length==0)throw new IllegalArgumentException(\"empty array\");int current=a[0],best=a[0];for(int i=1;i<a.length;i++){current=Math.max(a[i],current+a[i]);best=Math.max(best,current);}return best;}",
     "explanation": "Kadane’s algorithm: O(n) time; works when all numbers are negative.",
-    "id": 51
+    "id": "633a9491-c495-46ec-a97c-5121d3f316eb"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the majority element in an array",
     "answer": "static OptionalInt majority(int[] a){int candidate=0,count=0;for(int x:a){if(count==0)candidate=x;count+=x==candidate?1:-1;}count=0;for(int x:a)if(x==candidate)count++;return count>a.length/2?OptionalInt.of(candidate):OptionalInt.empty();}",
     "explanation": "Boyer–Moore voting plus verification; majority means more than n/2 occurrences.",
-    "id": 52
+    "id": "0a6c1ed7-74fa-430e-a413-9807dc44df48"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the element that appears once while others appear twice",
     "answer": "static int singleNumber(int[] a){int result=0;for(int x:a)result^=x;return result;}",
     "explanation": "XOR cancels pairs. Assumes exactly one singleton and all others appear twice.",
-    "id": 53
+    "id": "cf407172-40b0-4364-896f-831fa7161c39"
   },
   {
     "category": "Array Coding Questions",
     "question": "Maximum difference with larger element after smaller one",
     "answer": "static OptionalInt maxDifference(int[] a){if(a.length<2)return OptionalInt.empty();int min=a[0],best=Integer.MIN_VALUE;for(int i=1;i<a.length;i++){best=Math.max(best,a[i]-min);min=Math.min(min,a[i]);}return OptionalInt.of(best);}",
     "explanation": "One pass. Returns OptionalInt.empty() for fewer than two values.",
-    "id": 54
+    "id": "b3ad02ee-36a9-4e66-8d2b-fc71c46da642"
   },
   {
     "category": "Array Coding Questions",
     "question": "Product of array except self",
     "answer": "static long[] productExceptSelf(int[] a){int n=a.length;long[] out=new long[n];Arrays.fill(out,1);long p=1;for(int i=0;i<n;i++){out[i]=p;p*=a[i];}p=1;for(int i=n-1;i>=0;i--){out[i]*=p;p*=a[i];}return out;}",
     "explanation": "O(n) time without division. Products may overflow long for large values.",
-    "id": 55
+    "id": "43f79ba6-a538-435a-93d8-90442e0d6f1a"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the equilibrium index of an array",
     "answer": "static int equilibriumIndex(int[] a){long total=0,left=0;for(int x:a)total+=x;for(int i=0;i<a.length;i++){if(left==total-left-a[i])return i;left+=a[i];}return -1;}",
     "explanation": "Returns the first index where left sum equals right sum, or -1.",
-    "id": 56
+    "id": "698c4633-ea9d-47ec-a704-cf96ca63c06b"
   },
   {
     "category": "Array Coding Questions",
     "question": "Sort an array containing only 0s, 1s, and 2s",
     "answer": "static void sort012(int[] a){int low=0,mid=0,high=a.length-1;while(mid<=high){if(a[mid]==0)swap(a,low++,mid++);else if(a[mid]==1)mid++;else if(a[mid]==2)swap(a,mid,high--);else throw new IllegalArgumentException(\"Only 0, 1, 2 allowed\");}}\nstatic void swap(int[] a,int i,int j){int t=a[i];a[i]=a[j];a[j]=t;}",
     "explanation": "Dutch National Flag algorithm: O(n) time and O(1) space.",
-    "id": 57
+    "id": "487b9335-5d31-4790-8d9b-8c701420781f"
   },
   {
     "category": "Array Coding Questions",
     "question": "Longest consecutive sequence in an unsorted array",
     "answer": "static int longestConsecutive(int[] a){Set<Integer>s=new HashSet<>();for(int x:a)s.add(x);int best=0;for(int x:s)if(!s.contains(x-1)){int y=x;while(s.contains(y))y++;best=Math.max(best,y-x);}return best;}",
     "explanation": "Expected O(n) time. Extreme integer overflow can be avoided with long counters.",
-    "id": 58
+    "id": "0d0721d8-2098-473b-996b-a9c781e938a9"
   },
   {
     "category": "Array Coding Questions",
     "question": "Find the top K largest elements in an array",
     "answer": "static List<Integer> topKLargest(int[] a,int k){if(k<=0)return List.of();PriorityQueue<Integer> q=new PriorityQueue<>();for(int x:a){q.offer(x);if(q.size()>k)q.poll();}List<Integer> r=new ArrayList<>(q);r.sort(Comparator.reverseOrder());return r;}",
     "explanation": "Min-heap of size k: O(n log k). Returns fewer than k if the array is shorter.",
-    "id": 59
+    "id": "2e187468-6038-45b3-8455-3341b464f8a3"
   },
   {
     "category": "Array Coding Questions",
     "question": "Merge overlapping intervals",
     "answer": "static int[][] mergeIntervals(int[][] intervals){if(intervals.length==0)return new int[0][];Arrays.sort(intervals,Comparator.comparingInt(x->x[0]));List<int[]> out=new ArrayList<>();int[] cur=intervals[0].clone();for(int i=1;i<intervals.length;i++){if(intervals[i][0]<=cur[1])cur[1]=Math.max(cur[1],intervals[i][1]);else{out.add(cur);cur=intervals[i].clone();}}out.add(cur);return out.toArray(new int[0][]);}",
     "explanation": "Sort by start time, then merge. O(n log n) due to sorting.",
-    "id": 60
+    "id": "be92626c-86bb-4fc5-8b74-4f0aeb6cfbb6"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Count frequency of each element in a list using HashMap",
     "answer": "static <T> Map<T,Long> frequency(List<T> list){Map<T,Long> m=new HashMap<>();for(T x:list)m.merge(x,1L,Long::sum);return m;}",
     "explanation": "HashMap gives expected O(n) counting time.",
-    "id": 61
+    "id": "687ce291-be01-4031-88a3-06655a9af9ce"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Find duplicate elements in a list using Collections",
     "answer": "static <T> Set<T> duplicates(List<T> list){Set<T> seen=new HashSet<>(),dup=new LinkedHashSet<>();for(T x:list)if(!seen.add(x))dup.add(x);return dup;}",
     "explanation": "Works for any type with correct equals() and hashCode().",
-    "id": 62
+    "id": "6210dd7f-094e-4b2a-8d7b-df965f519b79"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Remove duplicates from a list preserving insertion order",
     "answer": "static <T> List<T> distinctInOrder(List<T> list){return new ArrayList<>(new LinkedHashSet<>(list));}",
     "explanation": "LinkedHashSet removes duplicates while retaining first occurrence order.",
-    "id": 63
+    "id": "0bc7a9b5-defb-453b-8a45-c498d0b6af85"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Sort a HashMap by its values",
     "answer": "static <K,V extends Comparable<? super V>> Map<K,V> sortByValue(Map<K,V> input){\n    return input.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(a,b)->a,LinkedHashMap::new));\n}",
     "explanation": "Returns a LinkedHashMap in ascending value order; ties follow the stream sort stability of the source encounter order where defined.",
-    "id": 64
+    "id": "33a44603-7e13-4180-b335-494f3d02cacd"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Sort employees by salary using Comparator",
     "answer": "employees.sort(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getName));",
     "explanation": "Assumes Employee has getSalary() and getName(); tie-breaks by name.",
-    "id": 65
+    "id": "e363953d-45f9-466c-998b-35ca2e1bdb6f"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Group employees by department using Streams",
     "answer": "Map<String,List<Employee>> byDepartment=employees.stream().collect(Collectors.groupingBy(Employee::getDepartment));",
     "explanation": "groupingBy creates one list per department.",
-    "id": 66
+    "id": "239a12c4-ea79-4e5f-aa7e-c704c2f28f7e"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Find first non-repeating element in a list",
     "answer": "static <T> Optional<T> firstUnique(List<T> list){Map<T,Integer> m=new LinkedHashMap<>();for(T x:list)m.merge(x,1,Integer::sum);return m.entrySet().stream().filter(e->e.getValue()==1).map(Map.Entry::getKey).findFirst();}",
     "explanation": "Preserves first-seen order.",
-    "id": 67
+    "id": "8f3c9629-b257-4f02-af48-006423e82a32"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Find the intersection of two lists",
     "answer": "static <T> List<T> intersection(List<T> a,List<T> b){Set<T> right=new HashSet<>(b);return a.stream().filter(right::contains).distinct().collect(Collectors.toList());}",
     "explanation": "Returns distinct values in the order of the first list.",
-    "id": 68
+    "id": "cbbe0624-d9f6-4936-8726-2b6732818368"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Implement an LRU cache using LinkedHashMap",
     "answer": "class LruCache<K,V> extends LinkedHashMap<K,V>{\n    private final int capacity;\n    LruCache(int capacity){super(16,0.75f,true);if(capacity<1)throw new IllegalArgumentException();this.capacity=capacity;}\n    @Override protected boolean removeEldestEntry(Map.Entry<K,V> eldest){return size()>capacity;}\n}",
     "explanation": "accessOrder=true tracks least-recently-used order. This implementation is not thread-safe.",
-    "id": 69
+    "id": "9fc02e17-9ed4-4026-9ace-cb407a65855a"
   },
   {
     "category": "Java Collections and HashMap",
     "question": "Find top K most frequent elements",
     "answer": "static List<Integer> topKFrequent(int[] a,int k){Map<Integer,Integer> f=new HashMap<>();for(int x:a)f.merge(x,1,Integer::sum);PriorityQueue<Integer> q=new PriorityQueue<>(Comparator.comparingInt(f::get));for(int x:f.keySet()){q.offer(x);if(q.size()>k)q.poll();}List<Integer> r=new ArrayList<>(q);r.sort((x,y)->Integer.compare(f.get(y),f.get(x)));return r;}",
     "explanation": "Counts frequencies and maintains a size-k min-heap.",
-    "id": 70
+    "id": "7b01c509-49d4-4826-9fd4-faafbdefca6c"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Filter even numbers from a list using Streams",
     "answer": "List<Integer> evens=numbers.stream().filter(n->n%2==0).collect(Collectors.toList());",
     "explanation": "filter retains elements matching the predicate.",
-    "id": 71
+    "id": "2c175e03-25f1-46f5-8af6-2d1c0827d88a"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find duplicate elements in a list using Streams",
     "answer": "Set<Integer> seen=new HashSet<>();Set<Integer> duplicates=numbers.stream().filter(n->!seen.add(n)).collect(Collectors.toCollection(LinkedHashSet::new));",
     "explanation": "Uses a stateful predicate; for parallel streams, use a different grouping-based approach.",
-    "id": 72
+    "id": "a2ee9d55-bca7-4b35-bbee-283dc8f8e8d9"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find first non-repeating character using Streams",
     "answer": "Optional<Character> first=s.chars().mapToObj(c->(char)c).collect(Collectors.groupingBy(c->c,LinkedHashMap::new,Collectors.counting())).entrySet().stream().filter(e->e.getValue()==1).map(Map.Entry::getKey).findFirst();",
     "explanation": "LinkedHashMap preserves encounter order. This processes UTF-16 char values.",
-    "id": 73
+    "id": "d0103c59-c605-412d-8faf-c665916b00ea"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find the second-highest number using Streams",
     "answer": "Optional<Integer> second=numbers.stream().distinct().sorted(Comparator.reverseOrder()).skip(1).findFirst();",
     "explanation": "distinct avoids treating duplicate maximum values as the second-highest distinct number.",
-    "id": 74
+    "id": "49d4268d-fa4c-46a7-a7e6-3d9b12f4fbd6"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find maximum and minimum using Streams",
     "answer": "IntSummaryStatistics stats=numbers.stream().mapToInt(Integer::intValue).summaryStatistics();\nint max=stats.getMax(), min=stats.getMin();",
     "explanation": "For an empty list, max/min default to 0; check stats.getCount() before relying on them.",
-    "id": 75
+    "id": "26eff3b0-05ff-4fe9-ad87-3f536749b42e"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Sort strings by length using Streams",
     "answer": "List<String> sorted=words.stream().sorted(Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder())).collect(Collectors.toList());",
     "explanation": "Sorts by length and then alphabetically for equal lengths.",
-    "id": 76
+    "id": "49c1393e-3ca0-459d-88f6-010b6084e9f1"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Convert a list of strings to uppercase using Streams",
     "answer": "List<String> upper=words.stream().map(s->s.toUpperCase(Locale.ROOT)).collect(Collectors.toList());",
     "explanation": "Locale.ROOT avoids locale-sensitive case conversion surprises.",
-    "id": 77
+    "id": "17e7112f-5209-4a4b-b08e-465208e812cd"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Partition numbers into even and odd using partitioningBy",
     "answer": "Map<Boolean,List<Integer>> parts=numbers.stream().collect(Collectors.partitioningBy(n->n%2==0));\nList<Integer> evens=parts.get(true), odds=parts.get(false);",
     "explanation": "The true key contains even numbers; false contains odd numbers.",
-    "id": 78
+    "id": "1b075f45-4a92-4ba5-9a36-c5083f8ccedb"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Group words by length using groupingBy",
     "answer": "Map<Integer,List<String>> byLength=words.stream().collect(Collectors.groupingBy(String::length));",
     "explanation": "Creates groups keyed by string length.",
-    "id": 79
+    "id": "ad2051d3-d8dd-4370-9465-9cf1f55a18ba"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Calculate sum and average using Streams",
     "answer": "IntSummaryStatistics stats=numbers.stream().mapToInt(Integer::intValue).summaryStatistics();\nlong sum=stats.getSum(); double average=stats.getAverage();",
     "explanation": "Check getCount() when an empty list is possible.",
-    "id": 80
+    "id": "ded76000-8327-4a8d-9eae-4b5398cf1df3"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find employee with highest salary using Streams",
     "answer": "Optional<Employee> highest=employees.stream().max(Comparator.comparing(Employee::getSalary));",
     "explanation": "Optional is empty when the collection is empty.",
-    "id": 81
+    "id": "640bf17f-9703-4262-8375-5fec13d099f2"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find top three highest-paid employees using Streams",
     "answer": "List<Employee> top3=employees.stream().sorted(Comparator.comparing(Employee::getSalary).reversed()).limit(3).collect(Collectors.toList());",
     "explanation": "Returns up to three employees; add a tie-breaker if deterministic ordering is required.",
-    "id": 82
+    "id": "16feba0e-8ba8-4593-9fb2-01a2d9dbc5b3"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Convert a list into a map using Streams",
     "answer": "Map<Long,Employee> byId=employees.stream().collect(Collectors.toMap(Employee::getId,Function.identity(),(first,duplicate)->first));",
     "explanation": "The merge function keeps the first employee when IDs collide. Choose a policy appropriate to the domain.",
-    "id": 83
+    "id": "a22cdd5d-942d-4aa5-9438-841d22063da4"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Flatten a nested list using flatMap",
     "answer": "List<Integer> flattened=nested.stream().flatMap(Collection::stream).collect(Collectors.toList());",
     "explanation": "flatMap converts each inner stream into one combined stream.",
-    "id": 84
+    "id": "35dbfdb3-14e1-4676-820a-b0ca41aef0a6"
   },
   {
     "category": "Java 8 and Stream API",
     "question": "Find word frequency using Streams",
     "answer": "Map<String,Long> frequency=Arrays.stream(sentence.toLowerCase(Locale.ROOT).split(\"\\\\W+\"))\n    .filter(w->!w.isEmpty()).collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));",
     "explanation": "Splits on non-word characters; Unicode tokenization may need a more specific regex.",
-    "id": 85
+    "id": "38018c48-14bd-48a3-bd5c-7ee0c90f393d"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement binary search iteratively",
     "answer": "static int binarySearch(int[] a,int target){int l=0,r=a.length-1;while(l<=r){int m=l+(r-l)/2;if(a[m]==target)return m;if(a[m]<target)l=m+1;else r=m-1;}return -1;}",
     "explanation": "Requires sorted input. O(log n) time.",
-    "id": 86
+    "id": "5912f5c8-2efd-4769-bac9-291882c25cd9"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement binary search recursively",
     "answer": "static int binarySearch(int[] a,int target,int l,int r){if(l>r)return -1;int m=l+(r-l)/2;if(a[m]==target)return m;return a[m]<target?binarySearch(a,target,m+1,r):binarySearch(a,target,l,m-1);}",
     "explanation": "Call with binarySearch(array, target, 0, array.length - 1). Requires sorted input.",
-    "id": 87
+    "id": "54cf5c83-83d6-4a98-9324-76e5ad3c4f68"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement bubble sort",
     "answer": "static void bubbleSort(int[] a){for(int i=0;i<a.length-1;i++){boolean changed=false;for(int j=0;j<a.length-1-i;j++)if(a[j]>a[j+1]){int t=a[j];a[j]=a[j+1];a[j+1]=t;changed=true;}if(!changed)break;}}",
     "explanation": "O(n²) worst-case; stable for equal values.",
-    "id": 88
+    "id": "79e20ecc-f937-4fcb-82e0-16620883a645"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement selection sort",
     "answer": "static void selectionSort(int[] a){for(int i=0;i<a.length-1;i++){int min=i;for(int j=i+1;j<a.length;j++)if(a[j]<a[min])min=j;int t=a[i];a[i]=a[min];a[min]=t;}}",
     "explanation": "O(n²) time, O(1) extra space; usually not stable.",
-    "id": 89
+    "id": "7aa0d3e6-d910-4dc6-885d-c7437c7418dd"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement insertion sort",
     "answer": "static void insertionSort(int[] a){for(int i=1;i<a.length;i++){int key=a[i],j=i-1;while(j>=0&&a[j]>key){a[j+1]=a[j];j--;}a[j+1]=key;}}",
     "explanation": "O(n²) worst-case, efficient on small or nearly sorted arrays; stable.",
-    "id": 90
+    "id": "b44c7ad7-4a95-454f-90a9-0f6866312b68"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement merge sort",
     "answer": "static void mergeSort(int[] a){if(a.length<2)return;int m=a.length/2;int[] l=Arrays.copyOfRange(a,0,m),r=Arrays.copyOfRange(a,m,a.length);mergeSort(l);mergeSort(r);int i=0,j=0,k=0;while(i<l.length&&j<r.length)a[k++]=l[i]<=r[j]?l[i++]:r[j++];while(i<l.length)a[k++]=l[i++];while(j<r.length)a[k++]=r[j++];}",
     "explanation": "O(n log n) time and O(n) auxiliary memory.",
-    "id": 91
+    "id": "ae08a83f-1345-4f7b-b6cd-f03276ae0650"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Implement quicksort",
     "answer": "static void quickSort(int[] a,int low,int high){if(low>=high)return;int p=partition(a,low,high);quickSort(a,low,p-1);quickSort(a,p+1,high);}\nstatic int partition(int[] a,int low,int high){int pivot=a[high],i=low;for(int j=low;j<high;j++)if(a[j]<=pivot){int t=a[i];a[i++]=a[j];a[j]=t;}int t=a[i];a[i]=a[high];a[high]=t;return i;}",
     "explanation": "Call with quickSort(array, 0, array.length-1). Average O(n log n), worst-case O(n²).",
-    "id": 92
+    "id": "7596377c-de86-4855-8b79-18620c68df55"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Find an element in a rotated sorted array",
     "answer": "static int searchRotated(int[] a,int target){int l=0,r=a.length-1;while(l<=r){int m=l+(r-l)/2;if(a[m]==target)return m;if(a[l]<=a[m]){if(a[l]<=target&&target<a[m])r=m-1;else l=m+1;}else{if(a[m]<target&&target<=a[r])l=m+1;else r=m-1;}}return -1;}",
     "explanation": "O(log n) when values are distinct; duplicates can require O(n) in the worst case.",
-    "id": 93
+    "id": "5194f409-d5c8-4d0e-8d2b-bc889600f240"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Find the longest common prefix in strings",
     "answer": "static String longestCommonPrefix(String[] a){if(a.length==0)return \"\";String p=a[0];for(int i=1;i<a.length;i++)while(!a[i].startsWith(p)){p=p.substring(0,p.length()-1);if(p.isEmpty())return \"\";}return p;}",
     "explanation": "Shrinks the candidate prefix until every string starts with it.",
-    "id": 94
+    "id": "e27a0c02-8acf-4a84-9a39-5c7e69bf5f21"
   },
   {
     "category": "Searching, Sorting, and Algorithms",
     "question": "Solve the Two Sum problem efficiently",
     "answer": "static int[] twoSum(int[] a,int target){Map<Integer,Integer> index=new HashMap<>();for(int i=0;i<a.length;i++){int need=target-a[i];if(index.containsKey(need))return new int[]{index.get(need),i};index.put(a[i],i);}return new int[0];}",
     "explanation": "Expected O(n) time. Returns indices, or an empty array if no pair exists.",
-    "id": 95
+    "id": "93271142-d619-4371-8471-34c7636a7b36"
   },
   {
     "category": "Linked Lists, Stacks, and Queues",
     "question": "Reverse a singly linked list",
     "answer": "static class Node { int value; Node next; Node(int v){value=v;} }\nstatic Node reverseList(Node head){Node prev=null,cur=head;while(cur!=null){Node next=cur.next;cur.next=prev;prev=cur;cur=next;}return prev;}",
     "explanation": "Iterative O(n) time, O(1) extra space.",
-    "id": 96
+    "id": "c4c66539-bc9a-45be-a4c2-1e5f7d51a99f"
   },
   {
     "category": "Linked Lists, Stacks, and Queues",
     "question": "Detect a cycle in a linked list",
     "answer": "static boolean hasCycle(Node head){Node slow=head,fast=head;while(fast!=null&&fast.next!=null){slow=slow.next;fast=fast.next.next;if(slow==fast)return true;}return false;}",
     "explanation": "Floyd’s tortoise-and-hare algorithm uses O(1) extra space.",
-    "id": 97
+    "id": "f79a43af-ae91-4f5e-865f-c6822cf11190"
   },
   {
     "category": "Linked Lists, Stacks, and Queues",
     "question": "Find the middle node of a linked list",
     "answer": "static Node middle(Node head){Node slow=head,fast=head;while(fast!=null&&fast.next!=null){slow=slow.next;fast=fast.next.next;}return slow;}",
     "explanation": "For an even number of nodes, returns the second middle node.",
-    "id": 98
+    "id": "2bea83eb-9f44-4ea7-a461-242f1bee3647"
   },
   {
     "category": "Linked Lists, Stacks, and Queues",
     "question": "Check balanced parentheses using a stack",
     "answer": "static boolean isBalanced(String s){Deque<Character> st=new ArrayDeque<>();for(char c:s.toCharArray()){if(c=='('||c=='['||c=='{')st.push(c);else if(c==')'||c==']'||c=='}'){if(st.isEmpty())return false;char o=st.pop();if((c==')'&&o!='(')||(c==']'&&o!='[')||(c=='}'&&o!='{'))return false;}}return st.isEmpty();}",
     "explanation": "Checks (), [], and {}. Ignores all other characters.",
-    "id": 99
+    "id": "c654fa25-c970-4c74-ac13-bc2941f553ea"
   },
   {
     "category": "Linked Lists, Stacks, and Queues",
     "question": "Implement a queue using two stacks",
     "answer": "class QueueWithStacks<T>{\n    private final Deque<T> in=new ArrayDeque<>(),out=new ArrayDeque<>();\n    void offer(T value){in.push(value);}\n    T poll(){moveIfNeeded();return out.poll();}\n    T peek(){moveIfNeeded();return out.peek();}\n    boolean isEmpty(){return in.isEmpty()&&out.isEmpty();}\n    private void moveIfNeeded(){if(out.isEmpty())while(!in.isEmpty())out.push(in.pop());}\n}",
     "explanation": "Amortized O(1) offer/poll. ArrayDeque does not permit null elements.",
-    "id": 100
+    "id": "6315a713-9b65-47ea-9eba-dcf624824c10"
   }
 ]
