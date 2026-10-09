@@ -1,0 +1,149 @@
+[
+  {
+    "id": 101,
+    "category": "Collections and HashMap",
+    "title": "Implement a thread-safe word frequency counter",
+    "question": "Write a Java method that counts word occurrences in a text using ConcurrentHashMap and LongAdder.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "ConcurrentHashMap",
+      "LongAdder",
+      "Concurrency"
+    ],
+    "answer": "import java.util.concurrent.ConcurrentHashMap;\nimport java.util.concurrent.atomic.LongAdder;\nimport java.util.Map;\n\npublic static Map<String, Long> countWordsConcurrently(Iterable<String> words) {\n    ConcurrentHashMap<String, LongAdder> counts = new ConcurrentHashMap<>();\n    words.forEach(word ->\n        counts.computeIfAbsent(word.toLowerCase(Locale.ROOT), k -> new LongAdder())\n              .increment()\n    );\n    Map<String, Long> result = new HashMap<>();\n    counts.forEach((word, count) -> result.put(word, count.sum()));\n    return result;\n}",
+    "explanation": "computeIfAbsent creates one LongAdder per word, and LongAdder supports efficient concurrent increments. The result map is a snapshot after input processing completes.",
+    "complexity": "Expected O(n) time for n words; O(u) space for u distinct words."
+  },
+  {
+    "id": 102,
+    "category": "Java 8 and Stream API",
+    "title": "Find the third-highest distinct salary",
+    "question": "Given a list of employees, find the third-highest distinct salary using Java Streams.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "Streams",
+      "distinct",
+      "Comparator"
+    ],
+    "answer": "Optional<BigDecimal> thirdHighestSalary(List<Employee> employees) {\n    return employees.stream()\n        .map(Employee::getSalary)\n        .filter(Objects::nonNull)\n        .distinct()\n        .sorted(Comparator.reverseOrder())\n        .skip(2)\n        .findFirst();\n}",
+    "explanation": "Map employees to salaries, remove duplicates, sort descending, skip the first two distinct values, and return the next. Optional.empty() is returned if fewer than three distinct salaries exist.",
+    "complexity": "O(n log n) time due to sorting; O(n) additional space."
+  },
+  {
+    "id": 103,
+    "category": "String Coding Questions",
+    "title": "Check whether two strings are isomorphic",
+    "question": "Write a Java program to determine whether two strings are isomorphic: each character in one string must map consistently to one character in the other.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "String",
+      "HashMap",
+      "Two pointers"
+    ],
+    "answer": "public static boolean isIsomorphic(String s, String t) {\n    if (s.length() != t.length()) return false;\n    Map<Character, Character> forward = new HashMap<>();\n    Map<Character, Character> reverse = new HashMap<>();\n    for (int i = 0; i < s.length(); i++) {\n        char a = s.charAt(i), b = t.charAt(i);\n        if (forward.containsKey(a) && forward.get(a) != b) return false;\n        if (reverse.containsKey(b) && reverse.get(b) != a) return false;\n        forward.put(a, b);\n        reverse.put(b, a);\n    }\n    return true;\n}",
+    "explanation": "Two maps enforce a one-to-one mapping in both directions. For example, egg and add are isomorphic, while foo and bar are not.",
+    "complexity": "O(n) time and O(k) space, where k is the number of distinct characters."
+  },
+  {
+    "id": 104,
+    "category": "Array Coding Questions",
+    "title": "Find the longest subarray with sum K",
+    "question": "Given an integer array that may contain negative values, find the length of the longest contiguous subarray whose sum equals K.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "Array",
+      "Prefix sum",
+      "HashMap"
+    ],
+    "answer": "public static int longestSubarraySumK(int[] nums, int k) {\n    Map<Long, Integer> firstIndex = new HashMap<>();\n    firstIndex.put(0L, -1);\n    long prefix = 0;\n    int best = 0;\n    for (int i = 0; i < nums.length; i++) {\n        prefix += nums[i];\n        firstIndex.putIfAbsent(prefix, i);\n        Integer start = firstIndex.get(prefix - k);\n        if (start != null) best = Math.max(best, i - start);\n    }\n    return best;\n}",
+    "explanation": "Store the earliest index for each prefix sum. If prefixSum - K has appeared, the elements between that index and the current index sum to K. This works with negative numbers too.",
+    "complexity": "Expected O(n) time and O(n) space."
+  },
+  {
+    "id": 105,
+    "category": "Searching, Sorting, and Algorithms",
+    "title": "Search in a row-wise and column-wise sorted matrix",
+    "question": "Find a target in a matrix where every row and every column is sorted in ascending order.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "Matrix",
+      "Search",
+      "Two pointers"
+    ],
+    "answer": "public static boolean searchMatrix(int[][] matrix, int target) {\n    if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;\n    int row = 0, col = matrix[0].length - 1;\n    while (row < matrix.length && col >= 0) {\n        int value = matrix[row][col];\n        if (value == target) return true;\n        if (value > target) col--;\n        else row++;\n    }\n    return false;\n}",
+    "explanation": "Start at the top-right corner. A value that is too large eliminates its column; a value that is too small eliminates its row.",
+    "complexity": "O(rows + columns) time and O(1) extra space."
+  },
+  {
+    "id": 106,
+    "category": "Linked Lists, Stacks, and Queues",
+    "title": "Merge two sorted singly linked lists",
+    "question": "Merge two sorted linked lists into one sorted list by reusing existing nodes.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "Linked List",
+      "Pointers"
+    ],
+    "answer": "static class Node {\n    int value;\n    Node next;\n    Node(int value) { this.value = value; }\n}\n\npublic static Node mergeSortedLists(Node a, Node b) {\n    Node dummy = new Node(0);\n    Node tail = dummy;\n    while (a != null && b != null) {\n        if (a.value <= b.value) {\n            tail.next = a;\n            a = a.next;\n        } else {\n            tail.next = b;\n            b = b.next;\n        }\n        tail = tail.next;\n    }\n    tail.next = (a != null) ? a : b;\n    return dummy.next;\n}",
+    "explanation": "A dummy head simplifies edge cases. Each iteration appends the smaller current node; the remaining list is attached at the end.",
+    "complexity": "O(m + n) time and O(1) extra space, excluding the reused nodes."
+  },
+  {
+    "id": 107,
+    "category": "Searching, Sorting, and Algorithms",
+    "title": "Find the minimum number of coins for an amount",
+    "question": "Given coin denominations and an amount, find the minimum number of coins needed. Assume unlimited coins and return -1 if the amount cannot be formed.",
+    "difficulty": "Intermediate",
+    "tags": [
+      "Dynamic Programming",
+      "Coins",
+      "Array"
+    ],
+    "answer": "public static int minCoins(int[] coins, int amount) {\n    if (amount < 0) return -1;\n    int unreachable = amount + 1;\n    int[] dp = new int[amount + 1];\n    Arrays.fill(dp, unreachable);\n    dp[0] = 0;\n    for (int value = 1; value <= amount; value++) {\n        for (int coin : coins) {\n            if (coin > 0 && coin <= value && dp[value - coin] != unreachable) {\n                dp[value] = Math.min(dp[value], dp[value - coin] + 1);\n            }\n        }\n    }\n    return dp[amount] == unreachable ? -1 : dp[amount];\n}",
+    "explanation": "dp[x] stores the fewest coins needed for amount x. For every amount, try using each valid denomination as the final coin.",
+    "complexity": "O(amount × numberOfCoins) time and O(amount) space."
+  },
+  {
+    "id": 108,
+    "category": "Java 8 and Stream API",
+    "title": "Partition employees into salary bands",
+    "question": "Using Java Streams, group employees into two groups: salary at least a threshold and salary below the threshold.",
+    "difficulty": "Beginner",
+    "tags": [
+      "Streams",
+      "Collectors.partitioningBy",
+      "Predicate"
+    ],
+    "answer": "Map<Boolean, List<Employee>> partitionBySalary(\n        List<Employee> employees, BigDecimal threshold) {\n    return employees.stream()\n        .collect(Collectors.partitioningBy(\n            e -> e.getSalary().compareTo(threshold) >= 0\n        ));\n}",
+    "explanation": "Collectors.partitioningBy always creates true and false partitions. The true key represents employees whose salary is greater than or equal to the threshold.",
+    "complexity": "O(n) time and O(n) space for the collected lists."
+  },
+  {
+    "id": 109,
+    "category": "String Coding Questions",
+    "title": "Validate balanced brackets of three types",
+    "question": "Write a Java program to validate whether (), {}, and [] are correctly balanced and nested.",
+    "difficulty": "Beginner",
+    "tags": [
+      "Stack",
+      "String"
+    ],
+    "answer": "public static boolean hasBalancedBrackets(String s) {\n    Deque<Character> stack = new ArrayDeque<>();\n    for (char c : s.toCharArray()) {\n        if (c == '(' || c == '{' || c == '[') {\n            stack.push(c);\n        } else if (c == ')' || c == '}' || c == ']') {\n            if (stack.isEmpty()) return false;\n            char open = stack.pop();\n            if ((c == ')' && open != '(')\n                    || (c == '}' && open != '{')\n                    || (c == ']' && open != '[')) return false;\n        }\n    }\n    return stack.isEmpty();\n}",
+    "explanation": "Push opening brackets. For every closing bracket, pop and verify its matching opener. The stack must be empty at the end.",
+    "complexity": "O(n) time and O(n) space."
+  },
+  {
+    "id": 110,
+    "category": "Basic Java Programs",
+    "title": "Check whether a number is a power of two",
+    "question": "Write a Java method that checks whether a positive integer is a power of two.",
+    "difficulty": "Beginner",
+    "tags": [
+      "Bit Manipulation",
+      "Integer"
+    ],
+    "answer": "public static boolean isPowerOfTwo(int n) {\n    return n > 0 && (n & (n - 1)) == 0;\n}",
+    "explanation": "A positive power of two has exactly one set bit in binary. Subtracting one clears that bit and sets lower bits, so n & (n - 1) equals zero.",
+    "complexity": "O(1) time and O(1) space."
+  }
+]
