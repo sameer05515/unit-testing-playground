@@ -1,115 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Express App</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <style>
-      body {
-        background-color: black;
-      }
-      .file-list {
-        max-height: calc(100vh - 60px);
-        overflow-y: auto;
-      }
-      .pdf-container {
-        min-height: calc(100vh - 60px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        overflow: auto;
-        background: #222;
-        padding: 10px;
-      }
-      canvas {
-        max-width: 100%;
-        height: auto;
-        border: 1px solid #ddd;
-        background: white;
-      }
-    </style>
-  </head>
-  <body x-data="{ showList: window.innerWidth > 768 }">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-2 shadow">
-      <a class="navbar-brand fw-bold" href="/">📂 My App</a>
-
-      <div class="d-flex flex-grow-1 justify-content-center">
-        <% if (details) { %>
-        <span class="badge bg-light text-dark p-2 rounded">
-          <strong><%= slug %></strong> &middot; <%= details.currentIndex + 1 %> / <%= files.length %>
-        </span>
-        <% } %>
-      </div>
-
-      <div class="d-flex gap-2">
-        <button class="btn btn-light" @click="showList = !showList">
-          <span x-text="showList ? '📂 Hide List' : '📂 Show List'"></span>
-        </button>
-        <% if (details) { %>
-        <a href="/pdf-viewer/v2/?slug=<%= details.prevSlug %>" title="Prev" class="btn btn-outline-light">⏪</a>
-        <a href="/pdf-viewer/v2/?slug=<%= details.nextSlug %>" title="Next" class="btn btn-outline-light">⏩</a>
-        <% } %>
-      </div>
-    </nav>
-
-    <!-- Main Container -->
-    <div class="container-fluid mt-1">
-      <div class="row">
-        <!-- Sidebar (File List) -->
-        <div id="listCol" x-show="showList" x-transition class="col-md-3 col-lg-2 file-list bg-dark text-white p-2">
-          <ul class="list-group">
-            <% files.forEach(file => { %>
-            <li class="text-break list-group-item bg-dark border-light <%= slug === file.slug ? 'active' : '' %>">
-              <a href="/pdf-viewer/v2/?slug=<%= file.slug %>" class="text-decoration-none text-light d-block p-2">
-                <%= file.slug %>
-              </a>
-            </li>
-            <% }); %>
-          </ul>
-        </div>
-
-        <!-- PDF Viewer using PDF.js -->
-        <div id="contentCol" :class="showList ? 'col-md-9 col-lg-10' : 'col-12'" class="pdf-container">
-          <% if (details) { %>
-          <canvas id="pdfViewer"></canvas>
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              const url = "/pdf-viewer/v2/pdf/<%= slug %>"; // PDF URL
-              const canvas = document.getElementById("pdfViewer");
-              const ctx = canvas.getContext("2d");
-
-              pdfjsLib.getDocument(url).promise.then(pdf => {
-                pdf.getPage(1).then(page => {
-                  const viewport = page.getViewport({ scale: 1.5 });
-
-                  // Adjust canvas size
-                  canvas.width = viewport.width;
-                  canvas.height = viewport.height;
-
-                  // Render PDF page into canvas
-                  page.render({ canvasContext: ctx, viewport: viewport });
-                });
-              });
-
-              // Adjust canvas size on window resize
-              window.addEventListener("resize", () => {
-                if (canvas) {
-                  const parentWidth = document.getElementById("contentCol").offsetWidth;
-                  canvas.style.width = parentWidth + "px";
-                }
-              });
-            });
-          </script>
-          <% } else { %>
-          <p class="text-muted">Select a file to view details.</p>
-          <% } %>
-        </div>
-      </div>
+<!doctype html>
+<html lang="en" x-data="pdfViewerApp()" :data-theme="theme">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PDF Library · V2</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#10141c;--panel:#191f2b;--panel2:#222b3a;--text:#e8edf5;--muted:#9aa8bc;--border:#354155;--accent:#6ea8fe;--input:#111722}
+    [data-theme="light"]{color-scheme:light;--bg:#f2f5fa;--panel:#fff;--panel2:#eaf0f8;--text:#1d2939;--muted:#667085;--border:#d0d9e6;--accent:#175cd3;--input:#fff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}button,input,textarea,select{font:inherit}a{color:var(--accent)}.topbar{height:auto;min-height:60px;display:flex;gap:12px;align-items:center;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}.brand{font-weight:800;white-space:nowrap}.top-actions{display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap}.btnx{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:7px 10px;border-radius:8px;cursor:pointer}.btnx.primary{background:var(--accent);color:white;border-color:var(--accent)}.btnx.active{outline:2px solid var(--accent)}.searchbar{min-width:180px;max-width:440px;width:36vw;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text)}.shell{display:grid;grid-template-columns:280px minmax(300px,1fr) 320px;min-height:calc(100vh - 60px)}.side{background:var(--panel);padding:14px;overflow:auto;max-height:calc(100vh - 60px);position:sticky;top:60px;border-right:1px solid var(--border)}.right{border-right:0;border-left:1px solid var(--border)}.section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:15px 0 8px}.doc-item{padding:10px;border:1px solid transparent;border-radius:9px;margin-bottom:5px;display:block;text-decoration:none;color:var(--text);overflow-wrap:anywhere}.doc-item:hover,.doc-item.selected{background:var(--panel2);border-color:var(--border)}.doc-sub{font-size:11px;color:var(--muted);margin-top:4px}.tag{display:inline-block;border-radius:5px;background:var(--panel2);padding:2px 6px;color:var(--muted);font-size:11px;margin:2px}.main{min-width:0;padding:12px;display:flex;flex-direction:column;gap:10px}.reader-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--border);padding:8px;border-radius:10px}.reader-toolbar input{width:66px;background:var(--input);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px}.reader-frame{background:#343b48;border-radius:10px;overflow:auto;min-height:65vh;flex:1;padding:16px;display:flex;justify-content:center;align-items:flex-start}.pdf-page{position:relative;background:white;box-shadow:0 4px 22px #0005;margin:0 auto 16px}.pdf-page canvas{display:block}.textLayer{position:absolute;inset:0;overflow:hidden;opacity:1;line-height:1;transform-origin:0 0;user-select:text}.textLayer span{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0 0}.textLayer ::selection{background:#70a7ff66}.textLayer .saved-highlight{background:#ffe66d88!important;border-radius:2px}.panel-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}.field{width:100%;padding:8px;background:var(--input);border:1px solid var(--border);color:var(--text);border-radius:7px;margin:4px 0 10px}.smallmuted{color:var(--muted);font-size:12px}.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{padding:10px;background:var(--panel2);border-radius:8px}.stat strong{display:block;font-size:22px}.note-item{border-top:1px solid var(--border);padding:10px 0;overflow-wrap:anywhere}.note-quote{border-left:3px solid #f5d45c;padding-left:8px;color:var(--muted);font-size:12px}.status{min-height:18px;color:var(--accent);font-size:12px}.empty{padding:40px 15px;text-align:center;color:var(--muted)}.progressbar{height:5px;background:var(--panel2);border-radius:4px;overflow:hidden}.progressbar span{height:100%;display:block;background:var(--accent)}
+    @media(max-width:1100px){.shell{grid-template-columns:230px minmax(300px,1fr)}.right{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.right .section-title{grid-column:1/-1}.searchbar{width:25vw}}
+    @media(max-width:700px){.topbar{flex-wrap:wrap}.top-actions{margin-left:0;width:100%}.searchbar{width:100%;max-width:none;flex:1}.shell{display:flex;flex-direction:column}.side{position:static;max-height:300px;border-right:0;border-bottom:1px solid var(--border)}.main{min-height:60vh}.right{display:block}.reader-frame{min-height:55vh;padding:8px}}
+  </style>
+</head>
+<body>
+<script>
+// Keep PDF.js proxy instances outside Alpine's deep reactive proxy.
+// PDF.js uses JavaScript private fields, which fail when proxied by Alpine.
+window.__pdfViewerPdfDoc = null;
+function pdfViewerApp(){return {
+ files:<%- JSON.stringify(files).replace(/</g,'\\u003c') %>, currentSlug:<%- JSON.stringify(slug || '').replace(/</g,'\\u003c') %>, bookmarks:<%- JSON.stringify(bookmarks || []).replace(/</g,'\\u003c') %>, progress:<%- JSON.stringify(progress || {}).replace(/</g,'\\u003c') %>, metadata:<%- JSON.stringify(metadata || {}).replace(/</g,'\\u003c') %>, annotations:<%- JSON.stringify(annotations || {}).replace(/</g,'\\u003c') %>, recent:<%- JSON.stringify(recent || []).replace(/</g,'\\u003c') %>, theme:<%- JSON.stringify((settings && settings.theme) || 'dark') %>,
+ search:'', pdfSearch:'', categoryFilter:'', page:1, pageCount:0, zoom:1.15, loading:false, status:'', selectedText:'', noteText:'', category:'', tags:'', renderTask:null,
+ get current(){return this.files.find(f=>f.slug===this.currentSlug)||null}, get currentAnnotations(){return this.annotations[this.currentSlug]||[]}, get isBookmarked(){return this.bookmarks.includes(this.currentSlug)},
+ get categories(){return [...new Set(this.files.map(f=>f.category).filter(Boolean))].sort()}, get filteredFiles(){const q=this.search.trim().toLowerCase();return this.files.filter(f=>(!this.categoryFilter||f.category===this.categoryFilter)&&(!q||(f.title+' '+f.slug+' '+f.category+' '+f.tags.join(' ')).toLowerCase().includes(q)))},
+ get totalStarted(){return Object.keys(this.progress).length}, get totalNotes(){return Object.values(this.annotations).reduce((n,a)=>n+(Array.isArray(a)?a.length:0),0)}, get totalPagesRead(){return Object.values(this.progress).reduce((n,p)=>n+(Number(p.page)||0),0)},
+ async init(){this.category=this.current?.category||'';this.tags=(this.current?.tags||[]).join(', ');if(this.currentSlug){await this.loadPdf();}else{this.status='Choose a PDF from the library to begin.';}},
+ async api(url,options={}){const r=await fetch('/pdf-viewer/v2'+url,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.error||'Request failed');return data},
+ async openPdf(slug){if(!slug)return;window.location.href='/pdf-viewer/v2/?slug='+encodeURIComponent(slug)},
+ async loadPdf(){this.loading=true;this.status='Loading PDF…';this.page=Math.max(1,Number((this.progress[this.currentSlug]||{}).page)||1);this.category=this.current?.category||'';this.tags=(this.current?.tags||[]).join(', ');try{const pdfjs=window.pdfjsLib;if(!pdfjs)throw new Error('PDF.js failed to load from CDN. Check network access or disable content blockers.');pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';window.__pdfViewerPdfDoc=await pdfjs.getDocument({url:'/pdf-viewer/v2/pdf/'+encodeURIComponent(this.currentSlug)}).promise;this.pageCount=window.__pdfViewerPdfDoc.numPages;this.page=Math.min(this.page,this.pageCount);await this.renderPage();this.status='PDF ready';this.loadAnnotations();}catch(e){this.status='Unable to render PDF: '+e.message+' (check PDF_DIRECTORY_PATH and network access to PDF.js CDN)';}finally{this.loading=false}},
+ async renderPage(){if(!window.__pdfViewerPdfDoc)return;const n=Math.min(this.pageCount,Math.max(1,Number(this.page)||1));this.page=n;const pdfPage=await window.__pdfViewerPdfDoc.getPage(n);const viewport=pdfPage.getViewport({scale:this.zoom});const host=document.getElementById('pdfPageHost');if(!host)return;host.innerHTML='';const pageEl=document.createElement('div');pageEl.className='pdf-page';pageEl.style.width=viewport.width+'px';pageEl.style.height=viewport.height+'px';const canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);canvas.style.width=viewport.width+'px';canvas.style.height=viewport.height+'px';pageEl.appendChild(canvas);const textLayer=document.createElement('div');textLayer.className='textLayer';textLayer.style.width=viewport.width+'px';textLayer.style.height=viewport.height+'px';pageEl.appendChild(textLayer);host.appendChild(pageEl);await pdfPage.render({canvasContext:canvas.getContext('2d'),viewport}).promise;const tc=await pdfPage.getTextContent();if(window.pdfjsLib&&window.pdfjsLib.renderTextLayer){const task=window.pdfjsLib.renderTextLayer({textContent:tc,container:textLayer,viewport,textDivs:[]});if(task&&task.promise)await task.promise;}this.applyHighlights();await this.saveProgress();},
+ async saveProgress(){if(!this.currentSlug||!this.page)return;this.progress[this.currentSlug]={page:this.page,updatedAt:new Date().toISOString()};try{await this.api('/api/progress/'+encodeURIComponent(this.currentSlug),{method:'PUT',body:JSON.stringify({page:this.page,pageCount:this.pageCount})})}catch(e){this.status=e.message}},
+ async goPage(delta){this.page=Math.min(this.pageCount,Math.max(1,Number(this.page)+delta));await this.renderPage()}, async setPage(){await this.renderPage()}, async setZoom(delta){this.zoom=Math.min(2.5,Math.max(.5,this.zoom+delta));await this.renderPage()},
+ async toggleBookmark(){try{const data=await this.api(this.isBookmarked?'/bookmarks/'+encodeURIComponent(this.currentSlug):'/bookmarks',{method:this.isBookmarked?'DELETE':'POST',body:JSON.stringify({slug:this.currentSlug})});this.bookmarks=data.bookmarks;this.status=this.isBookmarked?'Bookmark saved':'Bookmark removed'}catch(e){this.status=e.message}},
+ async saveMetadata(){try{const data=await this.api('/api/metadata/'+encodeURIComponent(this.currentSlug),{method:'PUT',body:JSON.stringify({category:this.category,tags:this.tags})});this.metadata[this.currentSlug]=data.metadata;const f=this.current;if(f){f.category=data.metadata.category;f.tags=data.metadata.tags}this.status='Category and tags saved'}catch(e){this.status=e.message}},
+ async loadAnnotations(){try{this.annotations[this.currentSlug]=await this.api('/api/annotations/'+encodeURIComponent(this.currentSlug));this.applyHighlights()}catch(e){this.status=e.message}},
+ captureSelection(){const selection=window.getSelection();this.selectedText=selection?selection.toString().trim().slice(0,5000):'';if(this.selectedText)this.status='Text selected — add a note or save as highlight.'},
+ async saveAnnotation(highlightOnly=false){const text=highlightOnly?this.selectedText:this.selectedText;const note=highlightOnly?'':this.noteText.trim();if(!text&&!note){this.status='Select text or enter a note first.';return}try{const data=await this.api('/api/annotations/'+encodeURIComponent(this.currentSlug),{method:'POST',body:JSON.stringify({page:this.page,text,note})});this.annotations[this.currentSlug]=data.annotations;this.selectedText='';this.noteText='';this.applyHighlights();this.status=highlightOnly?'Highlight saved':'Note saved'}catch(e){this.status=e.message}},
+ async deleteAnnotation(id){try{const data=await this.api('/api/annotations/'+encodeURIComponent(this.currentSlug)+'/'+encodeURIComponent(id),{method:'DELETE'});this.annotations[this.currentSlug]=data.annotations;this.applyHighlights();this.status='Annotation deleted'}catch(e){this.status=e.message}},
+ applyHighlights(){const layer=document.querySelector('.textLayer');if(!layer)return;layer.querySelectorAll('.saved-highlight').forEach(el=>el.classList.remove('saved-highlight'));const terms=(this.currentAnnotations||[]).filter(a=>a.page===this.page&&a.text).map(a=>a.text);if(!terms.length)return;const spans=[...layer.querySelectorAll('span')];for(const term of terms){let remaining=term.trim();for(const span of spans){const t=(span.textContent||'').trim();if(remaining&&t&&remaining.includes(t)){span.classList.add('saved-highlight');remaining=remaining.replace(t,'').trim();if(!remaining)break}}}},
+ async searchInPdf(){const q=this.pdfSearch.trim().toLowerCase();if(!q||!window.__pdfViewerPdfDoc)return;for(let p=1;p<=this.pageCount;p++){const pg=await window.__pdfViewerPdfDoc.getPage(p);const tc=await pg.getTextContent();if(tc.items.map(i=>i.str).join(' ').toLowerCase().includes(q)){this.page=p;await this.renderPage();this.status='Found text on page '+p;return}}this.status='No match found in this PDF'},
+ async toggleTheme(){this.theme=this.theme==='dark'?'light':'dark';try{await this.api('/api/settings',{method:'PUT',body:JSON.stringify({theme:this.theme})})}catch(e){this.status=e.message}},
+ async goAnnotation(a){this.page=a.page;await this.renderPage();document.getElementById('pdfPageHost')?.scrollIntoView({behavior:'smooth',block:'start'})}
+}}
+</script>
+<header class="topbar">
+  <a class="brand text-decoration-none" href="/pdf-viewer/v2/">📚 PDF Library <span class="smallmuted">V2</span></a>
+  <input class="searchbar" placeholder="Search title, category, tags…" x-model="search" aria-label="Search PDF library">
+  <div class="top-actions">
+    <select class="btnx" x-model="categoryFilter" aria-label="Filter category"><option value="">All categories</option><template x-for="c in categories" :key="c"><option :value="c" x-text="c"></option></template></select>
+    <button class="btnx" @click="toggleTheme()" x-text="theme==='dark'?'☀ Light':'☾ Dark'"></button>
+    <a class="btnx text-decoration-none" href="/pdf-viewer/v1/">Open V1</a>
+  </div>
+</header>
+<div class="shell">
+  <aside class="side">
+    <div class="d-flex justify-content-between align-items-center"><div class="section-title mt-0">PDF Library</div><span class="tag" x-text="filteredFiles.length+' files'"></span></div>
+    <template x-for="file in filteredFiles" :key="file.slug"><a class="doc-item" :class="{'selected':file.slug===currentSlug}" :href="'/pdf-viewer/v2/?slug='+encodeURIComponent(file.slug)">
+      <div class="d-flex gap-2"><span x-text="bookmarks.includes(file.slug)?'★':'📄'"></span><strong x-text="file.title"></strong></div><div class="doc-sub" x-text="file.category||file.slug"></div><div><template x-for="tag in file.tags" :key="tag"><span class="tag" x-text="tag"></span></template></div>
+      <div class="progressbar mt-2" x-show="progress[file.slug]"><span :style="'width:'+Math.min(100,((progress[file.slug].page||1)/Math.max(1,(progress[file.slug].pageCount||pageCount)))*100)+'%'" ></span></div>
+    </a></template>
+    <div class="empty" x-show="filteredFiles.length===0">No PDFs match your search.</div>
+    <div class="section-title">Bookmarks <span class="tag" x-text="bookmarks.length"></span></div>
+    <template x-for="slug in bookmarks" :key="slug"><a class="doc-item" :href="'/pdf-viewer/v2/?slug='+encodeURIComponent(slug)" x-text="(files.find(f=>f.slug===slug)||{title:slug}).title"></a></template>
+    <div class="section-title">Recently opened</div>
+    <template x-for="item in recent.slice(0,6)" :key="item.slug"><a class="doc-item" :href="'/pdf-viewer/v2/?slug='+encodeURIComponent(item.slug)"><span x-text="(files.find(f=>f.slug===item.slug)||{title:item.slug}).title"></span><div class="doc-sub" x-text="new Date(item.openedAt).toLocaleString()"></div></a></template>
+  </aside>
+  <main class="main">
+    <template x-if="current"><div class="d-flex align-items-start justify-content-between gap-3 flex-wrap"><div><h5 class="mb-1" x-text="current.title"></h5><div class="smallmuted" x-text="current.slug"></div><div class="smallmuted" x-show="progress[currentSlug]" x-text="'Resume at page '+(progress[currentSlug]?.page||1)+' of '+(pageCount||'…')"></div></div><button class="btnx" :class="isBookmarked?'active':''" @click="toggleBookmark()" x-text="isBookmarked?'★ Bookmarked':'☆ Bookmark'"></button></div></template>
+    <div class="reader-toolbar" x-show="current">
+      <button class="btnx" @click="goPage(-1)" :disabled="page<=1">‹ Prev</button><label class="smallmuted">Page <input type="number" min="1" :max="pageCount" x-model.number="page" @change="setPage()"></label><span class="smallmuted" x-text="'/ '+pageCount"></span><button class="btnx" @click="goPage(1)" :disabled="page>=pageCount">Next ›</button><span style="flex:1"></span><button class="btnx" @click="setZoom(-.15)">−</button><span class="smallmuted" x-text="Math.round(zoom*100)+'%'"></span><button class="btnx" @click="setZoom(.15)">+</button><input class="field mb-0" style="width:min(220px,38vw)" placeholder="Search inside PDF" x-model="pdfSearch" @keydown.enter="searchInPdf()"><button class="btnx" @click="searchInPdf()">Find</button>
     </div>
-  </body>
-</html>
+    <div class="reader-frame" x-show="current"><div id="pdfPageHost"></div></div>
+    <div class="empty" x-show="!current"><h3>Your PDF library</h3><p>Select a document from the left to start reading.</p></div>
+    <div class="status" role="status" x-text="status"></div>
+  </main>
+  <aside class="side right">
+    <div class="section-title mt-0">Reading dashboard</div>
+    <div class="statgrid">
+      <div class="stat"><span class="smallmuted">PDFs</span><strong><%= files.length %></strong></div>
+      <div class="stat"><span class="smallmuted">Bookmarks</span><strong x-text="bookmarks.length"></strong></div>
+      <div class="stat"><span class="smallmuted">Started</span><strong x-text="totalStarted"></strong></div>
+      <div class="stat"><span class="smallmuted">Notes / highlights</span><strong x-text="totalNotes"></strong></div>
+    </div>
+    <div class="section-title">Categories & tags</div>
+    <div class="panel-card" x-show="current">
+      <label class="smallmuted">Category</label><input class="field" placeholder="e.g. Java, System Design" x-model="category">
+      <label class="smallmuted">Tags (comma separated)</label><input class="field" placeholder="interview, revision, important" x-model="tags">
+      <button class="btnx primary w-100" @click="saveMetadata()">Save category & tags</button>
+    </div>
+    <div class="section-title">Highlights & notes</div>
+    <div class="panel-card" x-show="current">
+      <p class="smallmuted mb-2">Select text in the PDF page, then save it as a highlight or attach a note.</p>
+      <button class="btnx w-100 mb-2" @click="captureSelection()">Capture selected text</button>
+      <div class="note-quote mb-2" x-show="selectedText" x-text="selectedText"></div>
+      <textarea class="field" rows="3" placeholder="Write a note about the selected text or current page…" x-model="noteText"></textarea>
+      <div class="d-flex gap-2"><button class="btnx primary flex-fill" @click="saveAnnotation(true)">Save highlight</button><button class="btnx flex-fill" @click="saveAnnotation(false)">Save note</button></div>
+    </div>
+    <div class="panel-card" x-show="current">
+      <div class="d-flex justify-content-between align-items-center"><strong>Saved annotations</strong><span class="tag" x-text="currentAnnotations.length"></span></div>
+      <template x-for="a in currentAnnotations" :key="a.id"><div class="note-item"><button class="btnx float-end" @click="deleteAnnotation(a.id)" title="Delete annotation">×</button><button class="btnx mb-2" @click="goAnnotation(a)" x-text="'Page '+a.page"></button><div class="note-quote mb-2" x-show="a.text" x-text="a.text"></div><div x-show="a.note" style="white-space:pre-wrap" x-text="a.note"></div><div class="smallmuted mt-1" x-text="new Date(a.createdAt).toLocaleString()"></div></div></template>
+      <div class="smallmuted mt-2" x-show="currentAnnotations.length===0">No highlights or notes for this PDF yet.</div>
+    </div>
+  </aside>
+</div>
+</body></html>
