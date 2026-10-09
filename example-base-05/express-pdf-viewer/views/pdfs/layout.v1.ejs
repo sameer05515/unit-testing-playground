@@ -35,6 +35,43 @@
           showList: false && window.innerWidth > 768,
           search: '',
           files: <%- JSON.stringify(files) %>,
+          bookmarks: <%- JSON.stringify(bookmarks || []) %>,
+          currentSlug: <%- JSON.stringify(slug || "") %>,
+          bookmarkBusy: false,
+          bookmarkMessage: "",
+          get isBookmarked() { return this.bookmarks.includes(this.currentSlug); },
+          async toggleBookmark() {
+            if (!this.currentSlug || this.bookmarkBusy) return;
+            this.bookmarkBusy = true;
+            this.bookmarkMessage = "";
+            try {
+              const response = this.isBookmarked
+                ? await fetch(`/pdf-viewer/v1/bookmarks/${encodeURIComponent(this.currentSlug)}`, { method: "DELETE" })
+                : await fetch("/pdf-viewer/v1/bookmarks", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ slug: this.currentSlug })
+                  });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error || "Bookmark update failed");
+              this.bookmarks = result.bookmarks;
+              this.bookmarkMessage = this.isBookmarked ? "Bookmarked" : "Bookmark removed";
+            } catch (error) {
+              this.bookmarkMessage = error.message || "Unable to update bookmark";
+            } finally {
+              this.bookmarkBusy = false;
+            }
+          },
+          async toggleBookmarkFor(targetSlug) {
+            try {
+              const response = await fetch(`/pdf-viewer/v1/bookmarks/${encodeURIComponent(targetSlug)}`, { method: "DELETE" });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error || "Unable to remove bookmark");
+              this.bookmarks = result.bookmarks;
+              this.bookmarkMessage = "Bookmark removed";
+            } catch (error) { this.bookmarkMessage = error.message || "Unable to remove bookmark"; }
+          },
+          get bookmarkedFiles() { return this.files.filter(file => this.bookmarks.includes(file.slug)); },
           get filteredFiles() {
             if (!this.search.trim()) return this.files;
             return this.files.filter(f =>
@@ -63,6 +100,9 @@
           📂
         </button>
         <% if (details) { %>
+        <button class="btn" :class="isBookmarked ? 'btn-warning' : 'btn-outline-light'" @click="toggleBookmark()" :disabled="bookmarkBusy" :title="isBookmarked ? 'Remove bookmark' : 'Bookmark this PDF'">
+          <span x-text="isBookmarked ? '★ Saved' : '☆ Bookmark'"></span>
+        </button>
         <a
           href="/pdf-viewer/v1/?slug=<%= details.prevSlug %>"
           title="Prev"
@@ -98,6 +138,21 @@
             />
           </div>
 
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+            <strong>Bookmarks</strong><span class="badge bg-warning text-dark" x-text="bookmarks.length"></span>
+          </div>
+          <div class="small text-info mb-2" role="status" x-text="bookmarkMessage"></div>
+          <ul class="list-group mb-3">
+            <template x-for="file in bookmarkedFiles" :key="'bookmark-' + file.slug">
+              <li class="list-group-item bg-dark border-warning d-flex align-items-center gap-2">
+                <a :href="`/pdf-viewer/v1/?slug=${encodeURIComponent(file.slug)}`" class="text-decoration-none text-warning text-break flex-grow-1" x-text="file.slug"></a>
+                <button class="btn btn-sm btn-outline-warning" @click="toggleBookmarkFor(file.slug)" title="Remove bookmark" aria-label="Remove bookmark">×</button>
+              </li>
+            </template>
+            <li class="list-group-item bg-dark text-secondary" x-show="bookmarkedFiles.length === 0">No bookmarks yet.</li>
+          </ul>
+
+          <div class="fw-bold mb-2">All PDFs</div>
           <ul class="list-group">
             <template x-for="file in filteredFiles" :key="file.slug">
               <li
