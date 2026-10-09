@@ -2,6 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Apply the saved theme before rendering to avoid a light-mode flash on reload.
+  (function () {
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (e) {
+      // Storage may be unavailable in privacy-restricted contexts.
+    }
+  })();
+</script>
 <title>100 Java Coding Questions — Answers & Explanations</title>
 <script>tailwind={config:{darkMode:'class'}};</script><script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -49,7 +63,13 @@ try{
   if(!this.questions.length) console.warn('No questions loaded. Ensure data/questions-000.json exists and serve the folder over HTTP.');
 }catch(e){console.error('Could not load numbered question JSON files from data/',e)}
 try{this.solved=new Set(JSON.parse(localStorage.getItem('java100-solved')||'[]'))}catch(e){}
-this.dark=document.documentElement.classList.contains('dark');
+try {
+   const savedTheme=localStorage.getItem('theme');
+   this.dark=savedTheme ? savedTheme==='dark' : document.documentElement.classList.contains('dark');
+ } catch(e) {
+   this.dark=document.documentElement.classList.contains('dark');
+ }
+ document.documentElement.classList.toggle('dark',this.dark);
 this.$watch('expandAll',()=>this.highlightVisible())
 },toggleTheme(){this.dark=!this.dark;document.documentElement.classList.toggle('dark',this.dark);try{localStorage.setItem('theme',this.dark?'dark':'light')}catch(e){}},markSolved(id,value){if(value)this.solved.add(id);else this.solved.delete(id);try{localStorage.setItem('java100-solved',JSON.stringify([...this.solved]))}catch(e){}},clearProgress(){this.solved.clear();try{localStorage.removeItem('java100-solved')}catch(e){}},copyCode(code){if(navigator.clipboard)navigator.clipboard.writeText(code).catch(()=>{});},highlightVisible(){this.$nextTick(()=>{if(window.hljs)document.querySelectorAll('pre code:not(.hljs)').forEach(el=>hljs.highlightElement(el))})}}}
 document.addEventListener('alpine:initialized',()=>{const observer=new MutationObserver(()=>{if(window.hljs)document.querySelectorAll('pre code:not(.hljs)').forEach(el=>hljs.highlightElement(el))});observer.observe(document.body,{childList:true,subtree:true});});
