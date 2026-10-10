@@ -1,0 +1,703 @@
+[
+  {
+    "id": "c996f240-8ecf-43b5-bca2-59518bcd701a",
+    "title": "What is JSX and why is it used?",
+    "category": "React Basics",
+    "question": "What is JSX and why is it used?",
+    "answer": "JSX is a syntax extension that lets you write HTML-like markup inside JavaScript. It is transformed into React element creation calls by a build tool.",
+    "explanation": "JSX keeps rendering logic and UI structure close together. It is optional; React can also be used without it.",
+    "complexity": "",
+    "tags": [
+      "JSX",
+      "syntax"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "b30f06cb-5cdb-4757-a91b-6cebe883890d",
+    "title": "How do you render a React component?",
+    "category": "React Basics",
+    "question": "How do you render a React component?",
+    "answer": "```jsx\nimport { createRoot } from 'react-dom/client';\nimport App from './App';\n\ncreateRoot(document.getElementById('root')).render(<App />);\n```",
+    "explanation": "createRoot creates a React root for a DOM container, and render displays the component tree inside it.",
+    "complexity": "",
+    "tags": [
+      "createRoot",
+      "render"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "1ff0ce23-aa98-4531-96b3-ed2f54dbe568",
+    "title": "What is the difference between a component and an element?",
+    "category": "React Basics",
+    "question": "What is the difference between a component and an element?",
+    "answer": "A component is a function or class that describes UI. An element is a lightweight object describing what React should render, commonly written with JSX.",
+    "explanation": "For example, `function Welcome() { return <h1>Hello</h1>; }` defines a component; `<Welcome />` creates an element for it.",
+    "complexity": "",
+    "tags": [
+      "components",
+      "elements"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "7b664e49-ca5b-4d53-b385-8fb5fabc378a",
+    "title": "How do you pass props to a functional component?",
+    "category": "Props",
+    "question": "How do you pass props to a functional component?",
+    "answer": "```jsx\nfunction Greeting({ name }) {\n  return <p>Hello, {name}!</p>;\n}\n\n<Greeting name=\"Prem\" />\n```",
+    "explanation": "Props are read-only inputs passed from a parent component to a child component.",
+    "complexity": "",
+    "tags": [
+      "props",
+      "components"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "3e6eb3df-8d44-4667-8153-e67d6085b3e9",
+    "title": "How do you provide a default value for a prop?",
+    "category": "Props",
+    "question": "How do you provide a default value for a prop?",
+    "answer": "```jsx\nfunction Greeting({ name = 'Guest' }) {\n  return <p>Hello, {name}</p>;\n}\n```",
+    "explanation": "A destructuring default applies when the prop is `undefined`; it does not replace an explicitly passed `null`.",
+    "complexity": "",
+    "tags": [
+      "props",
+      "defaults"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "6c905a1f-cddd-4572-a0e1-6f32d80d36db",
+    "title": "How do you render a list in React?",
+    "category": "Rendering",
+    "question": "How do you render a list in React?",
+    "answer": "```jsx\nconst fruits = ['Apple', 'Mango', 'Orange'];\nreturn <ul>{fruits.map(fruit => <li key={fruit}>{fruit}</li>)}</ul>;\n```",
+    "explanation": "Use `map()` to turn data into elements. Provide a stable, unique key for each sibling element.",
+    "complexity": "",
+    "tags": [
+      "map",
+      "lists",
+      "key"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "86c14fdd-e80d-419a-aca2-7c1a6802c004",
+    "title": "Why is the key prop important in lists?",
+    "category": "Rendering",
+    "question": "Why is the key prop important in lists?",
+    "answer": "A key helps React match list items between renders so it can update, insert, or remove the correct elements.",
+    "explanation": "Prefer stable IDs from data. Array indexes can cause incorrect state reuse when items are reordered or removed.",
+    "complexity": "",
+    "tags": [
+      "key",
+      "reconciliation"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "23490e70-36e1-4cca-8d16-c2a947615041",
+    "title": "How do you conditionally render content?",
+    "category": "Rendering",
+    "question": "How do you conditionally render content?",
+    "answer": "```jsx\nreturn isLoggedIn ? <Dashboard /> : <Login />;\n```",
+    "explanation": "Use normal JavaScript conditions such as ternaries, `&&`, or early returns. Be careful with `count && <Badge />` when count may be zero, because `0` can render.",
+    "complexity": "",
+    "tags": [
+      "conditional rendering"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "e3989fbb-bae2-4e1b-8755-e2a37d041382",
+    "title": "How do you handle a button click?",
+    "category": "Events",
+    "question": "How do you handle a button click?",
+    "answer": "```jsx\nfunction SaveButton() {\n  function handleClick() {\n    console.log('Saved');\n  }\n  return <button onClick={handleClick}>Save</button>;\n}\n```",
+    "explanation": "Pass a function to the event prop; do not call it during render as `onClick={handleClick()}` unless the call intentionally returns a handler.",
+    "complexity": "",
+    "tags": [
+      "events",
+      "onClick"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "394f3057-1e30-408e-8e9b-70921685cddd",
+    "title": "How do you update state with useState?",
+    "category": "Hooks",
+    "question": "How do you update state with useState?",
+    "answer": "```jsx\nimport { useState } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;\n}\n```",
+    "explanation": "The setter schedules a render. Use a functional update when the next value depends on the previous value.",
+    "complexity": "",
+    "tags": [
+      "useState",
+      "state"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "3dc6a99a-d238-4f9f-a539-ff045e4e13ea",
+    "title": "Why should you not mutate React state directly?",
+    "category": "Hooks",
+    "question": "Why should you not mutate React state directly?",
+    "answer": "```jsx\n// Incorrect: state.items.push(newItem)\nsetItems(items => [...items, newItem]);\n```",
+    "explanation": "React relies on state identity and predictable updates. Create new arrays or objects instead of mutating existing state values.",
+    "complexity": "",
+    "tags": [
+      "immutability",
+      "state"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "89de132b-ae5b-4dac-aa95-a0a3383e9af0",
+    "title": "How do you update an object in state?",
+    "category": "Hooks",
+    "question": "How do you update an object in state?",
+    "answer": "```jsx\nsetUser(current => ({ ...current, name: 'Asha' }));\n```",
+    "explanation": "Spread the existing object and override the changed field. This is a shallow copy, so nested objects need their own copies.",
+    "complexity": "",
+    "tags": [
+      "objects",
+      "useState"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "38bd0aee-7c63-41de-8967-28afbb87b99f",
+    "title": "How do you update a nested state object immutably?",
+    "category": "Hooks",
+    "question": "How do you update a nested state object immutably?",
+    "answer": "```jsx\nsetUser(current => ({\n  ...current,\n  address: { ...current.address, city: 'Delhi' }\n}));\n```",
+    "explanation": "Copy each level along the path being changed. For complex state, consider a reducer or an immutable-update helper.",
+    "complexity": "",
+    "tags": [
+      "nested state",
+      "immutability"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "e108c478-8f45-468f-a7f0-e44b42b0fcfa",
+    "title": "What is useEffect used for?",
+    "category": "Hooks",
+    "question": "What is useEffect used for?",
+    "answer": "```jsx\nuseEffect(() => {\n  document.title = `Count: ${count}`;\n}, [count]);\n```",
+    "explanation": "useEffect synchronizes a component with an external system after rendering, such as subscriptions, timers, or browser APIs. Avoid using it for values that can be derived during render.",
+    "complexity": "",
+    "tags": [
+      "useEffect",
+      "effects"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "06ef2d1d-806b-40eb-a197-a9c50bfa699e",
+    "title": "How do you clean up an effect?",
+    "category": "Hooks",
+    "question": "How do you clean up an effect?",
+    "answer": "```jsx\nuseEffect(() => {\n  const id = setInterval(() => console.log('tick'), 1000);\n  return () => clearInterval(id);\n}, []);\n```",
+    "explanation": "Return a cleanup function to undo setup, such as clearing a timer or unsubscribing. React runs cleanup before rerunning an effect and when the component unmounts.",
+    "complexity": "",
+    "tags": [
+      "cleanup",
+      "useEffect"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "e8bdef96-f7da-406e-87e8-ef9b76e3c25a",
+    "title": "How do you fetch data in a component with useEffect?",
+    "category": "Data Fetching",
+    "question": "How do you fetch data in a component with useEffect?",
+    "answer": "```jsx\nuseEffect(() => {\n  const controller = new AbortController();\n  async function load() {\n    try {\n      const response = await fetch('/api/users', { signal: controller.signal });\n      if (!response.ok) throw new Error('Request failed');\n      setUsers(await response.json());\n    } catch (error) {\n      if (error.name !== 'AbortError') setError(error.message);\n    }\n  }\n  load();\n  return () => controller.abort();\n}, []);\n```",
+    "explanation": "Track loading, success, and error states in a complete implementation. Abort requests during cleanup to avoid stale work; larger apps may benefit from a data-fetching library.",
+    "complexity": "",
+    "tags": [
+      "fetch",
+      "useEffect",
+      "AbortController"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "cc200bac-446b-43ff-95fe-b1b691880dba",
+    "title": "What is the difference between useEffect and useLayoutEffect?",
+    "category": "Hooks",
+    "question": "What is the difference between useEffect and useLayoutEffect?",
+    "answer": "useEffect runs after the browser has had a chance to paint in typical cases. useLayoutEffect runs after DOM mutations but before paint and can block painting.",
+    "explanation": "Use useLayoutEffect for layout measurements or synchronous visual corrections that must happen before paint. Prefer useEffect for most side effects.",
+    "complexity": "",
+    "tags": [
+      "useEffect",
+      "useLayoutEffect"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "f70fe6d3-0c35-47ed-8114-8c00b93ad2c1",
+    "title": "What is a controlled input?",
+    "category": "Forms",
+    "question": "What is a controlled input?",
+    "answer": "```jsx\nfunction NameField() {\n  const [name, setName] = useState('');\n  return <input value={name} onChange={event => setName(event.target.value)} />;\n}\n```",
+    "explanation": "The input value is controlled by React state. This makes validation and conditional UI easier to manage.",
+    "complexity": "",
+    "tags": [
+      "forms",
+      "controlled components"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "19a258bd-b502-4ea6-93af-238bdfa6d626",
+    "title": "How do you handle form submission?",
+    "category": "Forms",
+    "question": "How do you handle form submission?",
+    "answer": "```jsx\nfunction handleSubmit(event) {\n  event.preventDefault();\n  // validate and submit form data\n}\nreturn <form onSubmit={handleSubmit}><button type=\"submit\">Submit</button></form>;\n```",
+    "explanation": "Prevent the browser's default navigation when handling the form in React, then validate and process the data. Use accessible labels and show errors clearly.",
+    "complexity": "",
+    "tags": [
+      "forms",
+      "onSubmit"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "83fa9651-44a0-426c-9b7a-f17009771bef",
+    "title": "How do you share state between sibling components?",
+    "category": "State Management",
+    "question": "How do you share state between sibling components?",
+    "answer": "Move the shared state to their closest common parent and pass the value and callbacks down as props.",
+    "explanation": "This pattern is called lifting state up. It keeps a single source of truth for state shared by multiple components.",
+    "complexity": "",
+    "tags": [
+      "lifting state",
+      "props"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "d43115ca-37c8-48a7-9341-5eb3d1ace1d9",
+    "title": "What is prop drilling and how can you avoid it?",
+    "category": "State Management",
+    "question": "What is prop drilling and how can you avoid it?",
+    "answer": "Prop drilling is passing props through intermediate components that do not need them, just to reach a deeply nested child.",
+    "explanation": "For suitable shared data, use Context, composition, or a state-management library. Context is not automatically the best choice for every prop.",
+    "complexity": "",
+    "tags": [
+      "props",
+      "Context"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "9edcef1c-f0ec-415a-882c-198e0f5e5eae",
+    "title": "How do you use React Context?",
+    "category": "Context",
+    "question": "How do you use React Context?",
+    "answer": "```jsx\nconst ThemeContext = createContext('light');\nfunction App() {\n  return <ThemeContext.Provider value=\"dark\"><Toolbar /></ThemeContext.Provider>;\n}\nfunction Toolbar() {\n  const theme = useContext(ThemeContext);\n  return <div className={theme}>Toolbar</div>;\n}\n```",
+    "explanation": "Context lets components read values from a provider without manually passing props through every level. A provider value change can re-render consumers.",
+    "complexity": "",
+    "tags": [
+      "createContext",
+      "useContext"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "30bf7125-176f-4921-b10a-3d13a9527112",
+    "title": "What is useReducer and when should you use it?",
+    "category": "Hooks",
+    "question": "What is useReducer and when should you use it?",
+    "answer": "```jsx\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment': return { count: state.count + 1 };\n    case 'reset': return { count: 0 };\n    default: return state;\n  }\n}\nconst [state, dispatch] = useReducer(reducer, { count: 0 });\n```",
+    "explanation": "useReducer centralizes state transitions in a reducer and is useful when updates are related or involve multiple action types.",
+    "complexity": "",
+    "tags": [
+      "useReducer",
+      "reducer"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "3c085877-8e5a-46a0-bd86-842f3cde99ed",
+    "title": "How do you create a reusable custom hook?",
+    "category": "Hooks",
+    "question": "How do you create a reusable custom hook?",
+    "answer": "```jsx\nfunction useWindowWidth() {\n  const [width, setWidth] = useState(window.innerWidth);\n  useEffect(() => {\n    const update = () => setWidth(window.innerWidth);\n    window.addEventListener('resize', update);\n    return () => window.removeEventListener('resize', update);\n  }, []);\n  return width;\n}\n```",
+    "explanation": "Custom hooks share stateful logic, not state itself. Each component calling the hook gets its own hook state unless the hook connects to shared state.",
+    "complexity": "",
+    "tags": [
+      "custom hooks"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "e3ab0f3e-2821-456a-9787-fa7ca7733b6c",
+    "title": "What are the Rules of Hooks?",
+    "category": "Hooks",
+    "question": "What are the Rules of Hooks?",
+    "answer": "Call hooks only at the top level of React function components or custom hooks, not inside loops, conditions, or nested functions. Call them before early returns.",
+    "explanation": "These rules let React preserve the order of hook calls across renders. Use the React Hooks ESLint plugin to catch violations.",
+    "complexity": "",
+    "tags": [
+      "Rules of Hooks",
+      "hooks"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "2065791c-644f-46e2-a29b-1b2634080869",
+    "title": "How do you prevent unnecessary re-renders with React.memo?",
+    "category": "Performance",
+    "question": "How do you prevent unnecessary re-renders with React.memo?",
+    "answer": "```jsx\nconst UserCard = React.memo(function UserCard({ user }) {\n  return <p>{user.name}</p>;\n});\n```",
+    "explanation": "React.memo can skip re-rendering when props are shallowly equal. It is a performance optimization, not a correctness mechanism, and new object/function props may defeat it.",
+    "complexity": "",
+    "tags": [
+      "React.memo",
+      "performance"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "fb7b6bcc-7a4f-43f7-883c-f895d98d0733",
+    "title": "What is useMemo?",
+    "category": "Performance",
+    "question": "What is useMemo?",
+    "answer": "```jsx\nconst filtered = useMemo(\n  () => items.filter(item => item.name.includes(query)),\n  [items, query]\n);\n```",
+    "explanation": "useMemo caches a calculated value between renders while dependencies remain equal. Use it when a calculation is expensive or stable identity matters; do not add it everywhere.",
+    "complexity": "",
+    "tags": [
+      "useMemo",
+      "performance"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "13b63189-87a6-4a54-bf89-4c1220a56a01",
+    "title": "What is useCallback?",
+    "category": "Performance",
+    "question": "What is useCallback?",
+    "answer": "```jsx\nconst handleSelect = useCallback((id) => {\n  setSelectedId(id);\n}, []);\n```",
+    "explanation": "useCallback caches a function reference until its dependencies change. It is most useful when function identity affects memoized children or hook dependencies.",
+    "complexity": "",
+    "tags": [
+      "useCallback",
+      "performance"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "3a6e33a8-c706-4d04-94cb-5b7414451200",
+    "title": "What is the difference between useMemo and useCallback?",
+    "category": "Performance",
+    "question": "What is the difference between useMemo and useCallback?",
+    "answer": "useMemo caches the result of calling a function; useCallback caches the function itself.",
+    "explanation": "Conceptually, `useCallback(fn, deps)` is similar to `useMemo(() => fn, deps)`. Both are performance tools and should be used when there is a concrete benefit.",
+    "complexity": "",
+    "tags": [
+      "useMemo",
+      "useCallback"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "4a288b88-8143-46cd-898c-c1dff46bbecd",
+    "title": "How do you implement a search filter for a list?",
+    "category": "Coding Problems",
+    "question": "How do you implement a search filter for a list?",
+    "answer": "```jsx\nconst visibleUsers = users.filter(user =>\n  user.name.toLowerCase().includes(query.trim().toLowerCase())\n);\n```",
+    "explanation": "Derive filtered data from the original list and query rather than storing duplicate filtered state. For large lists, consider debouncing input or server-side search.",
+    "complexity": "",
+    "tags": [
+      "filter",
+      "search"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "eb6d3f99-9aab-430e-9dff-8cdbfdbe451c",
+    "title": "How do you implement pagination in React?",
+    "category": "Coding Problems",
+    "question": "How do you implement pagination in React?",
+    "answer": "```jsx\nconst pageSize = 10;\nconst start = (page - 1) * pageSize;\nconst pageItems = items.slice(start, start + pageSize);\n```",
+    "explanation": "Keep the current page in state, compute the total page count, and reset the page when filters change if appropriate. For large datasets, prefer server-side pagination.",
+    "complexity": "",
+    "tags": [
+      "pagination",
+      "slice"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "ffebd9c5-a5d8-4f0c-9936-64847ea7406f",
+    "title": "How do you debounce a search input with a custom hook?",
+    "category": "Coding Problems",
+    "question": "How do you debounce a search input with a custom hook?",
+    "answer": "```jsx\nfunction useDebouncedValue(value, delay = 300) {\n  const [debounced, setDebounced] = useState(value);\n  useEffect(() => {\n    const id = setTimeout(() => setDebounced(value), delay);\n    return () => clearTimeout(id);\n  }, [value, delay]);\n  return debounced;\n}\n```",
+    "explanation": "The value updates only after it has remained unchanged for the delay. Use the debounced value for expensive filtering or network requests.",
+    "complexity": "",
+    "tags": [
+      "debounce",
+      "custom hook"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "0eafccf6-282b-4a1d-ae1e-3a343fe937c3",
+    "title": "How do you add and remove items from an array in state?",
+    "category": "Coding Problems",
+    "question": "How do you add and remove items from an array in state?",
+    "answer": "```jsx\nsetItems(current => [...current, newItem]);\nsetItems(current => current.filter(item => item.id !== idToRemove));\n```",
+    "explanation": "Use immutable array methods such as spread, map, and filter so React receives a new array reference.",
+    "complexity": "",
+    "tags": [
+      "arrays",
+      "state"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "f06c44a4-3c3e-49f0-b1c3-5ee67055247b",
+    "title": "How do you toggle a boolean state?",
+    "category": "Coding Problems",
+    "question": "How do you toggle a boolean state?",
+    "answer": "```jsx\nconst [open, setOpen] = useState(false);\n<button onClick={() => setOpen(value => !value)}>\n  {open ? 'Hide' : 'Show'}\n</button>\n```",
+    "explanation": "Use a functional state update to toggle from the latest state value, especially when updates may be queued.",
+    "complexity": "",
+    "tags": [
+      "toggle",
+      "useState"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "34c1b5df-1e89-4a9b-916e-06c3f8368a96",
+    "title": "How do you build an accordion component?",
+    "category": "Coding Problems",
+    "question": "How do you build an accordion component?",
+    "answer": "```jsx\nfunction Accordion({ title, children }) {\n  const [open, setOpen] = useState(false);\n  return <section>\n    <button aria-expanded={open} onClick={() => setOpen(v => !v)}>{title}</button>\n    {open && <div>{children}</div>}\n  </section>;\n}\n```",
+    "explanation": "Use a button for keyboard accessibility and expose its state with `aria-expanded`. A single-open accordion can keep the active item ID in a parent.",
+    "complexity": "",
+    "tags": [
+      "accordion",
+      "accessibility"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "f228449e-7da0-484f-b813-80f46a5c0986",
+    "title": "How do you create a modal with accessible behavior?",
+    "category": "Coding Problems",
+    "question": "How do you create a modal with accessible behavior?",
+    "answer": "A robust modal should move focus inside when opened, trap focus while open, close on Escape, restore focus to the trigger, and label the dialog. Use a native `<dialog>` or a well-tested accessible dialog library where possible.",
+    "explanation": "Rendering a positioned div alone does not provide complete dialog accessibility. Also consider scroll locking and preventing background interaction.",
+    "complexity": "",
+    "tags": [
+      "modal",
+      "accessibility"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "e9ffb211-c487-4d3a-81d8-44e9ed679fa6",
+    "title": "How do you implement a checkbox list with select-all?",
+    "category": "Coding Problems",
+    "question": "How do you implement a checkbox list with select-all?",
+    "answer": "```jsx\nconst allSelected = items.length > 0 && selectedIds.length === items.length;\nfunction toggleAll() {\n  setSelectedIds(allSelected ? [] : items.map(item => item.id));\n}\n```",
+    "explanation": "Keep selected IDs in state and ensure selection logic accounts for items being added or filtered. A production version should compare sets of IDs robustly.",
+    "complexity": "",
+    "tags": [
+      "checkbox",
+      "selection"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "052ce71d-fa1b-4241-b45c-d979285ae296",
+    "title": "How do you validate form fields in React?",
+    "category": "Forms",
+    "question": "How do you validate form fields in React?",
+    "answer": "Store field values and validation errors in state, validate on submit or blur, and render errors beside inputs. For larger forms, libraries such as React Hook Form with a schema validator can reduce boilerplate.",
+    "explanation": "Always validate important data on the server too. Connect error messages to fields with `aria-describedby` and mark invalid fields appropriately.",
+    "complexity": "",
+    "tags": [
+      "validation",
+      "forms"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "6f4c8aba-a54d-4edf-9abf-21e8a6f71f6b",
+    "title": "How do you render a component only when data has loaded?",
+    "category": "Data Fetching",
+    "question": "How do you render a component only when data has loaded?",
+    "answer": "```jsx\nif (loading) return <p>Loading…</p>;\nif (error) return <p role=\"alert\">{error}</p>;\nif (!data) return <p>No data found.</p>;\nreturn <UserList users={data} />;\n```",
+    "explanation": "Model loading, error, empty, and success states explicitly. This makes asynchronous interfaces easier to understand and test.",
+    "complexity": "",
+    "tags": [
+      "loading",
+      "error handling"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "c66797fc-7d25-42ab-ad23-313640e1851d",
+    "title": "How do you avoid race conditions in data fetching?",
+    "category": "Data Fetching",
+    "question": "How do you avoid race conditions in data fetching?",
+    "answer": "Use `AbortController` to cancel obsolete fetch requests, or track the latest request and ignore results from older requests. Data-fetching libraries can handle caching and request coordination.",
+    "explanation": "A race can happen when a slower earlier request finishes after a newer request and overwrites its result.",
+    "complexity": "",
+    "tags": [
+      "race condition",
+      "fetch"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "dac350bb-d79c-4756-bb6b-5312ca61fbe5",
+    "title": "How do you test a React component?",
+    "category": "Testing",
+    "question": "How do you test a React component?",
+    "answer": "```jsx\nrender(<Greeting name=\"Asha\" />);\nexpect(screen.getByText('Hello, Asha!')).toBeInTheDocument();\n```",
+    "explanation": "With React Testing Library, test observable behavior from the user's perspective. Use a test runner such as Vitest or Jest and mock external boundaries when necessary.",
+    "complexity": "",
+    "tags": [
+      "testing",
+      "React Testing Library"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "ae8e65c2-ba3c-4983-a267-3be9a3101ab5",
+    "title": "How do you test a button click?",
+    "category": "Testing",
+    "question": "How do you test a button click?",
+    "answer": "```jsx\nconst onSave = vi.fn();\nrender(<button onClick={onSave}>Save</button>);\nawait user.click(screen.getByRole('button', { name: 'Save' }));\nexpect(onSave).toHaveBeenCalledOnce();\n```",
+    "explanation": "This example uses Vitest and `user-event`. Prefer accessible queries such as role and name rather than implementation-specific selectors.",
+    "complexity": "",
+    "tags": [
+      "testing",
+      "user-event"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "7a9cb93b-1ed3-4a74-b730-d6d27dd6d3ed",
+    "title": "What is reconciliation in React?",
+    "category": "React Internals",
+    "question": "What is reconciliation in React?",
+    "answer": "Reconciliation is the process React uses to compare the new element tree with the previous one and determine what updates are needed.",
+    "explanation": "Element types and keys influence how React matches components and preserves or resets their state.",
+    "complexity": "",
+    "tags": [
+      "reconciliation",
+      "rendering"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "5bbafc4b-9e77-4af7-a4b2-34299ea3c04f",
+    "title": "What is the Virtual DOM?",
+    "category": "React Internals",
+    "question": "What is the Virtual DOM?",
+    "answer": "The Virtual DOM is a common informal term for React's in-memory representation of UI elements and the trees React uses during rendering.",
+    "explanation": "It is not simply a faster copy of the browser DOM in every case. React computes updates and commits necessary changes to the host environment.",
+    "complexity": "",
+    "tags": [
+      "Virtual DOM",
+      "rendering"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "82fc4cb2-a20c-4771-b54b-389bf1f33274",
+    "title": "What is the difference between state and props?",
+    "category": "React Basics",
+    "question": "What is the difference between state and props?",
+    "answer": "Props are inputs supplied by a parent; state is data a component manages over time. Both influence rendering, and props should be treated as read-only.",
+    "explanation": "A child should request changes through callbacks or shared state patterns rather than mutate its props.",
+    "complexity": "",
+    "tags": [
+      "state",
+      "props"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "ac6f60f9-362b-4b97-bc0a-87e9a512b9fb",
+    "title": "How do you reset component state when an ID changes?",
+    "category": "React Internals",
+    "question": "How do you reset component state when an ID changes?",
+    "answer": "```jsx\n<UserEditor key={userId} userId={userId} />\n```",
+    "explanation": "Changing the key tells React to treat the component as a different instance, resetting its local state. Use this when a full reset is intended rather than synchronizing every field manually.",
+    "complexity": "",
+    "tags": [
+      "key",
+      "state"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "30f4dceb-f441-472b-b31b-58a18af80926",
+    "title": "How do you navigate between pages in a React SPA?",
+    "category": "Routing",
+    "question": "How do you navigate between pages in a React SPA?",
+    "answer": "```jsx\nimport { BrowserRouter, Routes, Route } from 'react-router-dom';\n\n<BrowserRouter>\n  <Routes>\n    <Route path=\"/\" element={<Home />} />\n    <Route path=\"/users/:id\" element={<UserDetails />} />\n  </Routes>\n</BrowserRouter>\n```",
+    "explanation": "A routing library maps URL paths to UI and supports navigation without full page reloads. Configure the server to serve the SPA entry point for application routes.",
+    "complexity": "",
+    "tags": [
+      "React Router",
+      "routing"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "e3075626-7914-4533-b8fd-e4058a3331bc",
+    "title": "How do you read a route parameter with React Router?",
+    "category": "Routing",
+    "question": "How do you read a route parameter with React Router?",
+    "answer": "```jsx\nimport { useParams } from 'react-router-dom';\n\nfunction UserDetails() {\n  const { id } = useParams();\n  return <p>User ID: {id}</p>;\n}\n```",
+    "explanation": "Route parameters are strings from the URL. Validate and parse them before using them in API calls or numeric operations.",
+    "complexity": "",
+    "tags": [
+      "useParams",
+      "routing"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "1989bf99-47a1-44dc-8f1b-d54d3ada79a7",
+    "title": "How do you lazy-load a component?",
+    "category": "Performance",
+    "question": "How do you lazy-load a component?",
+    "answer": "```jsx\nconst Settings = React.lazy(() => import('./Settings'));\n\n<Suspense fallback={<p>Loading settings…</p>}>\n  <Settings />\n</Suspense>\n```",
+    "explanation": "React.lazy loads a component's module when it is first rendered. Suspense provides a fallback while the module loads; error boundaries can handle loading failures.",
+    "complexity": "",
+    "tags": [
+      "lazy",
+      "Suspense",
+      "code splitting"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "3cd78794-609c-4a5e-b244-f49592f25689",
+    "title": "What is an Error Boundary?",
+    "category": "React Internals",
+    "question": "What is an Error Boundary?",
+    "answer": "An Error Boundary is a component that catches rendering errors in its descendant tree and displays fallback UI instead of letting the entire UI crash.",
+    "explanation": "Traditionally, Error Boundaries are class components implementing `static getDerivedStateFromError` and optionally `componentDidCatch`. They do not catch every asynchronous or event-handler error.",
+    "complexity": "",
+    "tags": [
+      "Error Boundary",
+      "errors"
+    ],
+    "difficulty": "Medium"
+  }
+]
