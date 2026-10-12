@@ -1,0 +1,302 @@
+[
+  {
+    "id": "cbd53fb7-84ee-4b29-a7a7-93bccce8cc0c",
+    "title": "Define a JPA entity with a generated primary key",
+    "category": "entity",
+    "question": "Create a Product entity with an auto-generated ID, name, and price.",
+    "answer": "@Entity\npublic class Product {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    @Column(nullable = false, length = 120)\n    private String name;\n\n    @Column(nullable = false, precision = 12, scale = 2)\n    private BigDecimal price;\n\n    protected Product() {}\n    public Product(String name, BigDecimal price) {\n        this.name = name;\n        this.price = price;\n    }\n    public Long getId() { return id; }\n    public String getName() { return name; }\n    public BigDecimal getPrice() { return price; }\n}",
+    "explanation": "Use @Entity to map a class to a table, @Id for its primary key, and @GeneratedValue for ID generation. BigDecimal is preferred over double for monetary values.",
+    "complexity": "O(1) object creation",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "entity"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "317d3577-0afe-4ecb-b7a0-682e7cf66609",
+    "title": "Create a Spring Data JPA repository",
+    "category": "repository",
+    "question": "Create a repository for Product entities with Long IDs and inherit CRUD operations.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n}",
+    "explanation": "JpaRepository provides common persistence operations such as save, findById, findAll, and deleteById. Add the Spring Data JPA starter and configure a datasource.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "repository"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "084d6a37-6bf8-41e3-a72e-24594c39fe91",
+    "title": "Write a derived query method",
+    "category": "repository",
+    "question": "Write a repository method to find products whose names contain a phrase, ignoring case.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n    List<Product> findByNameContainingIgnoreCase(String phrase);\n}",
+    "explanation": "Spring Data parses the method name and creates a query. The property name must match the entity field; query cost depends on database indexes and matching strategy.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "repository"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "12d5bd1d-7d67-4fad-8ce2-951d58450aec",
+    "title": "Find records with multiple conditions",
+    "category": "repository",
+    "question": "Find active products in a price range using a derived repository method.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n    List<Product> findByActiveTrueAndPriceBetween(\n        BigDecimal minimum, BigDecimal maximum);\n}",
+    "explanation": "Derived methods support boolean predicates, comparisons, and combinations such as And and Or. Ensure the named properties exist on the entity.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "repository"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "7dce0230-a483-44f2-8cc3-539a06c20b6e",
+    "title": "Write a JPQL query with @Query",
+    "category": "jpql",
+    "question": "Use JPQL to find products priced below a supplied maximum.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n    @Query(\"select p from Product p where p.price < :maximum\")\n    List<Product> findCheaperThan(@Param(\"maximum\") BigDecimal maximum);\n}",
+    "explanation": "JPQL refers to entity names and Java attributes rather than physical table and column names. Named parameters improve readability and avoid positional mistakes.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "jpql"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "b27722b3-7bf7-4cdd-bac1-c5cfa2e0713e",
+    "title": "Write a native SQL query",
+    "category": "native-query",
+    "question": "Use a native SQL query to select products by an exact name.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n    @Query(value = \"select * from products where name = :name\", nativeQuery = true)\n    List<Product> findByExactNameNative(@Param(\"name\") String name);\n}",
+    "explanation": "Native queries use database SQL and physical table/column names, so they are less portable than JPQL. Adjust the table name to match your schema.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "native-query"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "95a0182a-6442-47eb-a2b2-dde7bc74cbcc",
+    "title": "Implement pagination and sorting",
+    "category": "pagination",
+    "question": "Return one page of products sorted by price in ascending order.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n    Page<Product> findAll(Pageable pageable);\n}\n\n// Service usage:\nPageable pageable = PageRequest.of(\n    0, 20, Sort.by(Sort.Direction.ASC, \"price\"));\nPage<Product> page = productRepository.findAll(pageable);",
+    "explanation": "Page numbers are zero-based. Validate page and size values and limit the maximum page size when they come from an API request.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "pagination"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "2c033605-143e-4984-8ede-7c551d494900",
+    "title": "Create a one-to-many relationship",
+    "category": "relationships",
+    "question": "Map one Customer to many Orders with the customer foreign key stored in the orders table.",
+    "answer": "@Entity\nclass Customer {\n    @Id @GeneratedValue\n    private Long id;\n\n    @OneToMany(mappedBy = \"customer\", cascade = CascadeType.ALL,\n               orphanRemoval = true)\n    private List<PurchaseOrder> orders = new ArrayList<>();\n\n    public void addOrder(PurchaseOrder order) {\n        orders.add(order);\n        order.setCustomer(this);\n    }\n}\n\n@Entity\nclass PurchaseOrder {\n    @Id @GeneratedValue\n    private Long id;\n\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"customer_id\", nullable = false)\n    private Customer customer;\n\n    void setCustomer(Customer customer) { this.customer = customer; }\n}",
+    "explanation": "The many-to-one side owns the foreign key. Keep both sides of a bidirectional relationship synchronized in helper methods; choose cascade behavior intentionally.",
+    "complexity": "O(n) to process n orders",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "relationships"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fef2fc14-874f-4567-8924-ffc6d5d09525",
+    "title": "Map a many-to-many relationship",
+    "category": "relationships",
+    "question": "Map students and courses using a join table.",
+    "answer": "@Entity\nclass Student {\n    @Id @GeneratedValue\n    private Long id;\n\n    @ManyToMany\n    @JoinTable(name = \"student_course\",\n        joinColumns = @JoinColumn(name = \"student_id\"),\n        inverseJoinColumns = @JoinColumn(name = \"course_id\"))\n    private Set<Course> courses = new HashSet<>();\n}\n\n@Entity\nclass Course {\n    @Id @GeneratedValue\n    private Long id;\n\n    @ManyToMany(mappedBy = \"courses\")\n    private Set<Student> students = new HashSet<>();\n}",
+    "explanation": "The owning side defines @JoinTable; the inverse side uses mappedBy. If the relationship has attributes of its own, model the join table as a separate entity instead.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "relationships"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "9479afd8-e1a5-41ff-b973-39a265c021c8",
+    "title": "Use @Embedded and @Embeddable for value objects",
+    "category": "mapping",
+    "question": "Map an Address value object inside a Customer table without creating a separate address entity.",
+    "answer": "@Embeddable\npublic class Address {\n    private String street;\n    private String city;\n    protected Address() {}\n    public Address(String street, String city) {\n        this.street = street; this.city = city;\n    }\n}\n\n@Entity\npublic class Customer {\n    @Id @GeneratedValue\n    private Long id;\n\n    @Embedded\n    private Address address;\n}",
+    "explanation": "An embeddable's fields are stored as columns in the owning entity's table by default. Use @AttributeOverrides if column names need customization.",
+    "complexity": "O(1) object mapping",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "mapping"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "8bb71375-2455-4273-bb6d-962654f401e7",
+    "title": "Implement optimistic locking with @Version",
+    "category": "concurrency",
+    "question": "Add optimistic locking to an entity to detect concurrent updates.",
+    "answer": "@Entity\npublic class InventoryItem {\n    @Id @GeneratedValue\n    private Long id;\n\n    private int quantity;\n\n    @Version\n    private long version;\n\n    public void remove(int amount) {\n        if (amount < 0 || quantity < amount)\n            throw new IllegalArgumentException(\"Invalid quantity\");\n        quantity -= amount;\n    }\n}",
+    "explanation": "JPA checks the version during update and increments it when appropriate. Concurrent stale updates can raise an optimistic locking exception; handle conflicts at the service/API layer.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "concurrency"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "361fbf5f-baa1-4c9e-a7d6-ed9e7ce0598c",
+    "title": "Run a service method inside a transaction",
+    "category": "transactions",
+    "question": "Load an entity, update a field, and persist the change transactionally.",
+    "answer": "@Service\npublic class ProductService {\n    private final ProductRepository repository;\n    public ProductService(ProductRepository repository) {\n        this.repository = repository;\n    }\n\n    @Transactional\n    public void rename(Long id, String newName) {\n        Product product = repository.findById(id)\n            .orElseThrow(() -> new EntityNotFoundException(\"Product not found\"));\n        product.setName(newName);\n        // Dirty checking writes the change when the transaction commits.\n    }\n}",
+    "explanation": "A managed entity's changed fields are detected by dirty checking. Spring's transaction proxy applies transaction behavior when the method is invoked through the proxy.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "transactions"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "20291bdf-237c-4199-b54e-ba0b9991e9a3",
+    "title": "Use a modifying query to update rows",
+    "category": "jpql",
+    "question": "Write a bulk JPQL update that changes a product's active flag by ID.",
+    "answer": "public interface ProductRepository extends JpaRepository<Product, Long> {\n    @Modifying(clearAutomatically = true, flushAutomatically = true)\n    @Transactional\n    @Query(\"update Product p set p.active = :active where p.id = :id\")\n    int updateActive(@Param(\"id\") Long id, @Param(\"active\") boolean active);\n}",
+    "explanation": "Bulk updates bypass normal entity dirty checking and can leave already-managed entities stale. Clearing the persistence context helps avoid reading outdated managed state.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "jpql"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "42e35116-3d32-4735-a8ec-90cfb23866cd",
+    "title": "Delete entities by a condition",
+    "category": "repository",
+    "question": "Create a repository method to delete all expired sessions before a given timestamp.",
+    "answer": "public interface SessionRepository extends JpaRepository<UserSession, Long> {\n    long deleteByExpiresAtBefore(Instant cutoff);\n}",
+    "explanation": "Spring Data derives a delete query from the method name. The exact return type supported can depend on the method form and Spring Data version; verify it against your chosen version.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "repository"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "7a19727d-1467-42bf-a1fa-fc2c7e70ec71",
+    "title": "Avoid N+1 selects with EntityGraph",
+    "category": "performance",
+    "question": "Load orders and their customer in a query method without triggering a separate customer lookup for every order.",
+    "answer": "public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {\n    @EntityGraph(attributePaths = \"customer\")\n    List<PurchaseOrder> findByStatus(String status);\n}",
+    "explanation": "An entity graph requests that the specified association be fetched for this operation. Inspect generated SQL and results because fetch behavior depends on provider and query shape.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "performance"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "3d8f9a16-f66c-45ec-b585-cf51636e4708",
+    "title": "Use a projection to return selected columns",
+    "category": "projection",
+    "question": "Return only product ID and name using a Spring Data interface projection.",
+    "answer": "public interface ProductSummary {\n    Long getId();\n    String getName();\n}\n\npublic interface ProductRepository extends JpaRepository<Product, Long> {\n    List<ProductSummary> findByActiveTrue();\n}",
+    "explanation": "Interface projections can reduce unnecessary entity materialization and data transfer when only a subset of fields is needed. Getter names should match entity properties.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "projection"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "82fd30e9-a993-432c-ac71-1548cd95dd0c",
+    "title": "Implement an enum field with @Enumerated",
+    "category": "mapping",
+    "question": "Persist an order status as its enum name rather than its ordinal number.",
+    "answer": "public enum OrderStatus { NEW, PAID, SHIPPED, CANCELLED }\n\n@Entity\npublic class PurchaseOrder {\n    @Id @GeneratedValue\n    private Long id;\n\n    @Enumerated(EnumType.STRING)\n    @Column(nullable = false)\n    private OrderStatus status;\n}",
+    "explanation": "EnumType.STRING stores values such as PAID and avoids ordinal shifts when enum constants are reordered. Renaming enum constants may require a data migration.",
+    "complexity": "O(1) enum mapping",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "mapping"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "6b4503d5-eb8b-4ef2-aa1f-fc07a8c7631a",
+    "title": "Use auditing fields for creation and modification times",
+    "category": "auditing",
+    "question": "Automatically populate createdAt and updatedAt timestamps using Spring Data JPA auditing.",
+    "answer": "@EntityListeners(AuditingEntityListener.class)\n@MappedSuperclass\npublic abstract class AuditedEntity {\n    @CreatedDate\n    @Column(nullable = false, updatable = false)\n    private Instant createdAt;\n\n    @LastModifiedDate\n    @Column(nullable = false)\n    private Instant updatedAt;\n}\n\n// Enable auditing on a configuration class:\n// @EnableJpaAuditing",
+    "explanation": "Add the relevant Spring Data auditing imports and enable auditing. Auditing fields are populated during persistence lifecycle events; configure a DateTimeProvider if needed.",
+    "complexity": "O(1) timestamp updates",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "auditing"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "dd50b124-9265-45f6-b51a-c4619bae13e0",
+    "title": "Write a repository test with @DataJpaTest",
+    "category": "testing",
+    "question": "Test that a Product can be saved and retrieved using a JPA slice test.",
+    "answer": "@DataJpaTest\nclass ProductRepositoryTest {\n    @Autowired ProductRepository repository;\n\n    @Test\n    void savesAndFindsProduct() {\n        Product saved = repository.save(new Product(\"Keyboard\", new BigDecimal(\"49.99\")));\n        repository.flush();\n\n        Product found = repository.findById(saved.getId()).orElseThrow();\n        assertEquals(\"Keyboard\", found.getName());\n    }\n}",
+    "explanation": "@DataJpaTest configures a focused JPA test context and commonly uses an embedded database when available. Add suitable test dependencies and adapt entity constructors/accessors to your project.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "testing"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "35bf44b1-8f9c-48fd-a9c9-58e194f14194",
+    "title": "Map a one-to-one relationship",
+    "category": "relationships",
+    "question": "Map a User entity to one Profile entity using a foreign key on the profile table.",
+    "answer": "@Entity\nclass UserProfile {\n    @Id @GeneratedValue\n    private Long id;\n\n    @OneToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"user_id\", nullable = false, unique = true)\n    private AppUser user;\n}\n\n@Entity\nclass AppUser {\n    @Id @GeneratedValue\n    private Long id;\n\n    private String username;\n}",
+    "explanation": "The unique foreign key enforces that each profile references at most one user. Lazy loading for one-to-one associations can vary by provider and mapping details, so verify behavior with your JPA implementation.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "jpa",
+      "relationships"
+    ],
+    "difficulty": "intermediate"
+  }
+]

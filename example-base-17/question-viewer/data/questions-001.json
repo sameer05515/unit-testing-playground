@@ -1,0 +1,41 @@
+[
+  {
+    "id": "3e7d1af8-b00d-4f6a-b93a-510d62ef4297",
+    "category": "Java",
+    "title": "What is the difference between JDK, JRE, and JVM?",
+    "description": "Explain how the JDK, JRE, and JVM relate to compiling and running Java applications.",
+    "answer": "JVM (Java Virtual Machine) executes Java bytecode. JRE (Java Runtime Environment) traditionally bundles the JVM and runtime libraries needed to run Java applications. JDK (Java Development Kit) includes development tools such as the Java compiler (`javac`) along with runtime components. In modern Java releases, a separate JRE download is generally not provided by Oracle.",
+    "tags": [
+      "java",
+      "jvm",
+      "jdk",
+      "jre"
+    ]
+  },
+  {
+    "id": "92d3cd0f-0007-40f8-8498-73f6320c9306",
+    "category": "Java",
+    "title": "Why should equals() and hashCode() be overridden together?",
+    "description": "Describe the contract and what can go wrong in hash-based collections.",
+    "answer": "If two objects are equal according to `equals()`, they must return the same `hashCode()`. Overriding only one can cause hash-based collections such as `HashMap` and `HashSet` to behave incorrectly. Unequal objects may still have the same hash code.",
+    "tags": [
+      "java",
+      "equals",
+      "hashcode",
+      "collections"
+    ]
+  },
+  {
+    "id": "476dd566-2c75-4764-9623-c2ad2bab5c6f",
+    "category": "Java Concurrency",
+    "title": "Why is volatile not enough for count++?",
+    "description": "Explain visibility versus atomicity in a multithreaded counter.",
+    "answer": "`volatile` makes writes visible to other threads and restricts certain reorderings, but `count++` is a read-modify-write sequence, not one atomic operation. Concurrent increments can be lost. Use `AtomicInteger.incrementAndGet()` or protect the operation with synchronization or a lock.",
+    "tags": [
+      "java",
+      "concurrency",
+      "volatile",
+      "atomicinteger"
+    ]
+  }
+]

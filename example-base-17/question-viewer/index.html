@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Question & Answer Viewer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Marked.js with GitHub Flavored Markdown support -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- DOMPurify sanitizes rendered Markdown HTML -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    .markdown { line-height: 1.7; overflow-wrap: anywhere; }
+    .markdown h1,.markdown h2,.markdown h3 { font-weight: 700; margin: 1.1rem 0 .5rem; line-height: 1.3; }
+    .markdown h1 { font-size: 1.6rem; }
+    .markdown h2 { font-size: 1.35rem; }
+    .markdown h3 { font-size: 1.15rem; }
+    .markdown p { margin: .65rem 0; }
+    .markdown ul { list-style: disc; padding-left: 1.5rem; margin: .65rem 0; }
+    .markdown ol { list-style: decimal; padding-left: 1.5rem; margin: .65rem 0; }
+    .markdown li { margin: .2rem 0; }
+    .markdown blockquote { border-left: 4px solid #94a3b8; padding-left: 1rem; color: #64748b; margin: .8rem 0; }
+    .markdown code { background: #e2e8f0; color: #0f172a; border-radius: .25rem; padding: .12rem .3rem; font-size: .9em; }
+    .markdown pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: .65rem; overflow-x: auto; margin: .8rem 0; }
+    .markdown pre code { background: transparent; color: inherit; padding: 0; }
+    .markdown table { border-collapse: collapse; width: 100%; margin: .8rem 0; display: block; overflow-x: auto; }
+    .markdown th,.markdown td { border: 1px solid #cbd5e1; padding: .5rem .7rem; text-align: left; }
+    .markdown th { background: #f1f5f9; font-weight: 700; }
+    .markdown a { color: #2563eb; text-decoration: underline; }
+    .markdown input[type="checkbox"] { margin-right: .4rem; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-800">
+  <div x-data="questionViewer()" x-init="init()" x-cloak>
+    <header class="bg-slate-900 text-white">
+      <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 class="text-2xl font-bold sm:text-3xl">Question & Answer Viewer</h1>
+            <p class="mt-1 text-sm text-slate-300">Alpine.js · Tailwind CSS · Marked.js · GFM</p>
+          </div>
+          <label class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold hover:bg-indigo-400">
+            Select data folder
+            <input type="file" class="hidden" webkitdirectory directory multiple accept=".json,application/json"
+                   @change="loadFolder($event)" />
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+      <div class="mb-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+        <strong>JSON source:</strong> When served over HTTP, the app automatically loads
+        <code>data/questions-001.json</code>, <code>data/questions-002.json</code>, and subsequent numbered files.
+        If you open this HTML directly from your computer, click <strong>Select JSON folder</strong> and choose the
+        <code>data</code> folder.
+      </div>
+
+      <div class="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside class="h-fit rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <label for="search" class="mb-2 block text-sm font-semibold">Search questions</label>
+          <input id="search" x-model="search" type="search" placeholder="Search title, answer, tag..."
+                 class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+
+          <div class="mt-5 flex items-center justify-between">
+            <h2 class="font-bold">Questions</h2>
+            <span class="rounded-full bg-slate-100 px-2 py-1 text-xs" x-text="filteredQuestions.length"></span>
+          </div>
+          <div class="mt-3 space-y-2">
+            <template x-for="(q, index) in filteredQuestions" :key="q.id">
+              <button @click="selectedId = q.id"
+                      class="w-full rounded-lg border p-3 text-left transition"
+                      :class="selectedId === q.id ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 hover:bg-slate-50'">
+                <span class="block text-xs text-slate-500" x-text="q.category || 'General'"></span>
+                <span class="mt-1 block text-sm font-semibold" x-text="q.title"></span>
+              </button>
+            </template>
+            <p x-show="filteredQuestions.length === 0" class="py-4 text-sm text-slate-500">No questions found.</p>
+          </div>
+        </aside>
+
+        <section class="min-w-0">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="text-sm text-slate-600">
+              <span x-text="allQuestions.length"></span> loaded questions
+              <span class="mx-1">·</span>
+              <span x-text="pageFiles.length"></span> JSON pages
+            </div>
+            <div class="flex items-center gap-2">
+              <button @click="changePage(-1)" :disabled="pageIndex <= 0"
+                      class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-40">← Previous</button>
+              <span class="text-sm font-semibold" x-text="pageFiles.length ? `${pageIndex + 1} / ${pageFiles.length}` : '0 / 0'"></span>
+              <button @click="changePage(1)" :disabled="pageIndex >= pageFiles.length - 1"
+                      class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-40">Next →</button>
+            </div>
+          </div>
+
+          <div x-show="error" class="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700" x-text="error"></div>
+
+          <template x-if="selectedQuestion">
+            <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-800" x-text="selectedQuestion.category || 'General'"></span>
+                <template x-for="tag in (selectedQuestion.tags || [])" :key="tag">
+                  <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600" x-text="tag"></span>
+                </template>
+              </div>
+              <h2 class="mt-4 text-2xl font-bold leading-tight" x-text="selectedQuestion.title"></h2>
+              <p x-show="selectedQuestion.description" class="mt-3 text-slate-600" x-text="selectedQuestion.description"></p>
+
+              <div class="mt-7 border-t border-slate-200 pt-5">
+                <h3 class="mb-3 text-lg font-bold">Answer</h3>
+                <div class="markdown" x-html="renderMarkdown(selectedQuestion.answer || '')"></div>
+              </div>
+
+              <div class="mt-8 flex flex-wrap justify-between gap-3 border-t border-slate-200 pt-5">
+                <button @click="selectAdjacent(-1)" :disabled="selectedIndex <= 0"
+                        class="rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold hover:bg-slate-200 disabled:opacity-40">← Previous question</button>
+                <button @click="selectAdjacent(1)" :disabled="selectedIndex < 0 || selectedIndex >= filteredQuestions.length - 1"
+                        class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-40">Next question →</button>
+              </div>
+            </article>
+          </template>
+
+          <div x-show="!selectedQuestion && !error" class="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
+            <h2 class="text-xl font-bold">No questions loaded</h2>
+            <p class="mt-2 text-slate-600">Select your paged JSON folder to get started.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function questionViewer() {
+      return {
+        pageFiles: [],
+        allQuestions: [],
+        search: '',
+        selectedId: null,
+        pageIndex: 0,
+        error: '',
+        get filteredQuestions() {
+          const term = this.search.trim().toLowerCase();
+          // Normal browsing shows only the current JSON page (3 questions).
+          // Searching checks all loaded pages and navigates to matching questions.
+          const source = term ? this.allQuestions : (this.pageFiles[this.pageIndex]?.questions || this.allQuestions);
+          if (!term) return source;
+          return source.filter(q =>
+            [q.title, q.description, q.answer, q.category, ...(q.tags || [])]
+              .some(value => String(value || '').toLowerCase().includes(term))
+          );
+        },
+        get selectedQuestion() {
+          return this.filteredQuestions.find(q => q.id === this.selectedId) || this.filteredQuestions[0] || null;
+        },
+        get selectedIndex() {
+          return this.filteredQuestions.findIndex(q => q.id === (this.selectedQuestion && this.selectedQuestion.id));
+        },
+        init() {
+          // Configure Marked with GitHub Flavored Markdown (tables, task lists, strikethrough, etc.).
+          marked.setOptions({ gfm: true, breaks: false });
+
+          // HTTP/HTTPS mode: automatically load every numbered JSON file from ./data/.
+          // Direct file:// mode must use the folder picker because browsers block fetch().
+          if (window.location.protocol !== 'file:') {
+            this.loadFromServer();
+          }
+        },
+        renderMarkdown(markdown) {
+          const html = marked.parse(String(markdown || ''), { gfm: true });
+          return DOMPurify.sanitize(html);
+        },
+        async loadFolder(event) {
+          this.error = '';
+          try {
+            const files = Array.from(event.target.files || [])
+              .filter(file => /^questions-\d+\.json$/i.test(file.name))
+              .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+            if (!files.length) throw new Error('No questions-NNN.json files found in the selected folder.');
+            const parsedPages = await Promise.all(files.map(async file => {
+              const data = JSON.parse(await file.text());
+              if (!Array.isArray(data)) throw new Error(`${file.name} must contain a JSON array.`);
+              return { name: file.name, questions: data };
+            }));
+            this.pageFiles = parsedPages;
+            this.pageIndex = 0;
+            this.allQuestions = parsedPages.flatMap(page => page.questions);
+            this.selectedId = this.allQuestions[0]?.id ?? null;
+          } catch (err) {
+            this.error = 'Unable to load JSON files: ' + err.message;
+          } finally {
+            event.target.value = '';
+          }
+        },
+        async loadFromServer() {
+          // Fetch numbered JSON pages from the ./data/ folder.
+          this.error = '';
+          try {
+            const pages = [];
+
+            // Stop at the first missing sequence number (e.g. 001, 002, 003...).
+            for (let i = 1; i <= 999; i++) {
+              const name = `questions-${String(i).padStart(3, '0')}.json`;
+              const response = await fetch(`./data/${name}`, { cache: 'no-store' });
+
+              if (response.status === 404) {
+                if (i === 1) throw new Error(`No files found at ./data/${name}`);
+                break;
+              }
+              if (!response.ok) throw new Error(`Failed to load ./data/${name} (HTTP ${response.status})`);
+
+              const data = await response.json();
+              if (!Array.isArray(data)) throw new Error(`${name} must contain a JSON array.`);
+              pages.push({ name, questions: data });
+            }
+
+            this.pageFiles = pages;
+            this.pageIndex = 0;
+            this.allQuestions = pages.flatMap(page => page.questions);
+            this.selectedId = this.allQuestions[0]?.id ?? null;
+          } catch (err) {
+            this.error = `Could not load JSON files from ./data/: ${err.message}. Use the folder picker when opening index.html directly, or run a local HTTP server.`;
+          }
+        },
+        changePage(delta) {
+          const next = this.pageIndex + delta;
+          if (next < 0 || next >= this.pageFiles.length) return;
+          this.pageIndex = next;
+          const page = this.pageFiles[next];
+          const visible = page.questions.find(q => this.filteredQuestions.some(item => item.id === q.id));
+          if (visible) this.selectedId = visible.id;
+        },
+        selectAdjacent(delta) {
+          const next = this.selectedIndex + delta;
+          const q = this.filteredQuestions[next];
+          if (q) {
+            this.selectedId = q.id;
+            const pageIndex = this.pageFiles.findIndex(page => page.questions.some(item => item.id === q.id));
+            if (pageIndex >= 0) this.pageIndex = pageIndex;
+          }
+        }
+      };
+    }
+  </script>
+</body>
+</html>

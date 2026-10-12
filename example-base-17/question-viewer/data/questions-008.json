@@ -1,0 +1,752 @@
+[
+  {
+    "id": "4d6db1b6-1b1e-41f7-bd2f-170a8548ab14",
+    "title": "Create a thread by extending the Thread class",
+    "category": "basic",
+    "question": "Create a thread that prints numbers from 1 to 5.",
+    "answer": "class NumberThread extends Thread {\n    @Override\n    public void run() {\n        for (int i = 1; i <= 5; i++) {\n            System.out.println(i);\n        }\n    }\n    public static void main(String[] args) {\n        new NumberThread().start();\n    }\n}",
+    "explanation": "Override run() with the task and call start() to execute it on a new thread. Calling run() directly would execute on the current thread.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "basic"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "3758ce66-7480-4bb8-94eb-b64afd8c5626",
+    "title": "Create a thread using Runnable",
+    "category": "basic",
+    "question": "Print a message from a task implemented with Runnable.",
+    "answer": "public class RunnableDemo {\n    public static void main(String[] args) {\n        Runnable task = () -> System.out.println(\"Running on \" + Thread.currentThread().getName());\n        new Thread(task).start();\n    }\n}",
+    "explanation": "Runnable separates the task from the Thread object and is usually more flexible than subclassing Thread.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "basic"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "df4ce5f5-8643-43a2-9fbc-d42c9c221bb7",
+    "title": "Create a thread using a lambda expression",
+    "category": "basic",
+    "question": "Use a lambda to run a task on a new thread.",
+    "answer": "public class LambdaThreadDemo {\n    public static void main(String[] args) {\n        Thread thread = new Thread(() -> {\n            for (int i = 1; i <= 3; i++) {\n                System.out.println(Thread.currentThread().getName() + \": \" + i);\n            }\n        });\n        thread.start();\n    }\n}",
+    "explanation": "Runnable is a functional interface, so a lambda can provide its run() implementation.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "basic"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "3e8ecd2f-c3a4-45d4-988e-ca6e92c20e5f",
+    "title": "Run two tasks concurrently",
+    "category": "basic",
+    "question": "Start two independent tasks and wait for both to finish.",
+    "answer": "public class TwoThreads {\n    public static void main(String[] args) throws InterruptedException {\n        Thread a = new Thread(() -> work(\"A\"));\n        Thread b = new Thread(() -> work(\"B\"));\n        a.start();\n        b.start();\n        a.join();\n        b.join();\n        System.out.println(\"Both tasks finished\");\n    }\n    static void work(String name) {\n        System.out.println(name + \" started\");\n    }\n}",
+    "explanation": "Starting both threads before joining allows overlap. join() makes the main thread wait for each worker to finish.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "basic"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "1cca15a5-1199-43ed-b4bc-4bac3ee1b4ba",
+    "title": "Print odd and even numbers using two threads",
+    "category": "coordination",
+    "question": "Use two threads to print 1 through 10 in order, with one printing odds and the other evens.",
+    "answer": "public class OddEvenPrinter {\n    private int number = 1;\n    private final int limit = 10;\n\n    synchronized void print(boolean odd) {\n        while (number <= limit) {\n            while (number <= limit && (number % 2 == 1) != odd) {\n                try { wait(); }\n                catch (InterruptedException e) {\n                    Thread.currentThread().interrupt();\n                    return;\n                }\n            }\n            if (number <= limit) {\n                System.out.println(Thread.currentThread().getName() + \": \" + number++);\n                notifyAll();\n            }\n        }\n        notifyAll();\n    }\n    public static void main(String[] args) throws InterruptedException {\n        OddEvenPrinter p = new OddEvenPrinter();\n        Thread odd = new Thread(() -> p.print(true), \"Odd\");\n        Thread even = new Thread(() -> p.print(false), \"Even\");\n        odd.start(); even.start();\n        odd.join(); even.join();\n    }\n}",
+    "explanation": "wait() releases the monitor; notifyAll() wakes the other thread. Conditions are checked in while loops to handle spurious wakeups.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "coordination"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "66d1d133-a957-40e1-8443-563e98fb4fc5",
+    "title": "Implement a thread-safe counter with synchronized",
+    "category": "synchronization",
+    "question": "Implement increment and read operations that are safe when called by multiple threads.",
+    "answer": "public class SafeCounter {\n    private int count;\n    public synchronized void increment() { count++; }\n    public synchronized int get() { return count; }\n\n    public static void main(String[] args) throws InterruptedException {\n        SafeCounter counter = new SafeCounter();\n        Thread[] threads = new Thread[4];\n        for (int i = 0; i < threads.length; i++) {\n            threads[i] = new Thread(() -> {\n                for (int j = 0; j < 100_000; j++) counter.increment();\n            });\n            threads[i].start();\n        }\n        for (Thread t : threads) t.join();\n        System.out.println(counter.get()); // 400000\n    }\n}",
+    "explanation": "synchronized makes increment atomic with respect to other synchronized calls on the same object and establishes visibility.",
+    "complexity": "O(1) counter space",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "c0523a8b-4dc4-47ee-b905-e1969e4958ea",
+    "title": "Implement a counter using AtomicInteger",
+    "category": "synchronization",
+    "question": "Use AtomicInteger to count increments from multiple threads.",
+    "answer": "import java.util.concurrent.atomic.AtomicInteger;\n\npublic class AtomicCounter {\n    private final AtomicInteger count = new AtomicInteger();\n    public void increment() { count.incrementAndGet(); }\n    public int get() { return count.get(); }\n\n    public static void main(String[] args) throws InterruptedException {\n        AtomicCounter counter = new AtomicCounter();\n        Thread[] threads = new Thread[4];\n        for (int i = 0; i < threads.length; i++) {\n            threads[i] = new Thread(() -> {\n                for (int j = 0; j < 100_000; j++) counter.increment();\n            });\n            threads[i].start();\n        }\n        for (Thread t : threads) t.join();\n        System.out.println(counter.get()); // 400000\n    }\n}",
+    "explanation": "AtomicInteger uses atomic compare-and-set operations for updates without requiring an explicit synchronized block.",
+    "complexity": "O(1) counter space",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "35c3c624-2c62-4acc-a35c-34dfcae1a89e",
+    "title": "Use a ReentrantLock to protect shared state",
+    "category": "synchronization",
+    "question": "Protect a counter with ReentrantLock and always release the lock.",
+    "answer": "import java.util.concurrent.locks.ReentrantLock;\n\npublic class LockCounter {\n    private int count;\n    private final ReentrantLock lock = new ReentrantLock();\n\n    void increment() {\n        lock.lock();\n        try { count++; }\n        finally { lock.unlock(); }\n    }\n    int get() {\n        lock.lock();\n        try { return count; }\n        finally { lock.unlock(); }\n    }\n}",
+    "explanation": "The finally block ensures unlock() runs even if an exception occurs. ReentrantLock also supports timed and interruptible acquisition.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "4dddf5f3-858c-4deb-9de2-2e674098956f",
+    "title": "Demonstrate a volatile flag for thread communication",
+    "category": "visibility",
+    "question": "Let one thread stop a worker by updating a shared flag.",
+    "answer": "public class VolatileStop {\n    private static volatile boolean running = true;\n    public static void main(String[] args) throws InterruptedException {\n        Thread worker = new Thread(() -> {\n            while (running) {\n                // Perform a small unit of work.\n            }\n            System.out.println(\"Stopped\");\n        });\n        worker.start();\n        Thread.sleep(100);\n        running = false;\n        worker.join();\n    }\n}",
+    "explanation": "volatile makes writes visible to other threads, but it does not make compound operations such as count++ atomic.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "visibility"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "e0cb34de-766c-4b09-b712-e7cf8f1f5099",
+    "title": "Wait for a thread with join()",
+    "category": "basic",
+    "question": "Make the main thread wait for a worker to complete.",
+    "answer": "public class JoinDemo {\n    public static void main(String[] args) throws InterruptedException {\n        Thread worker = new Thread(() -> {\n            try { Thread.sleep(300); }\n            catch (InterruptedException e) { Thread.currentThread().interrupt(); }\n            System.out.println(\"Worker done\");\n        });\n        worker.start();\n        worker.join();\n        System.out.println(\"Main done\");\n    }\n}",
+    "explanation": "join() blocks the calling thread until the target thread terminates. Handle interruption rather than swallowing it.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "basic"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "b1a2ce6f-5e23-49e4-bc3f-31fd07eac053",
+    "title": "Interrupt a sleeping thread gracefully",
+    "category": "interruption",
+    "question": "Interrupt a worker that is sleeping and handle the interruption correctly.",
+    "answer": "public class InterruptDemo {\n    public static void main(String[] args) throws InterruptedException {\n        Thread worker = new Thread(() -> {\n            try {\n                while (!Thread.currentThread().isInterrupted()) {\n                    Thread.sleep(1000);\n                }\n            } catch (InterruptedException e) {\n                Thread.currentThread().interrupt();\n                System.out.println(\"Worker interrupted\");\n            }\n        });\n        worker.start();\n        Thread.sleep(100);\n        worker.interrupt();\n        worker.join();\n    }\n}",
+    "explanation": "InterruptedException clears the interrupt status when thrown; restoring it preserves the signal for callers that need to observe it.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "interruption"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "a5d78b0d-083d-439e-9890-e4dba751e188",
+    "title": "Create a daemon thread",
+    "category": "basic",
+    "question": "Create a daemon background thread and start it.",
+    "answer": "public class DaemonDemo {\n    public static void main(String[] args) {\n        Thread worker = new Thread(() -> {\n            while (true) {\n                try { Thread.sleep(500); }\n                catch (InterruptedException e) {\n                    Thread.currentThread().interrupt();\n                    return;\n                }\n            }\n        });\n        worker.setDaemon(true); // Must be called before start()\n        worker.start();\n        System.out.println(\"Main may exit without waiting for daemon\");\n    }\n}",
+    "explanation": "The JVM can exit when only daemon threads remain. Daemon threads should not be used for work that must finish or save important data.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "basic"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "e3c620ed-def7-4291-a8b4-47d9a1237404",
+    "title": "Use ExecutorService to run a task",
+    "category": "executors",
+    "question": "Submit a Runnable to a fixed thread pool and shut down the executor.",
+    "answer": "import java.util.concurrent.*;\n\npublic class ExecutorDemo {\n    public static void main(String[] args) throws InterruptedException {\n        ExecutorService pool = Executors.newFixedThreadPool(2);\n        try {\n            pool.submit(() -> System.out.println(\"Task on \" + Thread.currentThread().getName()));\n        } finally {\n            pool.shutdown();\n            if (!pool.awaitTermination(5, TimeUnit.SECONDS)) pool.shutdownNow();\n        }\n    }\n}",
+    "explanation": "Executors manage worker threads and task queues. Shut them down to avoid leaving non-daemon worker threads running.",
+    "complexity": "Depends on task queue and pool size",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "23bd8011-23a3-4a14-8483-5c9001300b23",
+    "title": "Collect a task result using Callable and Future",
+    "category": "executors",
+    "question": "Submit a Callable that returns a value and retrieve the result through Future.",
+    "answer": "import java.util.concurrent.*;\n\npublic class CallableFutureDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService pool = Executors.newSingleThreadExecutor();\n        try {\n            Future<Integer> future = pool.submit(() -> 20 + 22);\n            System.out.println(future.get()); // 42\n        } finally {\n            pool.shutdown();\n        }\n    }\n}",
+    "explanation": "Callable returns a result and can throw checked exceptions. Future.get() waits for completion and can throw ExecutionException or InterruptedException.",
+    "complexity": "O(1) result space",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "6bf54f02-472b-4b72-8ef2-d53f7a9c88a6",
+    "title": "Run multiple tasks and collect results with invokeAll",
+    "category": "executors",
+    "question": "Submit multiple Callable tasks and print their results in input order.",
+    "answer": "import java.util.*;\nimport java.util.concurrent.*;\n\npublic class InvokeAllDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService pool = Executors.newFixedThreadPool(3);\n        try {\n            List<Callable<Integer>> tasks = List.of(\n                () -> 1, () -> 2, () -> 3\n            );\n            for (Future<Integer> f : pool.invokeAll(tasks)) {\n                System.out.println(f.get());\n            }\n        } finally { pool.shutdown(); }\n    }\n}",
+    "explanation": "invokeAll waits for all tasks to finish (or be cancelled on interruption) and returns Futures in the same order as the input tasks.",
+    "complexity": "O(n) futures",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "7a0bc847-c16d-4525-850f-35b3b576bfba",
+    "title": "Get the first successful result with ExecutorCompletionService",
+    "category": "executors",
+    "question": "Process task results in completion order rather than submission order.",
+    "answer": "import java.util.concurrent.*;\n\npublic class CompletionServiceDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService pool = Executors.newFixedThreadPool(3);\n        CompletionService<String> cs = new ExecutorCompletionService<>(pool);\n        try {\n            cs.submit(() -> { Thread.sleep(300); return \"slow\"; });\n            cs.submit(() -> \"fast\");\n            cs.submit(() -> { Thread.sleep(100); return \"medium\"; });\n            for (int i = 0; i < 3; i++) System.out.println(cs.take().get());\n        } finally { pool.shutdownNow(); }\n    }\n}",
+    "explanation": "take() retrieves the next completed task's Future. This is useful when results should be handled as soon as they finish.",
+    "complexity": "O(n) queued completions",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "4e47202d-b218-400c-84ee-69d9aba8bdec",
+    "title": "Use ScheduledExecutorService for repeated work",
+    "category": "executors",
+    "question": "Schedule a task to run every second and stop the scheduler after three executions.",
+    "answer": "import java.util.concurrent.*;\nimport java.util.concurrent.atomic.AtomicInteger;\n\npublic class ScheduledDemo {\n    public static void main(String[] args) throws InterruptedException {\n        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();\n        AtomicInteger runs = new AtomicInteger();\n        ScheduledFuture<?> task = scheduler.scheduleAtFixedRate(() -> {\n            System.out.println(\"Run \" + runs.incrementAndGet());\n        }, 0, 1, TimeUnit.SECONDS);\n        while (runs.get() < 3) Thread.sleep(50);\n        task.cancel(false);\n        scheduler.shutdown();\n    }\n}",
+    "explanation": "scheduleAtFixedRate targets a fixed cadence. Exceptions escaping a periodic task suppress later executions, so production tasks should handle failures deliberately.",
+    "complexity": "O(1) task state",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "2de786d5-2970-414d-b890-b0d6e5d1e202",
+    "title": "Limit concurrent access with Semaphore",
+    "category": "synchronization",
+    "question": "Allow at most two threads to use a resource simultaneously.",
+    "answer": "import java.util.concurrent.Semaphore;\n\npublic class SemaphoreDemo {\n    private static final Semaphore permits = new Semaphore(2);\n    static void useResource() {\n        try {\n            permits.acquire();\n            try { System.out.println(\"Using resource\"); }\n            finally { permits.release(); }\n        } catch (InterruptedException e) {\n            Thread.currentThread().interrupt();\n        }\n    }\n}",
+    "explanation": "A semaphore manages permits rather than ownership of a particular monitor. Release only after a successful acquire.",
+    "complexity": "O(1) semaphore state",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "f94f55eb-d018-4ab8-b795-b2d4e6119a46",
+    "title": "Coordinate threads with CountDownLatch",
+    "category": "coordination",
+    "question": "Wait until three worker tasks have completed their initialization.",
+    "answer": "import java.util.concurrent.CountDownLatch;\n\npublic class LatchDemo {\n    public static void main(String[] args) throws InterruptedException {\n        CountDownLatch ready = new CountDownLatch(3);\n        for (int i = 0; i < 3; i++) {\n            new Thread(() -> {\n                System.out.println(\"Initialized\");\n                ready.countDown();\n            }).start();\n        }\n        ready.await();\n        System.out.println(\"All initialized\");\n    }\n}",
+    "explanation": "CountDownLatch is a one-shot gate: countDown reduces the count and await waits until it reaches zero.",
+    "complexity": "O(n) threads",
+    "tags": [
+      "java",
+      "multithreading",
+      "coordination"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "803b9d07-cc4f-4d62-9df3-560faf645a04",
+    "title": "Synchronize phases with CyclicBarrier",
+    "category": "coordination",
+    "question": "Make three workers wait until all have reached a phase boundary.",
+    "answer": "import java.util.concurrent.*;\n\npublic class BarrierDemo {\n    public static void main(String[] args) {\n        int workers = 3;\n        CyclicBarrier barrier = new CyclicBarrier(workers,\n            () -> System.out.println(\"All workers reached barrier\"));\n        for (int i = 0; i < workers; i++) {\n            final int id = i;\n            new Thread(() -> {\n                try {\n                    System.out.println(\"Worker \" + id + \" phase 1\");\n                    barrier.await();\n                    System.out.println(\"Worker \" + id + \" phase 2\");\n                } catch (InterruptedException e) {\n                    Thread.currentThread().interrupt();\n                } catch (BrokenBarrierException e) {\n                    System.err.println(\"Barrier broken\");\n                }\n            }).start();\n        }\n    }\n}",
+    "explanation": "CyclicBarrier lets a fixed group rendezvous and can be reused for later phases. Cancellation or failure can break the barrier.",
+    "complexity": "O(n) threads",
+    "tags": [
+      "java",
+      "multithreading",
+      "coordination"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "a7dbb8aa-ddf0-40f1-90f3-f6422eb87989",
+    "title": "Exchange values between two threads with Exchanger",
+    "category": "coordination",
+    "question": "Exchange a value between two worker threads.",
+    "answer": "import java.util.concurrent.Exchanger;\n\npublic class ExchangerDemo {\n    public static void main(String[] args) {\n        Exchanger<String> exchanger = new Exchanger<>();\n        Thread a = new Thread(() -> exchange(exchanger, \"from A\"));\n        Thread b = new Thread(() -> exchange(exchanger, \"from B\"));\n        a.start(); b.start();\n    }\n    static void exchange(Exchanger<String> e, String value) {\n        try { System.out.println(Thread.currentThread().getName() + \" got \" + e.exchange(value)); }\n        catch (InterruptedException ex) { Thread.currentThread().interrupt(); }\n    }\n}",
+    "explanation": "exchange() blocks until another participant arrives and swaps the supplied objects. A timed exchange can help avoid indefinite waiting.",
+    "complexity": "O(1) exchange state",
+    "tags": [
+      "java",
+      "multithreading",
+      "coordination"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "ee07e271-3d14-4e05-951e-828054e5921a",
+    "title": "Build a producer-consumer queue with BlockingQueue",
+    "category": "producer-consumer",
+    "question": "Have one producer put messages on a queue and one consumer take them.",
+    "answer": "import java.util.concurrent.*;\n\npublic class ProducerConsumer {\n    public static void main(String[] args) throws InterruptedException {\n        BlockingQueue<String> queue = new ArrayBlockingQueue<>(10);\n        Thread producer = new Thread(() -> {\n            try {\n                for (int i = 1; i <= 5; i++) queue.put(\"item-\" + i);\n                queue.put(\"END\");\n            } catch (InterruptedException e) { Thread.currentThread().interrupt(); }\n        });\n        Thread consumer = new Thread(() -> {\n            try {\n                String item;\n                while (!(item = queue.take()).equals(\"END\")) System.out.println(item);\n            } catch (InterruptedException e) { Thread.currentThread().interrupt(); }\n        });\n        producer.start(); consumer.start();\n        producer.join(); consumer.join();\n    }\n}",
+    "explanation": "BlockingQueue handles coordination and backpressure. put() waits when full; take() waits when empty.",
+    "complexity": "O(capacity) queue space",
+    "tags": [
+      "java",
+      "multithreading",
+      "producer-consumer"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "50533be5-0b3f-4944-8002-1a9a33043758",
+    "title": "Implement a bounded buffer with wait and notifyAll",
+    "category": "producer-consumer",
+    "question": "Implement a fixed-capacity integer buffer using synchronized, wait, and notifyAll.",
+    "answer": "import java.util.*;\n\npublic class BoundedBuffer {\n    private final Queue<Integer> queue = new ArrayDeque<>();\n    private final int capacity;\n    public BoundedBuffer(int capacity) { this.capacity = capacity; }\n    public synchronized void put(int value) throws InterruptedException {\n        while (queue.size() == capacity) wait();\n        queue.add(value);\n        notifyAll();\n    }\n    public synchronized int take() throws InterruptedException {\n        while (queue.isEmpty()) wait();\n        int value = queue.remove();\n        notifyAll();\n        return value;\n    }\n}",
+    "explanation": "Always test conditions in while loops because wait can wake spuriously or another thread may consume the condition first.",
+    "complexity": "O(capacity) buffer space",
+    "tags": [
+      "java",
+      "multithreading",
+      "producer-consumer"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "e3baa79f-d0fe-4383-a432-b2f7aa6b59e2",
+    "title": "Prevent a race condition in a bank account",
+    "category": "synchronization",
+    "question": "Make concurrent deposits and withdrawals safe for a shared balance.",
+    "answer": "public class BankAccount {\n    private long balance;\n    public BankAccount(long initialBalance) { balance = initialBalance; }\n    public synchronized void deposit(long amount) {\n        if (amount < 0) throw new IllegalArgumentException(\"negative amount\");\n        balance += amount;\n    }\n    public synchronized boolean withdraw(long amount) {\n        if (amount < 0) throw new IllegalArgumentException(\"negative amount\");\n        if (balance < amount) return false;\n        balance -= amount;\n        return true;\n    }\n    public synchronized long getBalance() { return balance; }\n}",
+    "explanation": "The balance check and deduction must occur in the same critical section. Real financial code also needs validation, persistence, and transaction rules.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "f627b247-bfaa-4ec5-8cf3-c78aa424aa8d",
+    "title": "Demonstrate deadlock and avoid it with consistent lock ordering",
+    "category": "deadlocks",
+    "question": "Show a safe pattern for locking two resources without opposite lock ordering.",
+    "answer": "public class OrderedLocks {\n    private final Object first = new Object();\n    private final Object second = new Object();\n\n    public void doWork() {\n        synchronized (first) {\n            synchronized (second) {\n                System.out.println(\"Both locks acquired in fixed order\");\n            }\n        }\n    }\n}",
+    "explanation": "Deadlock can occur when threads acquire shared locks in opposite orders. Establish one global lock order and follow it everywhere.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "deadlocks"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "9c1ac334-3ab8-4576-8147-3c3ec149fdc7",
+    "title": "Use tryLock to avoid waiting forever",
+    "category": "deadlocks",
+    "question": "Attempt to acquire a lock with a timeout and handle failure.",
+    "answer": "import java.util.concurrent.TimeUnit;\nimport java.util.concurrent.locks.ReentrantLock;\n\npublic class TryLockDemo {\n    private final ReentrantLock lock = new ReentrantLock();\n    public void doWork() throws InterruptedException {\n        if (lock.tryLock(200, TimeUnit.MILLISECONDS)) {\n            try { System.out.println(\"Lock acquired\"); }\n            finally { lock.unlock(); }\n        } else {\n            System.out.println(\"Could not acquire lock in time\");\n        }\n    }\n}",
+    "explanation": "Timed tryLock lets a thread abandon an acquisition attempt and choose a fallback, reducing some deadlock risks.",
+    "complexity": "O(1) auxiliary space",
+    "tags": [
+      "java",
+      "multithreading",
+      "deadlocks"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "0e81f0b5-f8b4-47c9-ae8c-7a2be256f5c8",
+    "title": "Implement a thread-safe lazy singleton",
+    "category": "synchronization",
+    "question": "Implement a lazy singleton using the initialization-on-demand holder idiom.",
+    "answer": "public final class Singleton {\n    private Singleton() {}\n    private static class Holder {\n        private static final Singleton INSTANCE = new Singleton();\n    }\n    public static Singleton getInstance() {\n        return Holder.INSTANCE;\n    }\n}",
+    "explanation": "The JVM initializes Holder on first active use and guarantees class initialization synchronization, giving lazy and thread-safe initialization.",
+    "complexity": "O(1) instance space",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "d262ce8f-bd42-4b4a-b8c2-5072baf7105a",
+    "title": "Implement double-checked locking correctly",
+    "category": "synchronization",
+    "question": "Write a lazy singleton using double-checked locking.",
+    "answer": "public final class DclSingleton {\n    private static volatile DclSingleton instance;\n    private DclSingleton() {}\n    public static DclSingleton getInstance() {\n        if (instance == null) {\n            synchronized (DclSingleton.class) {\n                if (instance == null) instance = new DclSingleton();\n            }\n        }\n        return instance;\n    }\n}",
+    "explanation": "volatile prevents unsafe publication/reordering from exposing a partially constructed instance. The holder idiom is often simpler.",
+    "complexity": "O(1) instance space",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "3a6ad159-0062-4311-8bf6-97fa1ea26676",
+    "title": "Use ConcurrentHashMap for concurrent updates",
+    "category": "collections",
+    "question": "Count word frequencies safely while multiple threads process word lists.",
+    "answer": "import java.util.*;\nimport java.util.concurrent.*;\n\npublic class WordFrequency {\n    public static void main(String[] args) throws InterruptedException {\n        ConcurrentHashMap<String, LongAdder> counts = new ConcurrentHashMap<>();\n        List<String> words = List.of(\"java\", \"thread\", \"java\", \"safe\", \"thread\");\n        ExecutorService pool = Executors.newFixedThreadPool(2);\n        try {\n            for (String word : words) {\n                pool.submit(() -> counts.computeIfAbsent(word, k -> new LongAdder()).increment());\n            }\n        } finally {\n            pool.shutdown();\n            pool.awaitTermination(2, TimeUnit.SECONDS);\n        }\n        counts.forEach((word, count) -> System.out.println(word + \": \" + count.sum()));\n    }\n}",
+    "explanation": "ConcurrentHashMap supports concurrent access. LongAdder reduces contention for heavily updated counters; wait for tasks before reading final totals.",
+    "complexity": "O(u) map entries",
+    "tags": [
+      "java",
+      "multithreading",
+      "collections"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "e8fde864-0932-4315-aaeb-53e2f743bdfa",
+    "title": "Read a shared value safely with AtomicReference",
+    "category": "synchronization",
+    "question": "Use AtomicReference to atomically replace a shared configuration object.",
+    "answer": "import java.util.concurrent.atomic.AtomicReference;\n\npublic class ConfigDemo {\n    record Config(String endpoint, int timeoutSeconds) {}\n    public static void main(String[] args) {\n        AtomicReference<Config> config =\n            new AtomicReference<>(new Config(\"https://example.com\", 5));\n        config.updateAndGet(old -> new Config(old.endpoint(), 10));\n        System.out.println(config.get());\n    }\n}",
+    "explanation": "AtomicReference provides atomic reference reads and updates. Immutable configuration objects make safe publication and reasoning easier.",
+    "complexity": "O(1) reference state",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "7d349508-36b9-4aff-8046-6fc02e689393",
+    "title": "Use ThreadLocal for per-thread data",
+    "category": "threadlocal",
+    "question": "Give each thread its own formatter-like value using ThreadLocal.",
+    "answer": "public class ThreadLocalDemo {\n    private static final ThreadLocal<String> context =\n        ThreadLocal.withInitial(() -> \"default\");\n    public static void main(String[] args) throws InterruptedException {\n        Thread a = new Thread(() -> { context.set(\"request-A\"); print(); context.remove(); });\n        Thread b = new Thread(() -> { context.set(\"request-B\"); print(); context.remove(); });\n        a.start(); b.start(); a.join(); b.join();\n    }\n    static void print() { System.out.println(context.get()); }\n}",
+    "explanation": "ThreadLocal isolates values per thread. In thread pools, call remove() when the context is no longer needed to prevent stale data leaks.",
+    "complexity": "O(threads) stored values",
+    "tags": [
+      "java",
+      "multithreading",
+      "threadlocal"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "0add3fa3-a67c-45c6-9c6d-a3294cbd6b7f",
+    "title": "Implement a read-write lock for shared data",
+    "category": "synchronization",
+    "question": "Allow concurrent readers but exclusive writers using ReentrantReadWriteLock.",
+    "answer": "import java.util.concurrent.locks.*;\n\npublic class SharedStore {\n    private final ReadWriteLock rw = new ReentrantReadWriteLock();\n    private String value = \"\";\n    public String read() {\n        rw.readLock().lock();\n        try { return value; }\n        finally { rw.readLock().unlock(); }\n    }\n    public void write(String next) {\n        rw.writeLock().lock();\n        try { value = next; }\n        finally { rw.writeLock().unlock(); }\n    }\n}",
+    "explanation": "Multiple read locks can be held concurrently; the write lock is exclusive. Read-write locks are useful when reads substantially outnumber writes.",
+    "complexity": "O(1) stored value",
+    "tags": [
+      "java",
+      "multithreading",
+      "synchronization"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "3a2f3bf2-9101-40e5-a747-0708c5987518",
+    "title": "Use a Phaser for multiple task phases",
+    "category": "coordination",
+    "question": "Coordinate a changing set of workers across two phases with Phaser.",
+    "answer": "import java.util.concurrent.Phaser;\n\npublic class PhaserDemo {\n    public static void main(String[] args) {\n        Phaser phaser = new Phaser(3);\n        for (int i = 0; i < 3; i++) {\n            final int id = i;\n            new Thread(() -> {\n                System.out.println(id + \" phase 1\");\n                phaser.arriveAndAwaitAdvance();\n                System.out.println(id + \" phase 2\");\n                phaser.arriveAndDeregister();\n            }).start();\n        }\n    }\n}",
+    "explanation": "Phaser supports repeated synchronization phases and dynamic registration/deregistration, unlike a fixed one-shot latch.",
+    "complexity": "O(n) registered parties",
+    "tags": [
+      "java",
+      "multithreading",
+      "coordination"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "cb26b641-c2ae-4abd-afbc-51948a4f0685",
+    "title": "Run a task asynchronously with CompletableFuture",
+    "category": "completablefuture",
+    "question": "Run a calculation asynchronously and transform its result.",
+    "answer": "import java.util.concurrent.CompletableFuture;\n\npublic class CompletableFutureDemo {\n    public static void main(String[] args) {\n        CompletableFuture<Integer> result =\n            CompletableFuture.supplyAsync(() -> 21)\n                .thenApply(value -> value * 2);\n        System.out.println(result.join()); // 42\n    }\n}",
+    "explanation": "supplyAsync returns a value asynchronously; thenApply transforms it when available. Use an explicit executor when workload isolation matters.",
+    "complexity": "O(1) result space",
+    "tags": [
+      "java",
+      "multithreading",
+      "completablefuture"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "1379b8da-6cf4-44ec-8231-94d9bb894c52",
+    "title": "Combine two independent CompletableFuture results",
+    "category": "completablefuture",
+    "question": "Run two computations and combine their results.",
+    "answer": "import java.util.concurrent.CompletableFuture;\n\npublic class CombineFutures {\n    public static void main(String[] args) {\n        CompletableFuture<Integer> a = CompletableFuture.supplyAsync(() -> 10);\n        CompletableFuture<Integer> b = CompletableFuture.supplyAsync(() -> 32);\n        int sum = a.thenCombine(b, Integer::sum).join();\n        System.out.println(sum); // 42\n    }\n}",
+    "explanation": "thenCombine combines two completed results without blocking the caller until join() is invoked.",
+    "complexity": "O(1) result space",
+    "tags": [
+      "java",
+      "multithreading",
+      "completablefuture"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "2abb9f86-929d-4b2a-8836-181d5108b00a",
+    "title": "Handle exceptions in CompletableFuture",
+    "category": "completablefuture",
+    "question": "Recover from an asynchronous computation failure with a fallback value.",
+    "answer": "import java.util.concurrent.CompletableFuture;\n\npublic class FutureErrorHandling {\n    public static void main(String[] args) {\n        String value = CompletableFuture.supplyAsync(() -> {\n            throw new IllegalStateException(\"failed\");\n        }).exceptionally(ex -> \"fallback\").join();\n        System.out.println(value);\n    }\n}",
+    "explanation": "exceptionally maps an exceptional completion to a normal result. Handle errors deliberately so failures are not silently hidden.",
+    "complexity": "O(1) result space",
+    "tags": [
+      "java",
+      "multithreading",
+      "completablefuture"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "7f24d134-2e59-446a-8613-830c28ffa810",
+    "title": "Race tasks and use the first completion",
+    "category": "completablefuture",
+    "question": "Start two asynchronous tasks and use whichever completes first.",
+    "answer": "import java.util.concurrent.CompletableFuture;\n\npublic class AnyOfDemo {\n    public static void main(String[] args) {\n        CompletableFuture<String> a = CompletableFuture.supplyAsync(() -> \"A\");\n        CompletableFuture<String> b = CompletableFuture.supplyAsync(() -> \"B\");\n        Object first = CompletableFuture.anyOf(a, b).join();\n        System.out.println(first);\n    }\n}",
+    "explanation": "anyOf completes when any input completes, normally or exceptionally. It does not automatically cancel the losing tasks.",
+    "complexity": "O(n) future references",
+    "tags": [
+      "java",
+      "multithreading",
+      "completablefuture"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "178525be-87a4-4af7-a3e8-44f4c9453e2e",
+    "title": "Use allOf to wait for multiple asynchronous tasks",
+    "category": "completablefuture",
+    "question": "Wait for several CompletableFuture tasks to finish.",
+    "answer": "import java.util.*;\nimport java.util.concurrent.*;\n\npublic class AllOfDemo {\n    public static void main(String[] args) {\n        List<CompletableFuture<Integer>> tasks = List.of(\n            CompletableFuture.supplyAsync(() -> 10),\n            CompletableFuture.supplyAsync(() -> 20),\n            CompletableFuture.supplyAsync(() -> 12)\n        );\n        CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0])).join();\n        int sum = tasks.stream().mapToInt(CompletableFuture::join).sum();\n        System.out.println(sum); // 42\n    }\n}",
+    "explanation": "allOf returns a future that completes when all supplied futures complete. It does not aggregate their values, so collect each result separately.",
+    "complexity": "O(n) futures",
+    "tags": [
+      "java",
+      "multithreading",
+      "completablefuture"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "971e5ec6-b5c0-47d6-8ca1-c95b6a183a7a",
+    "title": "Use a custom ThreadFactory",
+    "category": "executors",
+    "question": "Create named worker threads using a custom ThreadFactory.",
+    "answer": "import java.util.concurrent.*;\nimport java.util.concurrent.atomic.AtomicInteger;\n\npublic class NamedThreadFactory implements ThreadFactory {\n    private final AtomicInteger sequence = new AtomicInteger();\n    @Override public Thread newThread(Runnable task) {\n        return new Thread(task, \"worker-\" + sequence.incrementAndGet());\n    }\n    public static void main(String[] args) {\n        ExecutorService pool = Executors.newFixedThreadPool(2, new NamedThreadFactory());\n        try { pool.submit(() -> System.out.println(Thread.currentThread().getName())); }\n        finally { pool.shutdown(); }\n    }\n}",
+    "explanation": "A ThreadFactory centralizes thread naming and can also configure daemon status, uncaught exception handlers, or other thread properties.",
+    "complexity": "O(1) factory state",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "cea1fe79-46ca-4e55-8595-48a7b34cce3f",
+    "title": "Cancel a task using Future",
+    "category": "executors",
+    "question": "Submit a long-running task and request cancellation.",
+    "answer": "import java.util.concurrent.*;\n\npublic class CancelTaskDemo {\n    public static void main(String[] args) throws InterruptedException {\n        ExecutorService pool = Executors.newSingleThreadExecutor();\n        try {\n            Future<?> future = pool.submit(() -> {\n                try {\n                    while (!Thread.currentThread().isInterrupted()) Thread.sleep(100);\n                } catch (InterruptedException e) {\n                    Thread.currentThread().interrupt();\n                }\n            });\n            Thread.sleep(200);\n            future.cancel(true);\n        } finally { pool.shutdownNow(); }\n    }\n}",
+    "explanation": "cancel(true) requests interruption; task code must cooperate by checking interruption or handling InterruptedException. Cancellation is not forced termination.",
+    "complexity": "O(1) task state",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "19281e57-4510-4d1b-af70-2da2ad982540",
+    "title": "Implement a timeout for a Future result",
+    "category": "executors",
+    "question": "Wait for a task result only up to a specified duration.",
+    "answer": "import java.util.concurrent.*;\n\npublic class FutureTimeoutDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService pool = Executors.newSingleThreadExecutor();\n        try {\n            Future<String> f = pool.submit(() -> {\n                Thread.sleep(500);\n                return \"done\";\n            });\n            try { System.out.println(f.get(100, TimeUnit.MILLISECONDS)); }\n            catch (TimeoutException e) {\n                f.cancel(true);\n                System.out.println(\"Timed out\");\n            }\n        } finally { pool.shutdownNow(); }\n    }\n}",
+    "explanation": "Future.get(timeout, unit) bounds the caller's wait. A timeout does not automatically stop the computation; cancellation is a separate request.",
+    "complexity": "O(1) task state",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "17bdd021-2f35-4936-ae63-21b8b756577f",
+    "title": "Limit a thread pool's queued work with ThreadPoolExecutor",
+    "category": "executors",
+    "question": "Create a pool with a bounded queue and a rejection policy.",
+    "answer": "import java.util.concurrent.*;\n\npublic class BoundedExecutorDemo {\n    public static void main(String[] args) {\n        ThreadPoolExecutor pool = new ThreadPoolExecutor(\n            2, 4, 30, TimeUnit.SECONDS,\n            new ArrayBlockingQueue<>(20),\n            new ThreadPoolExecutor.CallerRunsPolicy()\n        );\n        try {\n            pool.execute(() -> System.out.println(\"Task running\"));\n        } finally { pool.shutdown(); }\n    }\n}",
+    "explanation": "A bounded queue provides backpressure instead of allowing unbounded task accumulation. Choose a rejection policy that fits the application.",
+    "complexity": "O(queue capacity + pool size) managed tasks",
+    "tags": [
+      "java",
+      "multithreading",
+      "executors"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "957f269d-1024-4fcf-99e9-8a9c12e9bb58",
+    "title": "Implement a simple parallel sum using ExecutorService",
+    "category": "parallelism",
+    "question": "Split an integer array into chunks, sum each chunk concurrently, and combine the partial sums.",
+    "answer": "import java.util.*;\nimport java.util.concurrent.*;\n\npublic class ParallelSum {\n    static long sum(int[] a, int start, int end) {\n        long total = 0;\n        for (int i = start; i < end; i++) total += a[i];\n        return total;\n    }\n    public static void main(String[] args) throws Exception {\n        int[] a = new int[1000];\n        Arrays.fill(a, 1);\n        int workers = 4, chunk = (a.length + workers - 1) / workers;\n        ExecutorService pool = Executors.newFixedThreadPool(workers);\n        try {\n            List<Future<Long>> futures = new ArrayList<>();\n            for (int i = 0; i < a.length; i += chunk) {\n                int start = i, end = Math.min(i + chunk, a.length);\n                futures.add(pool.submit(() -> sum(a, start, end)));\n            }\n            long total = 0;\n            for (Future<Long> f : futures) total += f.get();\n            System.out.println(total); // 1000\n        } finally { pool.shutdown(); }\n    }\n}",
+    "explanation": "Independent chunks can be summed in parallel. For small arrays, thread coordination may cost more than the work saved.",
+    "complexity": "O(n) total work; O(workers) futures",
+    "tags": [
+      "java",
+      "multithreading",
+      "parallelism"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "29ddf2b2-9981-4f5f-a853-70bf8be283d0",
+    "title": "Use ForkJoinPool for recursive parallel work",
+    "category": "parallelism",
+    "question": "Sum an array using a RecursiveTask in ForkJoinPool.",
+    "answer": "import java.util.concurrent.*;\n\npublic class ForkJoinSum extends RecursiveTask<Long> {\n    private final int[] values;\n    private final int start, end;\n    private static final int THRESHOLD = 100;\n\n    ForkJoinSum(int[] values, int start, int end) {\n        this.values = values; this.start = start; this.end = end;\n    }\n    @Override protected Long compute() {\n        if (end - start <= THRESHOLD) {\n            long sum = 0;\n            for (int i = start; i < end; i++) sum += values[i];\n            return sum;\n        }\n        int mid = (start + end) / 2;\n        ForkJoinSum left = new ForkJoinSum(values, start, mid);\n        ForkJoinSum right = new ForkJoinSum(values, mid, end);\n        left.fork();\n        long rightResult = right.compute();\n        return left.join() + rightResult;\n    }\n    public static void main(String[] args) {\n        int[] a = new int[1000];\n        java.util.Arrays.fill(a, 1);\n        System.out.println(ForkJoinPool.commonPool().invoke(new ForkJoinSum(a, 0, a.length)));\n    }\n}",
+    "explanation": "ForkJoinPool uses work-stealing for divide-and-conquer tasks. A threshold avoids excessive task creation for small chunks.",
+    "complexity": "O(n) total work",
+    "tags": [
+      "java",
+      "multithreading",
+      "parallelism"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "3b719caf-e257-476d-b51e-c3f6c9f235bb",
+    "title": "Process a parallel stream safely",
+    "category": "parallelism",
+    "question": "Compute the sum of squares using a parallel stream.",
+    "answer": "import java.util.stream.IntStream;\n\npublic class ParallelStreamDemo {\n    public static void main(String[] args) {\n        int sum = IntStream.rangeClosed(1, 100)\n            .parallel()\n            .map(n -> n * n)\n            .sum();\n        System.out.println(sum);\n    }\n}",
+    "explanation": "Stateless transformations and associative reductions work well with parallel streams. Avoid mutating shared state and benchmark before using parallel().",
+    "complexity": "O(n) work",
+    "tags": [
+      "java",
+      "multithreading",
+      "parallelism"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "84e5bb04-dd51-4c43-9ce7-7cd9f0bf08ed",
+    "title": "Find a safe way to publish an immutable object",
+    "category": "visibility",
+    "question": "Publish an immutable configuration through a volatile reference.",
+    "answer": "public class ImmutablePublication {\n    record Settings(String host, int port) {}\n    private static volatile Settings current = new Settings(\"localhost\", 8080);\n\n    static Settings get() { return current; }\n    static void update(Settings next) { current = next; }\n\n    public static void main(String[] args) {\n        update(new Settings(\"api.example.com\", 443));\n        System.out.println(get());\n    }\n}",
+    "explanation": "An immutable object avoids internal mutation races; volatile ensures readers see the latest assigned reference and the object's prior state.",
+    "complexity": "O(1) current reference",
+    "tags": [
+      "java",
+      "multithreading",
+      "visibility"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "1d42a5e6-d87d-455d-bde9-2b6c38d3433c",
+    "title": "Use a concurrent set",
+    "category": "collections",
+    "question": "Create a set safe for concurrent additions and membership checks.",
+    "answer": "import java.util.Set;\nimport java.util.concurrent.ConcurrentHashMap;\n\npublic class ConcurrentSetDemo {\n    public static void main(String[] args) {\n        Set<String> set = ConcurrentHashMap.newKeySet();\n        set.add(\"java\");\n        set.add(\"threads\");\n        System.out.println(set.contains(\"java\"));\n    }\n}",
+    "explanation": "ConcurrentHashMap.newKeySet() provides a concurrent set backed by a ConcurrentHashMap.",
+    "complexity": "O(n) set elements",
+    "tags": [
+      "java",
+      "multithreading",
+      "collections"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "70b5413f-769c-423a-a19f-cc31f9b18f4a",
+    "title": "Use CopyOnWriteArrayList for read-heavy workloads",
+    "category": "collections",
+    "question": "Demonstrate a CopyOnWriteArrayList with concurrent-safe iteration.",
+    "answer": "import java.util.concurrent.CopyOnWriteArrayList;\n\npublic class CopyOnWriteDemo {\n    public static void main(String[] args) {\n        CopyOnWriteArrayList<String> listeners = new CopyOnWriteArrayList<>();\n        listeners.add(\"audit\");\n        listeners.add(\"metrics\");\n        for (String listener : listeners) {\n            System.out.println(listener);\n            listeners.addIfAbsent(\"alerts\");\n        }\n        System.out.println(listeners);\n    }\n}",
+    "explanation": "Iterators observe a snapshot and do not throw ConcurrentModificationException. Writes copy the underlying array, so use this for read-heavy, low-write collections.",
+    "complexity": "O(n) per write",
+    "tags": [
+      "java",
+      "multithreading",
+      "collections"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "5c327208-7140-4aef-a80b-4b55cb97c040",
+    "title": "Use ConcurrentLinkedQueue for non-blocking producer-consumer handoff",
+    "category": "collections",
+    "question": "Offer and poll items from a thread-safe non-blocking queue.",
+    "answer": "import java.util.concurrent.ConcurrentLinkedQueue;\n\npublic class ConcurrentQueueDemo {\n    public static void main(String[] args) {\n        ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();\n        queue.offer(\"one\");\n        queue.offer(\"two\");\n        System.out.println(queue.poll());\n        System.out.println(queue.poll());\n        System.out.println(queue.poll()); // null when empty\n    }\n}",
+    "explanation": "ConcurrentLinkedQueue is non-blocking and unbounded. Unlike BlockingQueue, poll() returns immediately when the queue is empty.",
+    "complexity": "O(n) queued elements",
+    "tags": [
+      "java",
+      "multithreading",
+      "collections"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "bc5bfce2-9138-43cd-82ad-31ba63128be7",
+    "title": "Use a lock condition to coordinate producer and consumer",
+    "category": "coordination",
+    "question": "Use Condition to wait for and signal availability of a value.",
+    "answer": "import java.util.concurrent.locks.*;\n\npublic class OneSlot {\n    private final Lock lock = new ReentrantLock();\n    private final Condition full = lock.newCondition();\n    private Integer value;\n\n    public void put(int v) throws InterruptedException {\n        lock.lock();\n        try {\n            while (value != null) full.await();\n            value = v;\n            full.signalAll();\n        } finally { lock.unlock(); }\n    }\n    public int take() throws InterruptedException {\n        lock.lock();\n        try {\n            while (value == null) full.await();\n            int result = value;\n            value = null;\n            full.signalAll();\n            return result;\n        } finally { lock.unlock(); }\n    }\n}",
+    "explanation": "Condition provides wait/signal operations associated with an explicit Lock. Await must be used in a condition-checking loop.",
+    "complexity": "O(1) stored value",
+    "tags": [
+      "java",
+      "multithreading",
+      "coordination"
+    ],
+    "difficulty": "intermediate"
+  }
+]

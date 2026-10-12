@@ -1,0 +1,302 @@
+[
+  {
+    "id": "8b287940-3284-4b2d-bfab-f6e4336fb18c",
+    "title": "Create a REST controller for a greeting endpoint",
+    "category": "rest-api",
+    "question": "Create GET /api/greeting returning a JSON greeting.",
+    "answer": "@RestController\npublic class GreetingController {\n    @GetMapping(\"/api/greeting\")\n    public Map<String, String> greeting() {\n        return Map.of(\"message\", \"Hello, Spring Boot!\");\n    }\n}",
+    "explanation": "@RestController serializes the returned Map as JSON, and @GetMapping maps HTTP GET requests.",
+    "complexity": "O(1)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "rest-api"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "34fa962e-8866-41ef-b960-c692c08498d7",
+    "title": "Accept a request body with a DTO",
+    "category": "rest-api",
+    "question": "Create POST /api/greetings that accepts a JSON name and returns a personalized greeting.",
+    "answer": "@RestController\n@RequestMapping(\"/api/greetings\")\npublic class GreetingController {\n    record GreetingRequest(String name) {}\n    record GreetingResponse(String message) {}\n    @PostMapping\n    public GreetingResponse greet(@RequestBody GreetingRequest request) {\n        String name = request.name() == null || request.name().isBlank()\n                ? \"there\" : request.name().trim();\n        return new GreetingResponse(\"Hello, \" + name + \"!\");\n    }\n}",
+    "explanation": "@RequestBody deserializes JSON into a DTO. Records provide concise data carriers on supported Java versions.",
+    "complexity": "O(n) name processing",
+    "tags": [
+      "spring-boot",
+      "java",
+      "rest-api"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "971b7865-8a4e-48d3-833f-11a70ec8ce9b",
+    "title": "Validate request fields with Bean Validation",
+    "category": "validation",
+    "question": "Validate a user's name and email before accepting a POST request.",
+    "answer": "@RestController\n@RequestMapping(\"/api/users\")\npublic class UserController {\n    public record CreateUserRequest(\n        @NotBlank String name, @NotBlank @Email String email) {}\n    @PostMapping\n    public String create(@Valid @RequestBody CreateUserRequest request) {\n        return \"Accepted user: \" + request.name();\n    }\n}",
+    "explanation": "Add spring-boot-starter-validation. @Valid triggers Bean Validation; invalid request bodies normally result in HTTP 400.",
+    "complexity": "O(1) fixed-field validation",
+    "tags": [
+      "spring-boot",
+      "java",
+      "validation"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "47548a94-8e50-4db4-9663-6b14b636f4fb",
+    "title": "Implement CRUD endpoints using a service layer",
+    "category": "rest-api",
+    "question": "Implement in-memory CRUD for notes with controller and service layers.",
+    "answer": "@Service\nclass NoteService {\n    private final Map<Long, String> notes = new ConcurrentHashMap<>();\n    private final AtomicLong ids = new AtomicLong();\n    Map<Long, String> findAll() { return Map.copyOf(notes); }\n    Optional<String> findById(long id) { return Optional.ofNullable(notes.get(id)); }\n    long create(String text) {\n        long id = ids.incrementAndGet(); notes.put(id, text); return id;\n    }\n    boolean delete(long id) { return notes.remove(id) != null; }\n}\n@RestController\n@RequestMapping(\"/api/notes\")\nclass NoteController {\n    private final NoteService service;\n    NoteController(NoteService service) { this.service = service; }\n    @GetMapping Map<Long, String> all() { return service.findAll(); }\n    @GetMapping(\"/{id}\") String one(@PathVariable long id) {\n        return service.findById(id).orElseThrow();\n    }\n    @PostMapping Map<String, Long> create(@RequestBody Map<String, String> body) {\n        return Map.of(\"id\", service.create(body.getOrDefault(\"text\", \"\")));\n    }\n    @DeleteMapping(\"/{id}\") void delete(@PathVariable long id) {\n        if (!service.delete(id)) throw new NoSuchElementException(\"Note not found\");\n    }\n}",
+    "explanation": "Constructor injection separates HTTP concerns from business logic. This is an in-memory learning example; production code should add validation, persistence and consistent HTTP error responses.",
+    "complexity": "Map lookup/update O(1) average; listing O(n)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "rest-api"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "7380984f-27d2-4f50-821a-8727c6e8901f",
+    "title": "Return HTTP 201 Created from a POST endpoint",
+    "category": "http",
+    "question": "Return HTTP 201 Created and a Location header for a newly created resource.",
+    "answer": "@RestController\n@RequestMapping(\"/api/products\")\npublic class ProductController {\n    private final AtomicLong ids = new AtomicLong();\n    record Product(long id, String name) {}\n    @PostMapping\n    public ResponseEntity<Product> create(@RequestBody Product request) {\n        Product saved = new Product(ids.incrementAndGet(), request.name());\n        URI location = URI.create(\"/api/products/\" + saved.id());\n        return ResponseEntity.created(location).body(saved);\n    }\n}",
+    "explanation": "ResponseEntity controls status, headers and body. A real resource ID should come from the persistence layer.",
+    "complexity": "O(1) example allocation",
+    "tags": [
+      "spring-boot",
+      "java",
+      "http"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "85f42fc3-96dd-48b1-b574-736fdfa9fdfc",
+    "title": "Handle exceptions globally with ControllerAdvice",
+    "category": "exception-handling",
+    "question": "Return HTTP 404 with a JSON error when a resource is not found.",
+    "answer": "@RestControllerAdvice\npublic class ApiExceptionHandler {\n    record ApiError(String code, String message) {}\n    @ExceptionHandler(ResourceNotFoundException.class)\n    public ResponseEntity<ApiError> notFound(ResourceNotFoundException ex) {\n        return ResponseEntity.status(HttpStatus.NOT_FOUND)\n            .body(new ApiError(\"NOT_FOUND\", ex.getMessage()));\n    }\n}\nclass ResourceNotFoundException extends RuntimeException {\n    ResourceNotFoundException(String message) { super(message); }\n}",
+    "explanation": "@RestControllerAdvice centralizes exception handling. Do not expose stack traces or sensitive internals in client-facing errors.",
+    "complexity": "O(1)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "exception-handling"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "afe715bd-1de2-48a4-8e2c-1e6026ec61ca",
+    "title": "Use constructor-based dependency injection",
+    "category": "dependency-injection",
+    "question": "Inject a service into a REST controller through its constructor.",
+    "answer": "@Service\nclass GreetingService {\n    String message() { return \"Hello from the service\"; }\n}\n@RestController\nclass GreetingController {\n    private final GreetingService service;\n    GreetingController(GreetingService service) { this.service = service; }\n    @GetMapping(\"/api/message\")\n    String message() { return service.message(); }\n}",
+    "explanation": "Spring injects the dependency through the single constructor. This makes dependencies explicit and supports simple unit tests.",
+    "complexity": "O(1)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "dependency-injection"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "89c8e1f0-a86a-4699-8a3a-aee3900a5c8a",
+    "title": "Bind properties with ConfigurationProperties",
+    "category": "configuration",
+    "question": "Bind app.catalog.page-size and app.catalog.title into a typed configuration class.",
+    "answer": "@ConfigurationProperties(prefix = \"app.catalog\")\npublic record CatalogProperties(int pageSize, String title) {}\n\n// Enable using @ConfigurationPropertiesScan on the application class.\n// application.properties:\n// app.catalog.page-size=25\n// app.catalog.title=Catalog",
+    "explanation": "Use @ConfigurationPropertiesScan or @EnableConfigurationProperties(CatalogProperties.class). Typed properties are easier to validate and maintain than scattered @Value fields.",
+    "complexity": "O(1)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "configuration"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "91544b21-6682-4772-be34-bd24418a9371",
+    "title": "Create a scheduled task",
+    "category": "scheduling",
+    "question": "Run a task every 60 seconds after the previous invocation finishes.",
+    "answer": "@Component\npublic class HeartbeatTask {\n    @Scheduled(fixedDelay = 60_000)\n    public void heartbeat() {\n        System.out.println(\"Heartbeat at \" + Instant.now());\n    }\n}\n// Add @EnableScheduling to a configuration or application class.",
+    "explanation": "fixedDelay measures the delay after the previous invocation completes. Use a logging framework in production instead of System.out.",
+    "complexity": "O(1) per invocation",
+    "tags": [
+      "spring-boot",
+      "java",
+      "scheduling"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "5fc28629-f873-4207-a1bd-c237fd892e82",
+    "title": "Run work asynchronously with @Async",
+    "category": "async",
+    "question": "Create an asynchronous service method returning CompletableFuture.",
+    "answer": "@Service\npublic class ReportService {\n    @Async\n    public CompletableFuture<String> generateReport() {\n        // Replace with actual report generation.\n        return CompletableFuture.completedFuture(\"Report generated\");\n    }\n}\n// Enable with @EnableAsync.",
+    "explanation": "@Async usually requires a call through Spring's proxy; self-invocation within the same bean will not trigger it. Configure a suitable executor for production.",
+    "complexity": "Depends on report work",
+    "tags": [
+      "spring-boot",
+      "java",
+      "async"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "54cb188d-126f-4e39-b200-ad11d518b64f",
+    "title": "Configure a custom executor for @Async",
+    "category": "async",
+    "question": "Configure a named thread pool and use it for an asynchronous notification method.",
+    "answer": "@Configuration\n@EnableAsync\npublic class AsyncConfig {\n    @Bean(\"appTaskExecutor\")\n    public Executor appTaskExecutor() {\n        ThreadPoolTaskExecutor e = new ThreadPoolTaskExecutor();\n        e.setCorePoolSize(4); e.setMaxPoolSize(8);\n        e.setQueueCapacity(100); e.setThreadNamePrefix(\"app-async-\");\n        e.initialize();\n        return e;\n    }\n}\n@Service\nclass NotificationService {\n    @Async(\"appTaskExecutor\")\n    public CompletableFuture<Void> send(String message) {\n        System.out.println(message);\n        return CompletableFuture.completedFuture(null);\n    }\n}",
+    "explanation": "A bounded queue limits queued work and memory growth. Tune pool sizes and rejection behavior for the actual workload.",
+    "complexity": "O(1) configuration",
+    "tags": [
+      "spring-boot",
+      "java",
+      "async"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "f996da7d-02a9-43d5-b0a7-e6ebda2e5d6b",
+    "title": "Create a JPA entity and repository",
+    "category": "data-access",
+    "question": "Define a Product entity and repository method to search names case-insensitively.",
+    "answer": "@Entity\npublic class Product {\n    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    protected Product() {}\n    public Product(String name) { this.name = name; }\n    public Long getId() { return id; }\n    public String getName() { return name; }\n}\npublic interface ProductRepository extends JpaRepository<Product, Long> {\n    List<Product> findByNameContainingIgnoreCase(String name);\n}",
+    "explanation": "Add spring-boot-starter-data-jpa and configure a datasource. Put public entity and repository types in separate files in a regular project.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "java",
+      "data-access"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "5eb80cb9-f555-4a04-b96f-da0f7cd53635",
+    "title": "Use @Transactional in a service method",
+    "category": "transactions",
+    "question": "Update an order status in a transactional service operation.",
+    "answer": "@Service\npublic class OrderService {\n    private final OrderRepository orders;\n    public OrderService(OrderRepository orders) { this.orders = orders; }\n\n    @Transactional\n    public void markPaid(Long id) {\n        Order order = orders.findById(id)\n            .orElseThrow(() -> new ResourceNotFoundException(\"Order not found\"));\n        order.setStatus(\"PAID\");\n        // JPA dirty checking persists the managed entity at commit.\n    }\n}",
+    "explanation": "Managed JPA changes are written at transaction commit. By default, Spring rolls back on unchecked exceptions and Errors; configure other rollback rules as needed. Order types are application-specific.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "java",
+      "transactions"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "53922456-99c6-41ed-ada3-c9e21a9b86b3",
+    "title": "Implement pagination and sorting",
+    "category": "data-access",
+    "question": "Return a page of products sorted by name ascending.",
+    "answer": "@Service\npublic class ProductQueryService {\n    private final ProductRepository repository;\n    public ProductQueryService(ProductRepository repository) { this.repository = repository; }\n\n    public Page<Product> findProducts(int page, int size) {\n        if (page < 0 || size < 1 || size > 100)\n            throw new IllegalArgumentException(\"Invalid page or size\");\n        Pageable pageable = PageRequest.of(page, size, Sort.by(\"name\").ascending());\n        return repository.findAll(pageable);\n    }\n}",
+    "explanation": "Page indexes are zero-based. Cap page size and whitelist sortable fields if clients control sorting.",
+    "complexity": "Database-dependent",
+    "tags": [
+      "spring-boot",
+      "java",
+      "data-access"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "6497ac0d-a47c-459c-aa57-4f261ecb69b7",
+    "title": "Write a MockMvc integration test",
+    "category": "testing",
+    "question": "Test that GET /api/greeting returns HTTP 200 and the expected JSON message.",
+    "answer": "@SpringBootTest\n@AutoConfigureMockMvc\nclass GreetingControllerTest {\n    @Autowired MockMvc mockMvc;\n    @Test\n    void greetingReturnsMessage() throws Exception {\n        mockMvc.perform(get(\"/api/greeting\"))\n            .andExpect(status().isOk())\n            .andExpect(jsonPath(\"$.message\").value(\"Hello, Spring Boot!\"));\n    }\n}",
+    "explanation": "MockMvc exercises MVC request handling without starting a real HTTP server. Imports and test dependencies come from Spring Boot test starter.",
+    "complexity": "Depends on application context",
+    "tags": [
+      "spring-boot",
+      "java",
+      "testing"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "accbefe5-cb57-42c6-bb16-efe6c1825f3f",
+    "title": "Unit-test a controller with Mockito",
+    "category": "testing",
+    "question": "Use Mockito to mock a service dependency and verify a controller result.",
+    "answer": "class GreetingControllerUnitTest {\n    @Test\n    void returnsServiceMessage() {\n        GreetingService service = mock(GreetingService.class);\n        when(service.message()).thenReturn(\"test message\");\n        GreetingController controller = new GreetingController(service);\n        assertEquals(\"test message\", controller.message());\n        verify(service).message();\n    }\n}",
+    "explanation": "A plain unit test avoids starting Spring's application context. This assumes the GreetingService and GreetingController types shown in the dependency-injection example.",
+    "complexity": "O(1)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "testing"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "918ecfcb-3a6c-46d4-9e8f-7434a5949ed3",
+    "title": "Log HTTP method and URI with a filter",
+    "category": "web-filter",
+    "question": "Implement a OncePerRequestFilter that logs method and request URI.",
+    "answer": "@Component\npublic class RequestLoggingFilter extends OncePerRequestFilter {\n    @Override\n    protected void doFilterInternal(HttpServletRequest request,\n            HttpServletResponse response, FilterChain chain)\n            throws ServletException, IOException {\n        logger.info(\"{} {}\", request.getMethod(), request.getRequestURI());\n        chain.doFilter(request, response);\n    }\n}",
+    "explanation": "OncePerRequestFilter avoids repeated filtering during one request dispatch. Never log credentials, access tokens or other sensitive data.",
+    "complexity": "O(1) logging overhead per request",
+    "tags": [
+      "spring-boot",
+      "java",
+      "web-filter"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fcc1291d-28ed-4d2b-85b0-d8bdfc9f9637",
+    "title": "Read a custom HTTP header",
+    "category": "rest-api",
+    "question": "Create GET /api/request-id that reads X-Request-Id and returns JSON.",
+    "answer": "@RestController\npublic class RequestIdController {\n    @GetMapping(\"/api/request-id\")\n    public Map<String, String> requestId(\n        @RequestHeader(name = \"X-Request-Id\", required = false) String id) {\n        return Map.of(\"requestId\", id == null ? \"not-provided\" : id);\n    }\n}",
+    "explanation": "@RequestHeader binds an HTTP header to a method argument. Mark it optional if clients may omit it.",
+    "complexity": "O(1)",
+    "tags": [
+      "spring-boot",
+      "java",
+      "rest-api"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "2f68e350-a5e3-4816-bc4e-381710c52bc6",
+    "title": "Configure CORS for a frontend origin",
+    "category": "security",
+    "question": "Allow a specific frontend origin to call GET and POST endpoints.",
+    "answer": "@RestController\n@RequestMapping(\"/api/data\")\n@CrossOrigin(origins = \"http://localhost:5173\",\n             methods = {RequestMethod.GET, RequestMethod.POST})\npublic class DataController {\n    @GetMapping public String read() { return \"data\"; }\n    @PostMapping public String write() { return \"saved\"; }\n}",
+    "explanation": "Restrict origins and methods to what is needed. For larger apps, centralize CORS configuration and carefully configure credentialed requests.",
+    "complexity": "O(1) configuration",
+    "tags": [
+      "spring-boot",
+      "java",
+      "security"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "08b88896-a2ff-4a3f-bb20-5baf77d62636",
+    "title": "Expose health with Spring Boot Actuator",
+    "category": "monitoring",
+    "question": "Configure Actuator so /actuator/health is available.",
+    "answer": "// Add dependency: spring-boot-starter-actuator\n// application.properties:\nmanagement.endpoints.web.exposure.include=health\nmanagement.endpoint.health.show-details=never\n\n// Actuator provides /actuator/health; no controller is needed.",
+    "explanation": "Expose only necessary operational endpoints and secure them appropriately in production.",
+    "complexity": "Depends on health indicators",
+    "tags": [
+      "spring-boot",
+      "java",
+      "monitoring"
+    ],
+    "difficulty": "beginner"
+  }
+]
