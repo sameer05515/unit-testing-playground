@@ -1,0 +1,702 @@
+[
+  {
+    "id": "25c79304-63c1-445b-bea9-422f33507980",
+    "title": "Reverse a string",
+    "category": "strings",
+    "question": "Reverse a string.",
+    "answer": "const reverseString = s => [...s].reverse().join('');",
+    "explanation": "Spread syntax iterates Unicode code points; complex grapheme clusters may need Intl.Segmenter.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "strings"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "f22508e7-412e-4f91-8a3e-2a85c0d2d7c6",
+    "title": "Palindrome check",
+    "category": "strings",
+    "question": "Check a palindrome ignoring case and punctuation.",
+    "answer": "const isPalindrome = s => { const t=s.toLowerCase().replace(/[^a-z0-9]/g,''); return t===[...t].reverse().join(''); };",
+    "explanation": "Normalize before comparing with the reverse. This example treats ASCII letters and digits as significant.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "strings"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "4a3fd9e4-97ef-4537-9297-edbdb1d2d278",
+    "title": "Character frequency",
+    "category": "strings",
+    "question": "Count each character in a string.",
+    "answer": "const charFrequency = s => { const m=new Map(); for(const c of s)m.set(c,(m.get(c)||0)+1); return Object.fromEntries(m); };",
+    "explanation": "Map stores counts without ordinary-object prototype key collisions.",
+    "complexity": "O(n) time, O(k) space",
+    "tags": [
+      "javascript",
+      "strings"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "80852cee-4bd6-4962-84c1-a9fd99a4f99f",
+    "title": "First non-repeating character",
+    "category": "strings",
+    "question": "Find the first character occurring once, or null.",
+    "answer": "function firstUnique(s){const m=new Map(); for(const c of s)m.set(c,(m.get(c)||0)+1); for(const c of s)if(m.get(c)===1)return c; return null;}",
+    "explanation": "Count first, then scan again to preserve original order.",
+    "complexity": "O(n) time, O(k) space",
+    "tags": [
+      "javascript",
+      "strings"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "58f4f008-8102-4104-94f4-b522bde0aea0",
+    "title": "Anagram check",
+    "category": "strings",
+    "question": "Check if two strings are anagrams ignoring case and whitespace.",
+    "answer": "const areAnagrams=(a,b)=>[a,b].map(s=>[...s.toLowerCase().replace(/\\s/g,'')].sort().join('')).every((s,i,arr)=>i===0||s===arr[0]);",
+    "explanation": "Normalize and compare sorted characters. A frequency map can improve asymptotic time.",
+    "complexity": "O(n log n) time",
+    "tags": [
+      "javascript",
+      "strings"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "e47ec7b6-af0d-46c8-86c4-ad6ff5103f6b",
+    "title": "Remove duplicates",
+    "category": "arrays",
+    "question": "Remove duplicate array values preserving order.",
+    "answer": "const unique = values => [...new Set(values)];",
+    "explanation": "Set preserves insertion order and uniqueness by JavaScript value identity rules.",
+    "complexity": "O(n) expected time",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "6ff909e9-d4d9-4446-9ee9-f501c4be1f06",
+    "title": "Flatten nested array",
+    "category": "arrays",
+    "question": "Flatten any nesting level in an array.",
+    "answer": "const flatten = values => values.flat(Infinity);",
+    "explanation": "flat returns a new array and does not mutate the source.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "1196d5b8-ac96-4fa8-b776-0cb472a892ef",
+    "title": "Second largest distinct number",
+    "category": "arrays",
+    "question": "Find second-largest distinct number or null.",
+    "answer": "function secondLargest(a){let max=-Infinity,second=-Infinity; for(const n of a){if(n>max){second=max;max=n;}else if(n<max&&n>second)second=n;} return second===-Infinity?null:second;}",
+    "explanation": "One pass tracks two distinct maxima; assumes finite numeric inputs.",
+    "complexity": "O(n) time, O(1) space",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "456e182f-ff07-41d7-986d-c9dcb566b62b",
+    "title": "Find missing number",
+    "category": "arrays",
+    "question": "Find missing value from range 0..n with one missing.",
+    "answer": "function missingNumber(a){let r=a.length; for(let i=0;i<a.length;i++)r+=i-a[i]; return r;}",
+    "explanation": "Expected sum minus actual sum, computed in a loop.",
+    "complexity": "O(n) time, O(1) space",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "3e2371da-b68c-47a5-aac1-f54211ba4d50",
+    "title": "Two Sum",
+    "category": "arrays",
+    "question": "Return indices of two numbers adding to target.",
+    "answer": "function twoSum(a,target){const seen=new Map(); for(let i=0;i<a.length;i++){const need=target-a[i]; if(seen.has(need))return [seen.get(need),i]; seen.set(a[i],i);} return [];}",
+    "explanation": "A map stores previously seen values; check before inserting the current item.",
+    "complexity": "O(n) expected time, O(n) space",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "ffcc04e6-25b9-4efb-8d51-1c8943405a88",
+    "title": "Merge sorted arrays",
+    "category": "arrays",
+    "question": "Merge two sorted arrays.",
+    "answer": "function mergeSorted(a,b){const r=[];let i=0,j=0;while(i<a.length&&j<b.length)r.push(a[i]<=b[j]?a[i++]:b[j++]);return r.concat(a.slice(i),b.slice(j));}",
+    "explanation": "Two pointers choose the next smallest value; inputs must be sorted ascending.",
+    "complexity": "O(n+m) time and space",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "343ecb12-53be-48ca-a5e7-47c65337119e",
+    "title": "Rotate array right",
+    "category": "arrays",
+    "question": "Rotate an array right by k positions.",
+    "answer": "function rotateRight(a,k){if(!a.length)return [];const n=a.length,s=((k%n)+n)%n;return a.slice(n-s).concat(a.slice(0,n-s));}",
+    "explanation": "Modulo handles large and negative rotations. Returns a new array.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "57a51759-69d6-4a62-9eb6-806346c80bc1",
+    "title": "Group objects by property",
+    "category": "objects",
+    "question": "Group records by a property key.",
+    "answer": "function groupBy(items,key){return items.reduce((g,x)=>{(g[x[key]]??=[]).push(x);return g;},{});}",
+    "explanation": "reduce builds arrays under each property value. Use Map if keys are arbitrary objects or untrusted special strings.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "objects"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "05dab231-4df2-4495-b2fc-d27b0ea8caec",
+    "title": "Deep clone JSON data",
+    "category": "objects",
+    "question": "Deep-clone JSON-compatible data.",
+    "answer": "const cloneJson = value => JSON.parse(JSON.stringify(value));",
+    "explanation": "This loses undefined, functions and special object types; structuredClone supports more types in modern runtimes.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "objects"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "d80a6a17-dbd1-49c3-b1dd-74505fc4a36c",
+    "title": "Debounce",
+    "category": "functions",
+    "question": "Implement debounce: call after invocations stop for delay.",
+    "answer": "function debounce(fn,delay){let timer;return function(...args){clearTimeout(timer);const ctx=this;timer=setTimeout(()=>fn.apply(ctx,args),delay);};}",
+    "explanation": "Each call cancels the prior timer and uses the latest arguments and context.",
+    "complexity": "O(1) state",
+    "tags": [
+      "javascript",
+      "functions"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "56646abc-affd-42fc-a3e2-e07f77b07264",
+    "title": "Throttle",
+    "category": "functions",
+    "question": "Implement leading-edge throttle.",
+    "answer": "function throttle(fn,delay){let last=0;return function(...args){const now=Date.now();if(now-last>=delay){last=now;return fn.apply(this,args);}};}",
+    "explanation": "Drops calls during the wait window; it does not schedule a trailing call.",
+    "complexity": "O(1) state",
+    "tags": [
+      "javascript",
+      "functions"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "03242a35-a30b-455b-b470-eb8748324d6b",
+    "title": "Memoize unary function",
+    "category": "functions",
+    "question": "Cache results for a pure function of one argument.",
+    "answer": "function memoize(fn){const cache=new Map();return function(x){if(cache.has(x))return cache.get(x);const y=fn.call(this,x);cache.set(x,y);return y;};}",
+    "explanation": "Map.has distinguishes cached undefined from absent entries. Add an eviction policy for unbounded workloads.",
+    "complexity": "O(1) average lookup",
+    "tags": [
+      "javascript",
+      "functions"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "58740f23-4243-4e56-9e5d-76323dc8941d",
+    "title": "Closure counter",
+    "category": "functions",
+    "question": "Create a counter whose state persists between calls.",
+    "answer": "function createCounter(start=0){let n=start;return {increment:()=>++n,decrement:()=>--n,value:()=>n};}",
+    "explanation": "Returned methods close over the private local variable.",
+    "complexity": "O(1) state",
+    "tags": [
+      "javascript",
+      "functions"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "4d1139f0-21ea-4bce-aaa9-df7041ac9614",
+    "title": "Custom reduce",
+    "category": "arrays",
+    "question": "Implement reduce with an optional initial value.",
+    "answer": "function customReduce(a,fn,...initial){let i=0,acc;if(initial.length)acc=initial[0];else{while(i<a.length&&!(i in a))i++;if(i===a.length)throw new TypeError('Reduce of empty array');acc=a[i++];}for(;i<a.length;i++)if(i in a)acc=fn(acc,a[i],i,a);return acc;}",
+    "explanation": "Handles empty input, optional initial value, and sparse holes for the common reduce behavior.",
+    "complexity": "O(n) time",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "bf34b0b8-ba14-41e3-97b6-07f87a9d4e09",
+    "title": "Binary search",
+    "category": "algorithms",
+    "question": "Find target index in a sorted array, or -1.",
+    "answer": "function binarySearch(a,target){let l=0,r=a.length-1;while(l<=r){const m=l+Math.floor((r-l)/2);if(a[m]===target)return m;if(a[m]<target)l=m+1;else r=m-1;}return -1;}",
+    "explanation": "Requires ascending sorted input and returns any matching index if duplicates exist.",
+    "complexity": "O(log n) time, O(1) space",
+    "tags": [
+      "javascript",
+      "algorithms"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "82ba14fe-504f-4b95-9fa5-f8cdd37ce8f2",
+    "title": "Maximum subarray sum",
+    "category": "algorithms",
+    "question": "Find the maximum sum of a non-empty contiguous subarray.",
+    "answer": "function maxSubarraySum(a){if(!a.length)return null;let cur=a[0],best=a[0];for(let i=1;i<a.length;i++){cur=Math.max(a[i],cur+a[i]);best=Math.max(best,cur);}return best;}",
+    "explanation": "Kadane's algorithm either starts at the current value or extends the prior subarray; works with all-negative arrays.",
+    "complexity": "O(n) time, O(1) space",
+    "tags": [
+      "javascript",
+      "algorithms"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "5cb78951-044c-41e5-a327-bd1fa36e3b61",
+    "title": "Pair sum in sorted array",
+    "category": "algorithms",
+    "question": "Find two values adding to target in a sorted array.",
+    "answer": "function pairSumSorted(a,target){let l=0,r=a.length-1;while(l<r){const s=a[l]+a[r];if(s===target)return [a[l],a[r]];if(s<target)l++;else r--;}return null;}",
+    "explanation": "Two pointers work because the input is sorted ascending.",
+    "complexity": "O(n) time, O(1) space",
+    "tags": [
+      "javascript",
+      "algorithms"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "9e110fd1-482d-4673-a321-a8f1c3e67145",
+    "title": "Balanced brackets",
+    "category": "stacks",
+    "question": "Check if (), [] and {} are balanced.",
+    "answer": "function isBalanced(s){const pairs={')':'(',']':'[','}':'{'};const stack=[];for(const c of s){if('([{'.includes(c))stack.push(c);else if(')]}'.includes(c)&&stack.pop()!==pairs[c])return false;}return stack.length===0;}",
+    "explanation": "Each closing bracket must match the most recent opening bracket. Other characters are ignored.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "stacks"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "ccbd9d6a-6f5c-4855-982e-41a9f8662a04",
+    "title": "Stack class",
+    "category": "data-structures",
+    "question": "Implement stack push, pop, peek and isEmpty.",
+    "answer": "class Stack{#items=[];push(v){this.#items.push(v);}pop(){return this.#items.pop();}peek(){return this.#items.at(-1);}isEmpty(){return this.#items.length===0;}}",
+    "explanation": "Private class fields protect the internal array; pop/peek return undefined when empty.",
+    "complexity": "O(1) amortized operations",
+    "tags": [
+      "javascript",
+      "data-structures"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "40d03d02-4389-433f-a171-aa150932d269",
+    "title": "Queue using two stacks",
+    "category": "data-structures",
+    "question": "Implement enqueue and dequeue with two stacks.",
+    "answer": "class Queue{in=[];out=[];enqueue(v){this.in.push(v);}dequeue(){if(!this.out.length)while(this.in.length)this.out.push(this.in.pop());return this.out.pop();}}",
+    "explanation": "Transfer only when output stack is empty. Each element moves at most once between stacks.",
+    "complexity": "O(1) amortized",
+    "tags": [
+      "javascript",
+      "data-structures"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "b9ffc29c-bdb6-45b9-8b92-8c584efae8f0",
+    "title": "Fibonacci with BigInt",
+    "category": "recursion",
+    "question": "Return nth Fibonacci number exactly.",
+    "answer": "function fibonacci(n){if(!Number.isInteger(n)||n<0)throw new RangeError('n must be non-negative');let a=0n,b=1n;for(let i=0;i<n;i++)[a,b]=[b,a+b];return a;}",
+    "explanation": "BigInt preserves exact integer results; F(0)=0 and F(1)=1.",
+    "complexity": "O(n) time, O(1) space",
+    "tags": [
+      "javascript",
+      "recursion"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "b123bd7a-f126-4bdb-ad0e-2b460d1864ed",
+    "title": "Promise.all implementation",
+    "category": "promises",
+    "question": "Implement a simplified Promise.all preserving input order.",
+    "answer": "function promiseAll(iterable){return new Promise((resolve,reject)=>{const items=Array.from(iterable);if(!items.length)return resolve([]);const out=new Array(items.length);let done=0;items.forEach((item,i)=>Promise.resolve(item).then(v=>{out[i]=v;if(++done===items.length)resolve(out);},reject));});}",
+    "explanation": "Assimilates promises and values and rejects on first rejection. Prefer native Promise.all in application code.",
+    "complexity": "O(n) time and space",
+    "tags": [
+      "javascript",
+      "promises"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fdb70e7d-bd0e-44f8-aa57-6089edea4e2a",
+    "title": "Run async tasks sequentially",
+    "category": "promises",
+    "question": "Run async task functions one after another and collect results.",
+    "answer": "async function runSequentially(tasks){const results=[];for(const task of tasks)results.push(await task());return results;}",
+    "explanation": "Await in the loop enforces sequential execution; use Promise.all for independent tasks that may run concurrently.",
+    "complexity": "O(n) task steps",
+    "tags": [
+      "javascript",
+      "promises"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "99000a9e-8e07-485d-a6bd-c6afecf441ae",
+    "title": "Retry async operation",
+    "category": "promises",
+    "question": "Retry an async function up to a maximum number of attempts.",
+    "answer": "async function retry(fn,attempts=3){if(attempts<1)throw new RangeError('attempts must be positive');let error;for(let i=0;i<attempts;i++){try{return await fn();}catch(e){error=e;if(i===attempts-1)throw error;}}}",
+    "explanation": "Retries can help transient failures. Production code may need backoff, jitter, cancellation, and idempotency.",
+    "complexity": "Depends on attempts",
+    "tags": [
+      "javascript",
+      "promises"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "0a97e49d-7c1a-4f67-8060-d9a25b1fec5e",
+    "title": "Promise timeout",
+    "category": "promises",
+    "question": "Reject if a promise does not settle before a timeout.",
+    "answer": "function withTimeout(promise,ms){let timer;const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Timed out')),ms);});return Promise.race([promise,timeout]).finally(()=>clearTimeout(timer));}",
+    "explanation": "Promise.race does not cancel the underlying operation; use AbortController when the API supports cancellation.",
+    "complexity": "O(1) wrapper state",
+    "tags": [
+      "javascript",
+      "promises"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "8b61c89d-b219-48db-976e-2320cbc6c632",
+    "title": "Fetch JSON with error handling",
+    "category": "async-js",
+    "question": "Fetch JSON and throw for non-2xx HTTP responses.",
+    "answer": "async function fetchJson(url){const res=await fetch(url);if(!res.ok)throw new Error(`HTTP ${res.status}`);return res.json();}",
+    "explanation": "fetch rejects on network errors but not automatically on HTTP 404/500; check response.ok.",
+    "complexity": "Network-dependent",
+    "tags": [
+      "javascript",
+      "async-js"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "68ec67c4-e759-4d28-9332-5a733ea2b6df",
+    "title": "Limit async concurrency",
+    "category": "async-js",
+    "question": "Map items with a maximum number of concurrent async tasks.",
+    "answer": "async function mapLimit(items,limit,mapper){if(!Number.isInteger(limit)||limit<1)throw new RangeError('limit must be positive');const out=new Array(items.length);let next=0;async function worker(){while(true){const i=next++;if(i>=items.length)return;out[i]=await mapper(items[i],i);}}await Promise.all(Array.from({length:Math.min(limit,items.length)},worker));return out;}",
+    "explanation": "Workers claim indexes before awaiting, limiting in-flight operations and preserving output order.",
+    "complexity": "O(n) total work, O(limit) active",
+    "tags": [
+      "javascript",
+      "async-js"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "d6c5aa74-2b1f-42be-a249-a55002f9d675",
+    "title": "EventEmitter",
+    "category": "objects",
+    "question": "Implement on, off and emit for named events.",
+    "answer": "class EventEmitter{listeners=new Map();on(e,fn){if(!this.listeners.has(e))this.listeners.set(e,new Set());this.listeners.get(e).add(fn);return()=>this.off(e,fn);}off(e,fn){this.listeners.get(e)?.delete(fn);}emit(e,...args){for(const fn of [...(this.listeners.get(e)||[])])fn(...args);}}",
+    "explanation": "A Set prevents duplicate function references; emitting a snapshot makes listener changes during emit predictable.",
+    "complexity": "O(k) per emit",
+    "tags": [
+      "javascript",
+      "objects"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "d26662d5-989d-4076-97cc-cad3b88f7831",
+    "title": "Sort objects by age",
+    "category": "arrays",
+    "question": "Sort a copy of records by age ascending.",
+    "answer": "const sortByAge = users => [...users].sort((a,b)=>a.age-b.age);",
+    "explanation": "Copy before sorting because Array.sort mutates its receiver.",
+    "complexity": "O(n log n) typical",
+    "tags": [
+      "javascript",
+      "arrays"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "8d946d1c-fc2d-4ae5-86ed-35aa836dc093",
+    "title": "Longest word",
+    "category": "strings",
+    "question": "Find the longest whitespace-separated word.",
+    "answer": "function longestWord(s){return s.trim().split(/\\s+/).filter(Boolean).reduce((best,w)=>w.length>best.length?w:best,'');}",
+    "explanation": "Returns the first word among ties; empty input returns an empty string.",
+    "complexity": "O(n) time",
+    "tags": [
+      "javascript",
+      "strings"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "e165698a-1c44-4819-918c-6fe88afac4be",
+    "title": "Check own property",
+    "category": "objects",
+    "question": "Check whether a property belongs directly to an object.",
+    "answer": "const hasOwn = (obj,key) => Object.hasOwn(obj,key);",
+    "explanation": "Object.hasOwn excludes inherited properties and works if an object overrides hasOwnProperty.",
+    "complexity": "O(1) average",
+    "tags": [
+      "javascript",
+      "objects"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "1f100653-e3a6-4b38-b5d4-836c78465bc7",
+    "title": "Deep copy with structuredClone",
+    "category": "objects",
+    "question": "Deep-copy a supported object with structuredClone.",
+    "answer": "const deepCopy = value => structuredClone(value);",
+    "explanation": "Supports many built-in types and cycles, but not functions or every custom object behavior.",
+    "complexity": "O(n) data size",
+    "tags": [
+      "javascript",
+      "objects"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "f5f1f5de-5108-4b4c-bbde-1de3026588ac",
+    "title": "Promisify callback",
+    "category": "promises",
+    "question": "Wrap a Node-style error-first callback API in a Promise.",
+    "answer": "function promisify(fn){return (...args)=>new Promise((resolve,reject)=>fn(...args,(err,value)=>err?reject(err):resolve(value)));}",
+    "explanation": "Educational version supports one success value. Node.js util.promisify handles common Node APIs.",
+    "complexity": "O(1) wrapper state",
+    "tags": [
+      "javascript",
+      "promises"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "5e9a57b4-ee68-438b-bbd2-a1369015e47e",
+    "title": "Parse query string",
+    "category": "web-apis",
+    "question": "Parse query parameters and collect repeated keys into arrays.",
+    "answer": "function parseQuery(q){const out={};for(const [k,v] of new URLSearchParams(q.startsWith('?')?q.slice(1):q)){if(Object.hasOwn(out,k))out[k]=Array.isArray(out[k])?[...out[k],v]:[out[k],v];else out[k]=v;}return out;}",
+    "explanation": "URLSearchParams handles percent encoding; repeated keys become arrays.",
+    "complexity": "O(n) query length",
+    "tags": [
+      "javascript",
+      "web-apis"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "c1301106-8e0b-40f1-83a9-38848a95c72a",
+    "title": "Basic email validation",
+    "category": "validation",
+    "question": "Write a simple email format check for form feedback.",
+    "answer": "const isLikelyEmail = value => /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value);",
+    "explanation": "Email syntax is more complex than this regex. Use only for basic feedback and validate appropriately on the server.",
+    "complexity": "O(n) time",
+    "tags": [
+      "javascript",
+      "validation"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "2a67cf87-1bbb-4bf3-a2f8-57ae37aff51b",
+    "title": "Range generator",
+    "category": "iterators",
+    "question": "Yield integers from start to end exclusive.",
+    "answer": "function* range(start,end){for(let n=start;n<end;n++)yield n;}",
+    "explanation": "Generators yield values lazily and can be consumed by for...of or spread.",
+    "complexity": "O(n) time, O(1) state",
+    "tags": [
+      "javascript",
+      "iterators"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "e4765469-1aba-4769-8556-bf6d2f4bc62a",
+    "title": "Custom iterable",
+    "category": "iterators",
+    "question": "Make an object iterable with for...of.",
+    "answer": "const collection={values:[10,20,30],*[Symbol.iterator](){for(const v of this.values)yield v;}};",
+    "explanation": "Symbol.iterator implements the iterable protocol; a generator method supplies the iterator.",
+    "complexity": "O(n) consumption",
+    "tags": [
+      "javascript",
+      "iterators"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "683ae2c8-0cd2-4070-a60e-737cf1bb2f58",
+    "title": "LRU cache",
+    "category": "data-structures",
+    "question": "Implement an LRU cache with get and put using Map order.",
+    "answer": "class LRUCache{constructor(capacity){if(capacity<1)throw new RangeError('capacity must be positive');this.capacity=capacity;this.map=new Map();}get(k){if(!this.map.has(k))return undefined;const v=this.map.get(k);this.map.delete(k);this.map.set(k,v);return v;}put(k,v){this.map.delete(k);this.map.set(k,v);if(this.map.size>this.capacity)this.map.delete(this.map.keys().next().value);}}",
+    "explanation": "Refreshing insertion order marks a key most-recently-used; the first key is evicted as least-recently-used.",
+    "complexity": "O(1) average",
+    "tags": [
+      "javascript",
+      "data-structures"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "4e529e0a-fd7f-46ed-8ec3-1cd0f3fec368",
+    "title": "Inorder tree traversal",
+    "category": "trees",
+    "question": "Return inorder traversal of a binary tree.",
+    "answer": "function inorder(root,out=[]){if(!root)return out;inorder(root.left,out);out.push(root.value);inorder(root.right,out);return out;}",
+    "explanation": "Visits left subtree, node, then right subtree. A BST yields sorted values.",
+    "complexity": "O(n) time, O(h) stack",
+    "tags": [
+      "javascript",
+      "trees"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "86c7bb0b-c019-4435-912c-2973d6ef598a",
+    "title": "Binary tree height",
+    "category": "trees",
+    "question": "Return the number of nodes on the longest root-to-leaf path.",
+    "answer": "function treeHeight(root){return root?1+Math.max(treeHeight(root.left),treeHeight(root.right)):0;}",
+    "explanation": "The empty tree height is defined as zero; recursion depth depends on tree height.",
+    "complexity": "O(n) time, O(h) stack",
+    "tags": [
+      "javascript",
+      "trees"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "99a93f3c-c4e1-4d37-8ab4-25a1abe81043",
+    "title": "Breadth-first graph search",
+    "category": "graphs",
+    "question": "Return BFS visit order using an adjacency-list object.",
+    "answer": "function bfs(graph,start){const seen=new Set([start]),queue=[start],order=[];for(let i=0;i<queue.length;i++){const node=queue[i];order.push(node);for(const next of graph[node]||[])if(!seen.has(next)){seen.add(next);queue.push(next);}}return order;}",
+    "explanation": "Mark nodes visited when enqueuing them to avoid duplicates. Map is better for arbitrary node keys.",
+    "complexity": "O(V+E) time, O(V) space",
+    "tags": [
+      "javascript",
+      "graphs"
+    ],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "3af01103-9fe3-477e-a842-cf9e2596e582",
+    "title": "Merge overlapping intervals",
+    "category": "algorithms",
+    "question": "Merge overlapping [start,end] intervals.",
+    "answer": "function mergeIntervals(intervals){const sorted=intervals.map(x=>[...x]).sort((a,b)=>a[0]-b[0]),out=[];for(const cur of sorted){const last=out.at(-1);if(!last||cur[0]>last[1])out.push(cur);else last[1]=Math.max(last[1],cur[1]);}return out;}",
+    "explanation": "Sort by start, then extend the previous interval if they overlap. Copies input pairs to avoid mutation.",
+    "complexity": "O(n log n) time",
+    "tags": [
+      "javascript",
+      "algorithms"
+    ],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "f7f1c0e2-af95-4ea9-8c18-7798e315ca61",
+    "title": "Safe JSON parse",
+    "category": "error-handling",
+    "question": "Parse JSON and return a fallback on malformed input.",
+    "answer": "function safeJsonParse(text,fallback=null){try{return JSON.parse(text);}catch{return fallback;}}",
+    "explanation": "Use a fallback only when silently recovering from malformed data is appropriate; otherwise report the parsing error.",
+    "complexity": "O(n) input length",
+    "tags": [
+      "javascript",
+      "error-handling"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "5165a44c-fc9c-40b0-af8e-6c380ebb419f",
+    "title": "Optional chaining and nullish coalescing",
+    "category": "language-features",
+    "question": "Read nested city safely and default only for null or undefined.",
+    "answer": "const getCity = user => user?.address?.city ?? 'Unknown city';",
+    "explanation": "Optional chaining avoids errors on nullish intermediates; ?? preserves valid falsy values such as empty strings and zero.",
+    "complexity": "O(1)",
+    "tags": [
+      "javascript",
+      "language-features"
+    ],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "c91d2e2a-59bb-4e9e-9472-a98eeeb12f36",
+    "title": "Sleep with Promise",
+    "category": "promises",
+    "question": "Create a Promise-based sleep helper.",
+    "answer": "const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));",
+    "explanation": "Timer execution happens after at least the requested delay and can be delayed by event-loop load.",
+    "complexity": "O(1) state",
+    "tags": [
+      "javascript",
+      "promises"
+    ],
+    "difficulty": "beginner"
+  }
+]

@@ -1,0 +1,703 @@
+[
+  {
+    "id": "b968b366-6a3f-4019-b180-c69893206f93",
+    "title": "What is Redux and when should you use it?",
+    "category": "Redux Basics",
+    "question": "What is Redux and when should you use it?",
+    "answer": "Redux is a predictable state container for JavaScript applications. It is useful when shared state is complex, updated from many places, or benefits from centralized debugging and middleware.",
+    "explanation": "For small local UI state, React state or Context may be simpler. Redux Toolkit is the recommended way to write Redux today.",
+    "complexity": "",
+    "tags": [
+      "Redux",
+      "state management"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "dc0362ea-5918-487a-a5cd-3d288cdec6ff",
+    "title": "What are the core principles of Redux?",
+    "category": "Redux Basics",
+    "question": "What are the core principles of Redux?",
+    "answer": "Redux emphasizes a single store for application state, state changes through actions, and reducers that calculate the next state without mutating existing state.",
+    "explanation": "These principles make state transitions explicit and easier to test and debug.",
+    "complexity": "",
+    "tags": [
+      "store",
+      "actions",
+      "reducers"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "7304661b-11b0-4424-9a89-415bc677b36f",
+    "title": "What is a Redux store?",
+    "category": "Core Concepts",
+    "question": "What is a Redux store?",
+    "answer": "```js\nimport { configureStore } from '@reduxjs/toolkit';\nimport counterReducer from './counterSlice';\n\nexport const store = configureStore({\n  reducer: { counter: counterReducer }\n});\n```",
+    "explanation": "The store holds the Redux state tree and provides APIs to dispatch actions and subscribe to updates. Redux Toolkit's `configureStore` sets up useful defaults.",
+    "complexity": "",
+    "tags": [
+      "store",
+      "configureStore"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "78e29a24-c6ef-43f5-9164-8c4dbccb5fdd",
+    "title": "What is an action in Redux?",
+    "category": "Core Concepts",
+    "question": "What is an action in Redux?",
+    "answer": "An action is a plain object describing an event or requested state change, usually with a `type` field and optional payload.",
+    "explanation": "With Redux Toolkit, `createSlice` generates action creators so you rarely need to write action objects manually.",
+    "complexity": "",
+    "tags": [
+      "actions",
+      "payload"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "f60bcb05-1ef2-4f2e-be88-704181806bd9",
+    "title": "What is a reducer in Redux?",
+    "category": "Core Concepts",
+    "question": "What is a reducer in Redux?",
+    "answer": "```js\nfunction counterReducer(state = { value: 0 }, action) {\n  switch (action.type) {\n    case 'counter/increment': return { value: state.value + 1 };\n    default: return state;\n  }\n}\n```",
+    "explanation": "A reducer receives the current state and an action, then returns the next state. It should be deterministic and free of side effects.",
+    "complexity": "",
+    "tags": [
+      "reducers",
+      "pure functions"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "4971379c-b797-4e75-b37c-a557f851148e",
+    "title": "What is Redux Toolkit?",
+    "category": "Redux Toolkit",
+    "question": "What is Redux Toolkit?",
+    "answer": "Redux Toolkit (RTK) is the official, recommended set of tools for writing Redux logic with less boilerplate.",
+    "explanation": "It includes `configureStore`, `createSlice`, `createAsyncThunk`, RTK Query, and other utilities.",
+    "complexity": "",
+    "tags": [
+      "RTK",
+      "Redux Toolkit"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "976b34a6-f85a-4b94-b621-1eb6c86df960",
+    "title": "How do you create a slice with createSlice?",
+    "category": "Redux Toolkit",
+    "question": "How do you create a slice with createSlice?",
+    "answer": "```js\nimport { createSlice } from '@reduxjs/toolkit';\n\nconst counterSlice = createSlice({\n  name: 'counter',\n  initialState: { value: 0 },\n  reducers: {\n    increment(state) { state.value += 1; },\n    decrement(state) { state.value -= 1; }\n  }\n});\n\nexport const { increment, decrement } = counterSlice.actions;\nexport default counterSlice.reducer;\n```",
+    "explanation": "`createSlice` generates action creators and a reducer from a name, initial state, and reducer functions. Its apparent mutations are handled safely by Immer.",
+    "complexity": "",
+    "tags": [
+      "createSlice",
+      "reducers"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "5d64542a-5423-4cbe-9958-130c8dc1b455",
+    "title": "How do you configure a Redux store with multiple reducers?",
+    "category": "Redux Toolkit",
+    "question": "How do you configure a Redux store with multiple reducers?",
+    "answer": "```js\nimport { configureStore } from '@reduxjs/toolkit';\nimport counterReducer from './counterSlice';\nimport todosReducer from './todosSlice';\n\nexport const store = configureStore({\n  reducer: { counter: counterReducer, todos: todosReducer }\n});\n```",
+    "explanation": "The object keys become top-level state keys, so state is available at `state.counter` and `state.todos`.",
+    "complexity": "",
+    "tags": [
+      "configureStore",
+      "combined reducers"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "0ad2d5f4-d609-4e33-82db-bdff423374d3",
+    "title": "How do you connect Redux to a React application?",
+    "category": "React Redux",
+    "question": "How do you connect Redux to a React application?",
+    "answer": "```jsx\nimport { Provider } from 'react-redux';\nimport { store } from './store';\n\nroot.render(\n  <Provider store={store}><App /></Provider>\n);\n```",
+    "explanation": "The Provider makes the store available to nested React components through React Redux hooks and APIs.",
+    "complexity": "",
+    "tags": [
+      "Provider",
+      "React Redux"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "afbf7e4b-88aa-4ae3-b656-f18bfb3548ad",
+    "title": "How do you read state from Redux in a React component?",
+    "category": "React Redux",
+    "question": "How do you read state from Redux in a React component?",
+    "answer": "```jsx\nimport { useSelector } from 'react-redux';\n\nfunction CounterValue() {\n  const value = useSelector(state => state.counter.value);\n  return <span>{value}</span>;\n}\n```",
+    "explanation": "`useSelector` subscribes to the store and re-renders the component when its selected result changes according to the equality comparison.",
+    "complexity": "",
+    "tags": [
+      "useSelector",
+      "state"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "625051cb-1ef7-4d30-b45f-6afaa068e995",
+    "title": "How do you dispatch a Redux action from React?",
+    "category": "React Redux",
+    "question": "How do you dispatch a Redux action from React?",
+    "answer": "```jsx\nimport { useDispatch } from 'react-redux';\nimport { increment } from './counterSlice';\n\nfunction IncrementButton() {\n  const dispatch = useDispatch();\n  return <button onClick={() => dispatch(increment())}>Add</button>;\n}\n```",
+    "explanation": "`useDispatch` returns the store's dispatch function. Dispatch an action in response to user events or other application logic.",
+    "complexity": "",
+    "tags": [
+      "useDispatch",
+      "dispatch"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "134fae00-bf43-4286-8ce7-15b671cd3dd3",
+    "title": "What is the difference between useSelector and useDispatch?",
+    "category": "React Redux",
+    "question": "What is the difference between useSelector and useDispatch?",
+    "answer": "`useSelector` reads a selected value from the Redux store; `useDispatch` provides the dispatch function used to send actions to the store.",
+    "explanation": "A component can use both hooks to display state and trigger updates.",
+    "complexity": "",
+    "tags": [
+      "useSelector",
+      "useDispatch"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "667b8fbc-bc6b-4347-8c80-23824fcc1daf",
+    "title": "How do you pass data in a Redux action payload?",
+    "category": "Redux Toolkit",
+    "question": "How do you pass data in a Redux action payload?",
+    "answer": "```js\nconst todosSlice = createSlice({\n  name: 'todos',\n  initialState: [],\n  reducers: {\n    addTodo(state, action) {\n      state.push({ id: action.payload.id, text: action.payload.text, done: false });\n    }\n  }\n});\n```",
+    "explanation": "Dispatch the generated action creator with the data, such as `dispatch(addTodo({ id: crypto.randomUUID(), text }))`. Generate random values outside reducers to keep reducers pure.",
+    "complexity": "",
+    "tags": [
+      "payload",
+      "createSlice"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "7879780c-5c28-4b9c-9e8c-2f59599fb805",
+    "title": "How do you update an item in a Redux Toolkit array?",
+    "category": "Redux Toolkit",
+    "question": "How do you update an item in a Redux Toolkit array?",
+    "answer": "```js\nupdateTodo(state, action) {\n  const todo = state.find(item => item.id === action.payload.id);\n  if (todo) todo.done = !todo.done;\n}\n```",
+    "explanation": "Inside a `createSlice` reducer, Immer allows mutation-like syntax while producing an immutable next state. Avoid mixing mutation and returning a separate replacement value in the same reducer.",
+    "complexity": "",
+    "tags": [
+      "arrays",
+      "Immer"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "2898089b-2df6-4bd8-9e6e-a84a7719131b",
+    "title": "How do you remove an item from a Redux Toolkit array?",
+    "category": "Redux Toolkit",
+    "question": "How do you remove an item from a Redux Toolkit array?",
+    "answer": "```js\nremoveTodo(state, action) {\n  return state.filter(todo => todo.id !== action.payload);\n}\n```",
+    "explanation": "Returning a new array is a clear way to remove an item. The payload here is the todo ID.",
+    "complexity": "",
+    "tags": [
+      "filter",
+      "arrays"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "ba5b088e-cda0-40b2-b9f6-a5fee10fe1a9",
+    "title": "How do you implement a counter with Redux Toolkit?",
+    "category": "Coding Problems",
+    "question": "How do you implement a counter with Redux Toolkit?",
+    "answer": "```jsx\nconst value = useSelector(state => state.counter.value);\nconst dispatch = useDispatch();\nreturn <>\n  <button onClick={() => dispatch(decrement())}>-</button>\n  <span>{value}</span>\n  <button onClick={() => dispatch(increment())}>+</button>\n</>;\n```",
+    "explanation": "Create the counter slice, register its reducer in the store, and wrap the app in Provider before using these hooks.",
+    "complexity": "",
+    "tags": [
+      "counter",
+      "coding problem"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "1ac955ce-98ee-4c3c-936b-4fe2cdadb04e",
+    "title": "How do you implement reset state in a slice?",
+    "category": "Redux Toolkit",
+    "question": "How do you implement reset state in a slice?",
+    "answer": "```js\nconst counterSlice = createSlice({\n  name: 'counter',\n  initialState: { value: 0 },\n  reducers: {\n    reset: () => ({ value: 0 })\n  }\n});\n```",
+    "explanation": "A reducer can return a replacement state. For object state, returning the initial-state shape resets the slice.",
+    "complexity": "",
+    "tags": [
+      "reset",
+      "createSlice"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "e7f2813b-b09a-48d3-ba5b-3a87d9d5f234",
+    "title": "What is createAsyncThunk?",
+    "category": "Async Redux",
+    "question": "What is createAsyncThunk?",
+    "answer": "```js\nexport const fetchUsers = createAsyncThunk(\n  'users/fetchUsers',\n  async () => {\n    const response = await fetch('/api/users');\n    if (!response.ok) throw new Error('Could not fetch users');\n    return response.json();\n  }\n);\n```",
+    "explanation": "`createAsyncThunk` creates a thunk action creator and lifecycle actions for pending, fulfilled, and rejected states. Handle those actions in `extraReducers`.",
+    "complexity": "",
+    "tags": [
+      "createAsyncThunk",
+      "async"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "ac28c722-67a4-4a01-ba7d-321045df027c",
+    "title": "How do you handle pending, fulfilled, and rejected thunk states?",
+    "category": "Async Redux",
+    "question": "How do you handle pending, fulfilled, and rejected thunk states?",
+    "answer": "```js\nextraReducers: builder => {\n  builder\n    .addCase(fetchUsers.pending, state => { state.status = 'loading'; })\n    .addCase(fetchUsers.fulfilled, (state, action) => {\n      state.status = 'succeeded';\n      state.items = action.payload;\n    })\n    .addCase(fetchUsers.rejected, state => { state.status = 'failed'; });\n}\n```",
+    "explanation": "Track request status and error information in the slice so the UI can show loading indicators, results, and failure messages.",
+    "complexity": "",
+    "tags": [
+      "extraReducers",
+      "request status"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "ca06f0fc-084c-4a54-98fb-12c7e28d3681",
+    "title": "How do you dispatch an async thunk in a component?",
+    "category": "Async Redux",
+    "question": "How do you dispatch an async thunk in a component?",
+    "answer": "```jsx\nconst dispatch = useDispatch();\nuseEffect(() => {\n  dispatch(fetchUsers());\n}, [dispatch]);\n```",
+    "explanation": "Dispatching a thunk starts the async operation. Depending on the use case, handle cancellation, errors, or repeated requests; RTK Query can simplify common data fetching.",
+    "complexity": "",
+    "tags": [
+      "dispatch",
+      "useEffect"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "a922ce62-1196-49cf-ab26-5e48ff0be413",
+    "title": "How do you access a thunk's result or error?",
+    "category": "Async Redux",
+    "question": "How do you access a thunk's result or error?",
+    "answer": "```js\ntry {\n  const users = await dispatch(fetchUsers()).unwrap();\n  console.log(users);\n} catch (error) {\n  console.error(error);\n}\n```",
+    "explanation": "The `.unwrap()` helper returns the fulfilled payload or throws the rejection value/error, making it convenient to handle success and failure at the call site.",
+    "complexity": "",
+    "tags": [
+      "unwrap",
+      "errors"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "453ea75c-5708-4735-a06d-fff52bc5965c",
+    "title": "What is middleware in Redux?",
+    "category": "Middleware",
+    "question": "What is middleware in Redux?",
+    "answer": "Middleware is a function that can inspect, delay, transform, or respond to dispatched actions before they reach the reducer, and can perform side effects.",
+    "explanation": "Common uses include logging, async logic, analytics, and error reporting. Redux Toolkit includes thunk middleware by default.",
+    "complexity": "",
+    "tags": [
+      "middleware",
+      "side effects"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "0f3c102f-22cf-4faf-8840-dcdd36a34431",
+    "title": "How do you write a simple logging middleware?",
+    "category": "Middleware",
+    "question": "How do you write a simple logging middleware?",
+    "answer": "```js\nconst logger = store => next => action => {\n  console.log('dispatching', action);\n  const result = next(action);\n  console.log('next state', store.getState());\n  return result;\n};\n```",
+    "explanation": "Call `next(action)` to pass the action to the next middleware or reducer, and return its result. Add middleware with the store's middleware configuration.",
+    "complexity": "",
+    "tags": [
+      "logger",
+      "middleware"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "6a2aa7c2-73e3-491a-b3f0-0026281d2134",
+    "title": "What is a thunk in Redux?",
+    "category": "Middleware",
+    "question": "What is a thunk in Redux?",
+    "answer": "A thunk is a function used as an action-like unit of logic, commonly receiving `dispatch` and `getState` so it can perform asynchronous work and dispatch actions later.",
+    "explanation": "Redux Toolkit configures thunk middleware by default. For new code, `createAsyncThunk` or RTK Query often reduces manual boilerplate.",
+    "complexity": "",
+    "tags": [
+      "thunk",
+      "async"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "d5c19099-fcfc-4476-adb7-13a9764613c3",
+    "title": "What is the difference between createAsyncThunk and RTK Query?",
+    "category": "Data Fetching",
+    "question": "What is the difference between createAsyncThunk and RTK Query?",
+    "answer": "`createAsyncThunk` helps implement an async workflow and lifecycle actions. RTK Query is a data-fetching and caching solution that manages requests, cache entries, loading states, and invalidation.",
+    "explanation": "Use RTK Query for typical server-state fetching and mutations. Use thunks when you need custom async workflows not well represented as API endpoints.",
+    "complexity": "",
+    "tags": [
+      "RTK Query",
+      "createAsyncThunk"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "f0f597ea-f8ea-4666-ae09-7dacc2198bad",
+    "title": "How do you define an API with RTK Query?",
+    "category": "RTK Query",
+    "question": "How do you define an API with RTK Query?",
+    "answer": "```js\nimport { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';\n\nexport const usersApi = createApi({\n  reducerPath: 'usersApi',\n  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),\n  endpoints: builder => ({\n    getUsers: builder.query({ query: () => 'users' })\n  })\n});\nexport const { useGetUsersQuery } = usersApi;\n```",
+    "explanation": "RTK Query generates React hooks for endpoints. Register both the API reducer and its middleware in the Redux store.",
+    "complexity": "",
+    "tags": [
+      "createApi",
+      "RTK Query"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "5c6ac72e-a13d-4108-b3ae-d6356b987ac1",
+    "title": "How do you register RTK Query in the store?",
+    "category": "RTK Query",
+    "question": "How do you register RTK Query in the store?",
+    "answer": "```js\nexport const store = configureStore({\n  reducer: { [usersApi.reducerPath]: usersApi.reducer },\n  middleware: getDefaultMiddleware =>\n    getDefaultMiddleware().concat(usersApi.middleware)\n});\n```",
+    "explanation": "The API reducer stores cache state; the middleware handles subscription lifecycles, cache behavior, and request management.",
+    "complexity": "",
+    "tags": [
+      "middleware",
+      "reducerPath"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "658d222e-de91-4706-9512-40675b030651",
+    "title": "How do you fetch data using an RTK Query hook?",
+    "category": "RTK Query",
+    "question": "How do you fetch data using an RTK Query hook?",
+    "answer": "```jsx\nconst { data, error, isLoading, isFetching } = useGetUsersQuery();\nif (isLoading) return <p>Loading…</p>;\nif (error) return <p>Unable to load users.</p>;\nreturn <ul>{data?.map(user => <li key={user.id}>{user.name}</li>)}</ul>;\n```",
+    "explanation": "Generated hooks expose data and request status. `isLoading` typically indicates the first load; `isFetching` can also be true during refetches.",
+    "complexity": "",
+    "tags": [
+      "query hooks",
+      "loading"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "aa5730dd-1202-411d-bafb-1f3517a1da99",
+    "title": "How do you implement a mutation with RTK Query?",
+    "category": "RTK Query",
+    "question": "How do you implement a mutation with RTK Query?",
+    "answer": "```js\ncreateUser: builder.mutation({\n  query: user => ({ url: 'users', method: 'POST', body: user })\n})\n```",
+    "explanation": "A mutation changes server data. The generated hook returns a trigger function and mutation status; call the trigger when the user submits the form.",
+    "complexity": "",
+    "tags": [
+      "mutation",
+      "POST"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "d9c08af3-f0fb-4190-bb14-80a0bfab068a",
+    "title": "How do you invalidate RTK Query cache after a mutation?",
+    "category": "RTK Query",
+    "question": "How do you invalidate RTK Query cache after a mutation?",
+    "answer": "```js\ngetUsers: builder.query({\n  query: () => 'users',\n  providesTags: ['User']\n}),\ncreateUser: builder.mutation({\n  query: user => ({ url: 'users', method: 'POST', body: user }),\n  invalidatesTags: ['User']\n})\n```",
+    "explanation": "Tag invalidation tells RTK Query which cached queries may be stale so active subscriptions can refetch. For better precision, use entity-specific tags when appropriate.",
+    "complexity": "",
+    "tags": [
+      "cache",
+      "tags"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "97651d02-20dd-466f-bf13-4552f42208a1",
+    "title": "How do you select derived data from Redux state?",
+    "category": "Selectors",
+    "question": "How do you select derived data from Redux state?",
+    "answer": "```js\nconst selectCompletedTodos = state =>\n  state.todos.filter(todo => todo.done);\n```",
+    "explanation": "A selector encapsulates how data is read or derived from the state tree. For expensive calculations, use a memoized selector such as one built with `createSelector`.",
+    "complexity": "",
+    "tags": [
+      "selectors",
+      "derived state"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "9007e93b-e0c0-4e25-96c1-5a1a210cc78a",
+    "title": "What is createSelector used for?",
+    "category": "Selectors",
+    "question": "What is createSelector used for?",
+    "answer": "```js\nimport { createSelector } from '@reduxjs/toolkit';\n\nconst selectTodos = state => state.todos;\nexport const selectCompletedTodos = createSelector(\n  [selectTodos],\n  todos => todos.filter(todo => todo.done)\n);\n```",
+    "explanation": "Memoized selectors reuse their result when input selector values have not changed, reducing repeated calculations and helping preserve result identity.",
+    "complexity": "",
+    "tags": [
+      "createSelector",
+      "memoization"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "d3faedac-642f-4fa6-b313-f34924925437",
+    "title": "How do you normalize Redux state?",
+    "category": "State Design",
+    "question": "How do you normalize Redux state?",
+    "answer": "Store entities by ID and keep an array of IDs for ordering, rather than deeply nesting repeated copies of the same entity.",
+    "explanation": "Normalized state simplifies updates and lookups. Redux Toolkit's `createEntityAdapter` provides helpers and selectors for this pattern.",
+    "complexity": "",
+    "tags": [
+      "normalization",
+      "entities"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "4a27a521-8235-4b2e-804b-d563798d979f",
+    "title": "How do you use createEntityAdapter?",
+    "category": "State Design",
+    "question": "How do you use createEntityAdapter?",
+    "answer": "```js\nconst usersAdapter = createEntityAdapter();\nconst initialState = usersAdapter.getInitialState({ status: 'idle' });\nconst usersSlice = createSlice({\n  name: 'users', initialState,\n  reducers: { usersReceived: usersAdapter.setAll }\n});\n```",
+    "explanation": "The adapter supplies reducers and selectors for common CRUD operations on normalized collections. Customize `selectId` or sorting when your entity shape requires it.",
+    "complexity": "",
+    "tags": [
+      "createEntityAdapter",
+      "normalized state"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "6d7e19d0-3f5a-4894-8b9c-a127b00b3ec8",
+    "title": "How do you reset a slice on logout?",
+    "category": "Authentication",
+    "question": "How do you reset a slice on logout?",
+    "answer": "```js\nextraReducers: builder => {\n  builder.addCase(logout, () => initialState);\n}\n```",
+    "explanation": "A slice can listen for a shared logout action and return its initial state. Ensure sensitive server-side sessions and tokens are also handled securely; clearing Redux state alone is not authorization.",
+    "complexity": "",
+    "tags": [
+      "logout",
+      "extraReducers"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "d933be7b-ef6c-4372-ac80-95e22deef26b",
+    "title": "How do you persist Redux state across page reloads?",
+    "category": "Persistence",
+    "question": "How do you persist Redux state across page reloads?",
+    "answer": "Use a persistence library or explicitly save and restore only the state that should survive reloads, for example user preferences.",
+    "explanation": "Avoid blindly persisting the entire store. Consider schema/version migrations, stale data, and security risks; do not store sensitive credentials in ordinary browser storage without carefully assessing the threat model.",
+    "complexity": "",
+    "tags": [
+      "persistence",
+      "localStorage"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "e61a9daf-e3e0-44f0-af57-c1221d4e6a5c",
+    "title": "How do you use Redux DevTools?",
+    "category": "Debugging",
+    "question": "How do you use Redux DevTools?",
+    "answer": "Enable Redux DevTools through the standard Redux Toolkit store setup and inspect dispatched actions, state snapshots, and state transitions in the browser extension.",
+    "explanation": "DevTools helps trace which action caused a change and supports time-travel debugging in development. Avoid exposing secrets in logged actions or state.",
+    "complexity": "",
+    "tags": [
+      "Redux DevTools",
+      "debugging"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "9773a4b0-b936-4dac-a53c-2167d1acd797",
+    "title": "Why should reducers be pure functions?",
+    "category": "Core Concepts",
+    "question": "Why should reducers be pure functions?",
+    "answer": "A reducer should calculate the next state from the current state and action without network requests, timers, random values, or other side effects.",
+    "explanation": "Pure reducers are predictable, testable, and compatible with replaying actions. Put side effects in thunks, middleware, listeners, or RTK Query.",
+    "complexity": "",
+    "tags": [
+      "pure functions",
+      "reducers"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "95aace3f-0176-40d5-aa87-9899f565041f",
+    "title": "Can you mutate state inside a Redux Toolkit reducer?",
+    "category": "Redux Toolkit",
+    "question": "Can you mutate state inside a Redux Toolkit reducer?",
+    "answer": "Yes, reducer functions created by `createSlice` or `createReducer` can use mutation-like syntax because Redux Toolkit uses Immer to produce immutable updates.",
+    "explanation": "This exception does not apply to ordinary Redux reducers. Do not mutate objects from outside an Immer-managed reducer.",
+    "complexity": "",
+    "tags": [
+      "Immer",
+      "immutability"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "39590109-fc72-4740-872f-609f7a80be01",
+    "title": "How do you write a unit test for a Redux reducer?",
+    "category": "Testing",
+    "question": "How do you write a unit test for a Redux reducer?",
+    "answer": "```js\nconst initial = { value: 0 };\nconst next = counterReducer(initial, increment());\nexpect(next.value).toBe(1);\nexpect(initial.value).toBe(0);\n```",
+    "explanation": "Reducer tests can pass an initial state and action, then assert the resulting state. Keep tests focused on meaningful transitions and edge cases.",
+    "complexity": "",
+    "tags": [
+      "unit testing",
+      "reducers"
+    ],
+    "difficulty": "Easy"
+  },
+  {
+    "id": "a79fc499-a077-432b-a88b-203d7870221e",
+    "title": "How do you test a React component that uses Redux?",
+    "category": "Testing",
+    "question": "How do you test a React component that uses Redux?",
+    "answer": "```jsx\nrender(\n  <Provider store={store}>\n    <Counter />\n  </Provider>\n);\nexpect(screen.getByText('0')).toBeInTheDocument();\n```",
+    "explanation": "Use a real test store configured with the relevant reducers for integration-style component tests. Create a fresh store per test to avoid state leaking between tests.",
+    "complexity": "",
+    "tags": [
+      "testing",
+      "Provider"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "81a1435b-a366-4662-a42b-8a7b0efda65f",
+    "title": "How do you create a fresh Redux store for each test?",
+    "category": "Testing",
+    "question": "How do you create a fresh Redux store for each test?",
+    "answer": "```js\nexport const setupStore = (preloadedState) => configureStore({\n  reducer: { counter: counterReducer },\n  preloadedState\n});\n```",
+    "explanation": "A store factory lets each test start with isolated state and optionally provide a known initial state. Avoid sharing one mutable store across unrelated tests.",
+    "complexity": "",
+    "tags": [
+      "configureStore",
+      "testing"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "1143f66b-3a83-460f-a7c4-dd31a3bc2431",
+    "title": "What is preloadedState in configureStore?",
+    "category": "Store Configuration",
+    "question": "What is preloadedState in configureStore?",
+    "answer": "```js\nconst store = configureStore({\n  reducer: { counter: counterReducer },\n  preloadedState: { counter: { value: 10 } }\n});\n```",
+    "explanation": "`preloadedState` supplies the initial state tree, useful for hydration, tests, or restoring carefully selected persisted state. Its shape should match the reducer tree.",
+    "complexity": "",
+    "tags": [
+      "preloadedState",
+      "hydration"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "a6984ec2-bcf8-461b-8b6f-f9917288f636",
+    "title": "How do you type Redux hooks with TypeScript?",
+    "category": "TypeScript",
+    "question": "How do you type Redux hooks with TypeScript?",
+    "answer": "```ts\nexport type RootState = ReturnType<typeof store.getState>;\nexport type AppDispatch = typeof store.dispatch;\n\nexport const useAppDispatch = useDispatch.withTypes<AppDispatch>();\nexport const useAppSelector = useSelector.withTypes<RootState>();\n```",
+    "explanation": "Typed hooks give components accurate state and dispatch types. The `.withTypes` API is available in recent React Redux versions; for older versions, define typed wrapper hooks with the standard generic syntax.",
+    "complexity": "",
+    "tags": [
+      "TypeScript",
+      "typed hooks"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "5f13b550-a33b-48fb-a6d3-0414ce286f88",
+    "title": "How do you avoid unnecessary component re-renders with useSelector?",
+    "category": "Performance",
+    "question": "How do you avoid unnecessary component re-renders with useSelector?",
+    "answer": "Select the smallest value the component needs, avoid creating a new object or array on every selector call unless memoized, and use memoized selectors for derived data.",
+    "explanation": "React Redux compares selected results by reference by default. A selector that returns a fresh object each time can cause avoidable re-renders.",
+    "complexity": "",
+    "tags": [
+      "useSelector",
+      "performance"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "2c14685d-7fc6-4984-829f-691172ac18aa",
+    "title": "How do you access the current state inside a thunk?",
+    "category": "Async Redux",
+    "question": "How do you access the current state inside a thunk?",
+    "answer": "```js\nexport const incrementIfOdd = () => (dispatch, getState) => {\n  const value = getState().counter.value;\n  if (value % 2 === 1) dispatch(increment());\n};\n```",
+    "explanation": "Thunks receive `dispatch` and `getState`, so they can make decisions based on current state. Keep business logic testable and avoid treating client state as a security boundary.",
+    "complexity": "",
+    "tags": [
+      "getState",
+      "thunk"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "73bb2224-4338-43e9-b587-5da72ebb97a3",
+    "title": "How do you handle API errors in createAsyncThunk?",
+    "category": "Async Redux",
+    "question": "How do you handle API errors in createAsyncThunk?",
+    "answer": "```js\nexport const saveUser = createAsyncThunk('users/save', async (user, { rejectWithValue }) => {\n  const response = await fetch('/api/users', {\n    method: 'POST', headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(user)\n  });\n  if (!response.ok) return rejectWithValue(await response.json());\n  return response.json();\n});\n```",
+    "explanation": "Use `rejectWithValue` to return structured server validation errors. Store the rejection payload or serialized error and show a safe, user-friendly message in the UI.",
+    "complexity": "",
+    "tags": [
+      "rejectWithValue",
+      "error handling"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "17d136ab-c306-4d12-a13e-69eac48749a1",
+    "title": "What is listener middleware in Redux Toolkit?",
+    "category": "Middleware",
+    "question": "What is listener middleware in Redux Toolkit?",
+    "answer": "Listener middleware runs logic in response to dispatched actions or state changes and can support workflows such as debounce, cancellation, and reacting to events.",
+    "explanation": "It is useful for complex reactive side effects that do not fit neatly into a single thunk. Keep reducers pure and configure listener middleware in the store.",
+    "complexity": "",
+    "tags": [
+      "listener middleware",
+      "side effects"
+    ],
+    "difficulty": "Hard"
+  },
+  {
+    "id": "30c3980c-b3e9-4f18-855e-d094e744a273",
+    "title": "How do you implement a wishlist toggle with Redux Toolkit?",
+    "category": "Coding Problems",
+    "question": "How do you implement a wishlist toggle with Redux Toolkit?",
+    "answer": "```js\ntoggleWishlist(state, action) {\n  const id = action.payload;\n  const index = state.ids.indexOf(id);\n  if (index >= 0) state.ids.splice(index, 1);\n  else state.ids.push(id);\n}\n```",
+    "explanation": "This reducer assumes the slice state is an object with an `ids` array. With `createSlice`, Immer safely handles the mutation-like operations.",
+    "complexity": "",
+    "tags": [
+      "wishlist",
+      "toggle"
+    ],
+    "difficulty": "Medium"
+  },
+  {
+    "id": "3b949f2b-6432-4ebc-9e51-5d5d3c1ce83d",
+    "title": "How do you implement filtering with Redux selectors?",
+    "category": "Selectors",
+    "question": "How do you implement filtering with Redux selectors?",
+    "answer": "```js\nconst selectFilter = state => state.todos.filter;\nexport const selectVisibleTodos = createSelector(\n  [selectTodos, selectFilter],\n  (todos, filter) => todos.filter(todo => {\n    if (filter === 'completed') return todo.done;\n    if (filter === 'active') return !todo.done;\n    return true;\n  })\n);\n```",
+    "explanation": "Keep the filter value in state if it must be shared, then derive the visible list with a selector rather than storing duplicate filtered results.",
+    "complexity": "",
+    "tags": [
+      "filtering",
+      "selectors"
+    ],
+    "difficulty": "Medium"
+  }
+]
