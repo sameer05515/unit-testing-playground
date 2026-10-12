@@ -60,37 +60,80 @@
 
   </style>
 
+
   <style id="theme-toggle-styles">
+    /* Light theme defaults */
     html { color-scheme: light; }
     html.dark { color-scheme: dark; }
-    html.dark body { background: #0f172a !important; color: #e2e8f0 !important; }
-    html.dark body .bg-white { background-color: #1e293b !important; }
-    html.dark body .bg-slate-100 { background-color: #0f172a !important; }
-    html.dark body .bg-slate-900 { background-color: #020617 !important; }
-    html.dark body .text-slate-800, html.dark body .text-slate-700 { color: #e2e8f0 !important; }
-    html.dark body .text-slate-600, html.dark body .text-slate-500 { color: #cbd5e1 !important; }
-    html.dark body .text-slate-300 { color: #cbd5e1 !important; }
-    html.dark body .border-slate-200, html.dark body .border-slate-300 { border-color: #475569 !important; }
-    html.dark body .bg-slate-50 { background-color: #334155 !important; }
-    html.dark body .bg-slate-200 { background-color: #475569 !important; }
-    html.dark body .bg-indigo-50 { background-color: #312e81 !important; }
-    html.dark body .bg-indigo-100 { background-color: #3730a3 !important; color: #e0e7ff !important; }
-    html.dark body .bg-blue-50 { background-color: #172554 !important; border-color: #1d4ed8 !important; color: #dbeafe !important; }
+
+    /* Dark theme: page and common Tailwind utility backgrounds */
+    html.dark body { background-color: #0b1220 !important; color: #e5e7eb !important; }
+    html.dark body .bg-white { background-color: #111827 !important; }
+    html.dark body .bg-slate-50 { background-color: #172033 !important; }
+    html.dark body .bg-slate-100 { background-color: #0b1220 !important; }
+    html.dark body .bg-slate-200 { background-color: #273449 !important; }
+    html.dark body .bg-slate-900 { background-color: #030712 !important; }
+
+    /* Text colors */
+    html.dark body .text-slate-900,
+    html.dark body .text-slate-800,
+    html.dark body .text-slate-700 { color: #f3f4f6 !important; }
+    html.dark body .text-slate-600,
+    html.dark body .text-slate-500,
+    html.dark body .text-slate-400 { color: #cbd5e1 !important; }
+    html.dark body .text-slate-300 { color: #d1d5db !important; }
+
+    /* Borders, inputs, cards, and hover states */
+    html.dark body .border-slate-100,
+    html.dark body .border-slate-200,
+    html.dark body .border-slate-300,
+    html.dark body .border-slate-400 { border-color: #374151 !important; }
+    html.dark body input,
+    html.dark body select,
+    html.dark body textarea { background-color: #111827 !important; color: #f3f4f6 !important; border-color: #4b5563 !important; }
+    html.dark body input::placeholder,
+    html.dark body textarea::placeholder { color: #9ca3af !important; }
+    html.dark body button:disabled { opacity: .4; }
+
+    /* Indigo/blue/red utility backgrounds and text */
+    html.dark body .bg-indigo-50 { background-color: #24204a !important; }
+    html.dark body .bg-indigo-100 { background-color: #312e81 !important; color: #e0e7ff !important; }
+    html.dark body .text-indigo-800 { color: #c7d2fe !important; }
+    html.dark body .bg-blue-50 { background-color: #102a43 !important; border-color: #1d4ed8 !important; color: #dbeafe !important; }
     html.dark body .text-blue-900 { color: #dbeafe !important; }
+    html.dark body .border-blue-200 { border-color: #1d4ed8 !important; }
     html.dark body .bg-red-50 { background-color: #450a0a !important; }
     html.dark body .text-red-700 { color: #fecaca !important; }
-    html.dark body input, html.dark body select, html.dark body textarea { background: #1e293b !important; color: #e2e8f0 !important; border-color: #475569 !important; }
-    html.dark body input::placeholder { color: #94a3b8 !important; }
-    html.dark body .markdown-answer code, html.dark body .markdown code { background: #334155 !important; color: #f8fafc !important; }
-    html.dark body .markdown-answer pre, html.dark body .markdown pre { background: #020617 !important; }
-    html.dark body .markdown-answer th, html.dark body .markdown th { background: #334155 !important; }
-    html.dark body .markdown-answer th, html.dark body .markdown-answer td,
-    html.dark body .markdown th, html.dark body .markdown td { border-color: #475569 !important; }
+    html.dark body .border-red-200 { border-color: #991b1b !important; }
+
+    /* GFM Markdown content */
+    html.dark body .markdown-answer,
+    html.dark body .markdown { color: #e5e7eb !important; }
+    html.dark body .markdown-answer code,
+    html.dark body .markdown code { background-color: #273449 !important; color: #f9fafb !important; }
+    html.dark body .markdown-answer pre,
+    html.dark body .markdown pre { background-color: #030712 !important; color: #e5e7eb !important; border: 1px solid #374151; }
+    html.dark body .markdown-answer th,
+    html.dark body .markdown th { background-color: #273449 !important; color: #f9fafb !important; }
+    html.dark body .markdown-answer th,
+    html.dark body .markdown-answer td,
+    html.dark body .markdown th,
+    html.dark body .markdown td { border-color: #4b5563 !important; }
+    html.dark body .markdown-answer blockquote,
+    html.dark body .markdown blockquote { color: #cbd5e1 !important; border-color: #64748b !important; }
+    html.dark body .markdown-answer a,
+    html.dark body .markdown a { color: #93c5fd !important; }
+
+    /* Tailwind hover utilities */
+    html.dark body .hover\\:bg-slate-50:hover { background-color: #273449 !important; }
+    html.dark body .hover\\:bg-slate-200:hover { background-color: #374151 !important; }
+    html.dark body .hover\\:bg-indigo-400:hover { background-color: #6366f1 !important; }
+    html.dark body .hover\\:bg-slate-800:hover { background-color: #1f2937 !important; }
   </style>
 
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
-  <div x-data="questionViewer()" x-init="init()" x-cloak>
+  <div x-data="questionViewer()" x-init="document.documentElement.classList.toggle('dark', darkMode); $watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('qa-theme', value ? 'dark' : 'light'); })">
     <header class="bg-slate-900 text-white">
       <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
