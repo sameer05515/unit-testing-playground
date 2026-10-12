@@ -59,6 +59,35 @@
     .markdown-answer hr { border: 0; border-top: 1px solid #cbd5e1; margin: 1rem 0; }
 
   </style>
+
+  <style id="theme-toggle-styles">
+    html { color-scheme: light; }
+    html.dark { color-scheme: dark; }
+    html.dark body { background: #0f172a !important; color: #e2e8f0 !important; }
+    html.dark body .bg-white { background-color: #1e293b !important; }
+    html.dark body .bg-slate-100 { background-color: #0f172a !important; }
+    html.dark body .bg-slate-900 { background-color: #020617 !important; }
+    html.dark body .text-slate-800, html.dark body .text-slate-700 { color: #e2e8f0 !important; }
+    html.dark body .text-slate-600, html.dark body .text-slate-500 { color: #cbd5e1 !important; }
+    html.dark body .text-slate-300 { color: #cbd5e1 !important; }
+    html.dark body .border-slate-200, html.dark body .border-slate-300 { border-color: #475569 !important; }
+    html.dark body .bg-slate-50 { background-color: #334155 !important; }
+    html.dark body .bg-slate-200 { background-color: #475569 !important; }
+    html.dark body .bg-indigo-50 { background-color: #312e81 !important; }
+    html.dark body .bg-indigo-100 { background-color: #3730a3 !important; color: #e0e7ff !important; }
+    html.dark body .bg-blue-50 { background-color: #172554 !important; border-color: #1d4ed8 !important; color: #dbeafe !important; }
+    html.dark body .text-blue-900 { color: #dbeafe !important; }
+    html.dark body .bg-red-50 { background-color: #450a0a !important; }
+    html.dark body .text-red-700 { color: #fecaca !important; }
+    html.dark body input, html.dark body select, html.dark body textarea { background: #1e293b !important; color: #e2e8f0 !important; border-color: #475569 !important; }
+    html.dark body input::placeholder { color: #94a3b8 !important; }
+    html.dark body .markdown-answer code, html.dark body .markdown code { background: #334155 !important; color: #f8fafc !important; }
+    html.dark body .markdown-answer pre, html.dark body .markdown pre { background: #020617 !important; }
+    html.dark body .markdown-answer th, html.dark body .markdown th { background: #334155 !important; }
+    html.dark body .markdown-answer th, html.dark body .markdown-answer td,
+    html.dark body .markdown th, html.dark body .markdown td { border-color: #475569 !important; }
+  </style>
+
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
   <div x-data="questionViewer()" x-init="init()" x-cloak>
@@ -69,6 +98,14 @@
             <h1 class="text-2xl font-bold sm:text-3xl">Question & Answer Viewer</h1>
             <p class="mt-1 text-sm text-slate-300">Alpine.js · Tailwind CSS · Marked.js · GFM</p>
           </div>
+          
+          <button type="button"
+                  @click="darkMode = !darkMode"
+                  class="inline-flex items-center justify-center rounded-lg border border-slate-600 px-4 py-2.5 text-sm font-semibold hover:bg-slate-800"
+                  :aria-label="darkMode ? 'Switch to light theme' : 'Switch to dark theme'"
+                  :title="darkMode ? 'Switch to light theme' : 'Switch to dark theme'"
+                  x-text="darkMode ? '☀️ Light mode' : '🌙 Dark mode'"></button>
+          
           <label class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold hover:bg-indigo-400">
             Select data folder
             <input type="file" class="hidden" webkitdirectory directory multiple accept=".json,application/json"
@@ -185,6 +222,7 @@
         selectedId: null,
         pageIndex: 0,
         error: '',
+        darkMode: localStorage.getItem('qa-theme') === 'dark',
         get filteredQuestions() {
           const term = this.search.trim().toLowerCase();
           // Normal browsing shows only the current JSON page (3 questions).
