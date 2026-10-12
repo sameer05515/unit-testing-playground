@@ -1,10 +1,13 @@
 [
   {
     "id": "087df1fe-7571-492c-9df0-12e2082b53a1",
-    "category": "Collections",
     "title": "What is the difference between HashMap and ConcurrentHashMap?",
+    "category": "Collections",
     "description": "Compare thread safety, null handling, and typical use cases.",
     "answer": "`HashMap` is not thread-safe and permits one null key and null values. `ConcurrentHashMap` supports concurrent access and updates with concurrency-oriented implementation techniques, and it does not permit null keys or values. Use it when multiple threads access and modify a shared map.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "java",
       "hashmap",
@@ -14,10 +17,13 @@
   },
   {
     "id": "3f557bf6-28c0-4311-b229-073478cb5a68",
-    "category": "Spring Boot",
     "title": "What is dependency injection in Spring?",
+    "category": "Spring Boot",
     "description": "Explain how Spring provides an object's dependencies.",
     "answer": "Dependency injection (DI) means an object receives the dependencies it needs instead of creating them itself. Spring's IoC container creates and wires beans. Constructor injection is generally preferred because it makes required dependencies explicit and supports immutable fields and straightforward unit testing.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "spring",
       "spring-boot",
@@ -27,10 +33,13 @@
   },
   {
     "id": "55e39536-279e-4233-8ac5-34c8970c6b87",
-    "category": "Spring Boot",
     "title": "What are Spring bean scopes?",
+    "category": "Spring Boot",
     "description": "Name common bean scopes and explain their lifetimes.",
     "answer": "`singleton` creates one bean instance per Spring IoC container (the default); `prototype` creates a new instance whenever requested from the container. Web-aware scopes include `request`, `session`, `application`, and `websocket`. Scope choice should match the bean's intended lifecycle.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "spring",
       "beans",

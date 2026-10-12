@@ -32,3 +32,14 @@ Each numbered JSON file must contain an array:
   }
 ]
 ```
+
+
+## Normalized data schema
+All `data/questions-NNN.json` files use the same ordered fields:
+`id`, `title`, `category`, `description`, `answer`, `explanation`, `complexity`, `difficulty`, `tags`.
+
+- `id` is a valid UUID string.
+- `title`, `category`, `description`, `answer`, `explanation`, `complexity`, and `difficulty` are strings.
+- `tags` is always an array of unique strings.
+- Legacy `question` text is mapped to `description` when a separate title exists, or to `title` if no title was provided.
+- Existing question content is preserved; optional fields use an empty string when not supplied.

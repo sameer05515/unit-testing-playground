@@ -1,10 +1,13 @@
 [
   {
     "id": "175bad9f-fe35-42a2-83a8-7696b07899b8",
-    "category": "React",
     "title": "What is the difference between props and state?",
+    "category": "React",
     "description": "Explain how data is passed to a component versus managed by it.",
     "answer": "Props are inputs passed from a parent component and should be treated as read-only. State is data a component manages over time; updating state schedules a re-render. Keep state minimal and derive values from props or existing state when practical.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "react",
       "props",
@@ -13,10 +16,13 @@
   },
   {
     "id": "1061cc88-a702-4588-88d7-19927f0d6ebb",
-    "category": "JavaScript",
     "title": "What is the difference between == and ===?",
+    "category": "JavaScript",
     "description": "Explain loose equality versus strict equality in JavaScript.",
     "answer": "`==` allows type coercion before comparison, while `===` compares without coercing types. For predictable comparisons, prefer `===` unless the coercion behavior of `==` is specifically intended.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "javascript",
       "equality"
@@ -24,10 +30,13 @@
   },
   {
     "id": "f0a18c87-1abc-4d74-ba8c-a0a54eb5a08b",
-    "category": "SQL",
     "title": "What is the difference between WHERE and HAVING?",
+    "category": "SQL",
     "description": "Explain when each clause filters query results.",
     "answer": "`WHERE` filters rows before grouping and aggregation. `HAVING` filters groups after `GROUP BY` and aggregation. For example, use `WHERE status = 'ACTIVE'` to filter source rows and `HAVING COUNT(*) > 5` to filter groups.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "sql",
       "database",

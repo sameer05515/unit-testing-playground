@@ -1,10 +1,13 @@
 [
   {
     "id": "99829374-f7b1-4365-8637-3c92c5e6d771",
-    "category": "Messaging",
     "title": "What is a Dead Letter Queue (DLQ)?",
+    "category": "Messaging",
     "description": "Explain why messages may be moved to a DLQ.",
     "answer": "A Dead Letter Queue stores messages that cannot be processed successfully after configured attempts or because of a non-retryable error. It helps isolate poison messages, inspect failures, and replay messages after fixing the issue. Configure alerting, retention, and a safe redrive process.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "messaging",
       "dlq",
@@ -14,10 +17,13 @@
   },
   {
     "id": "b6f0a97c-54d9-49b0-900a-be607aa5c4c1",
-    "category": "Caching",
     "title": "What is cache invalidation?",
+    "category": "Caching",
     "description": "Describe common strategies for keeping cached data consistent with its source.",
     "answer": "Cache invalidation removes or refreshes cached entries when source data changes. Common approaches include time-to-live (TTL), explicit eviction after writes, write-through, and event-driven invalidation. Choose a strategy based on freshness requirements and acceptable staleness.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "cache",
       "redis",
@@ -26,10 +32,13 @@
   },
   {
     "id": "6488ed2c-d094-473b-981c-0835a4c4ccd0",
-    "category": "System Design",
     "title": "What is the role of an API Gateway?",
+    "category": "System Design",
     "description": "Explain common responsibilities of a gateway in a microservices architecture.",
     "answer": "An API Gateway provides a client-facing entry point and can route requests to services, terminate TLS, enforce authentication and rate limits, and handle cross-cutting concerns. Avoid turning it into a place for extensive business logic, and consider resilience, observability, and gateway availability.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "system-design",
       "api-gateway",

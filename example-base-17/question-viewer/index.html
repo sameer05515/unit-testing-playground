@@ -119,6 +119,21 @@
                 <div class="markdown" x-html="renderMarkdown(selectedQuestion.answer || '')"></div>
               </div>
 
+              <div x-show="selectedQuestion.explanation" class="mt-6 border-t border-slate-200 pt-5">
+                <h3 class="mb-3 text-lg font-bold">Explanation</h3>
+                <div class="markdown" x-html="renderMarkdown(selectedQuestion.explanation || '')"></div>
+              </div>
+
+              <div x-show="selectedQuestion.complexity || selectedQuestion.difficulty"
+                   class="mt-5 flex flex-wrap gap-2 text-sm">
+                <span x-show="selectedQuestion.difficulty" class="rounded-md bg-amber-50 px-3 py-1 text-amber-800">
+                  Difficulty: <span x-text="selectedQuestion.difficulty"></span>
+                </span>
+                <span x-show="selectedQuestion.complexity" class="rounded-md bg-emerald-50 px-3 py-1 text-emerald-800">
+                  Complexity: <span x-text="selectedQuestion.complexity"></span>
+                </span>
+              </div>
+
               <div class="mt-8 flex flex-wrap justify-between gap-3 border-t border-slate-200 pt-5">
                 <button @click="selectAdjacent(-1)" :disabled="selectedIndex <= 0"
                         class="rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold hover:bg-slate-200 disabled:opacity-40">← Previous question</button>

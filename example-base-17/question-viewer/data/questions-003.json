@@ -1,10 +1,13 @@
 [
   {
     "id": "1f9244ce-6241-46ba-9a86-01adbe6dc536",
-    "category": "Spring Security",
     "title": "What is the difference between authentication and authorization?",
+    "category": "Spring Security",
     "description": "Explain identity verification versus permission checking.",
     "answer": "Authentication verifies who a user or client is. Authorization determines what that authenticated principal is allowed to do. For example, validating a JWT can establish identity and claims, while role or permission checks decide whether the principal may access an admin endpoint.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "spring-security",
       "authentication",
@@ -14,10 +17,13 @@
   },
   {
     "id": "91707e24-3972-408f-84ac-8c817ef19431",
-    "category": "REST API",
     "title": "Which HTTP methods are considered idempotent?",
+    "category": "REST API",
     "description": "Define idempotency and give common examples.",
     "answer": "An operation is idempotent when repeating the same request has the same intended effect as making it once. `GET`, `PUT`, and `DELETE` are defined as idempotent in HTTP semantics; `HEAD` and `OPTIONS` are also idempotent. `POST` is not generally idempotent, though an API can implement idempotency keys.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "rest",
       "http",
@@ -26,10 +32,13 @@
   },
   {
     "id": "0e161ba7-b224-4b0f-99d2-00b3d4336703",
-    "category": "Microservices",
     "title": "What is the Saga pattern?",
+    "category": "Microservices",
     "description": "Explain how a distributed business transaction can span multiple services.",
     "answer": "The Saga pattern breaks a distributed transaction into a sequence of local transactions. If a step fails, compensating transactions can semantically undo earlier steps. A saga can be coordinated through orchestration (a central coordinator) or choreography (services react to events). Compensation is business logic, not a guaranteed database rollback.",
+    "explanation": "",
+    "complexity": "",
+    "difficulty": "",
     "tags": [
       "microservices",
       "saga",
