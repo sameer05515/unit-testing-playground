@@ -43,3 +43,7 @@ All `data/questions-NNN.json` files use the same ordered fields:
 - `tags` is always an array of unique strings.
 - Legacy `question` text is mapped to `description` when a separate title exists, or to `title` if no title was provided.
 - Existing question content is preserved; optional fields use an empty string when not supplied.
+
+
+## Markdown answers
+Answers are rendered with Marked.js in GitHub Flavored Markdown (GFM) mode, including tables, fenced code blocks, strikethrough, and task lists. DOMPurify sanitizes the generated HTML. CDN access is required.
