@@ -1,0 +1,1302 @@
+[
+  {
+    "id": "a3f9053a-ff78-4308-bc2b-794cea993850",
+    "title": "First non-repeated character",
+    "question": "Write a JavaScript function to first non-repeated character.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){const c={};for(const x of s)c[x]=(c[x]||0)+1;return [...s].find(x=>c[x]===1)??null;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "36a8df2f-aecf-4a67-8bb9-58afcaa6f7b7",
+    "title": "Check a palindrome",
+    "question": "Write a JavaScript function to check a palindrome.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return s===[...s].reverse().join('');}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "92aa3d45-71b5-43d7-99d6-ade0117feb7d",
+    "title": "Flatten a nested array",
+    "question": "Write a JavaScript function to flatten a nested array.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return a.flat(Infinity);}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0a384cad-464b-4439-aee9-c44488c23dd1",
+    "title": "Find the longest word",
+    "question": "Write a JavaScript function to find the longest word.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return (s.match(/[\\w']+/g)||[]).reduce((a,b)=>b.length>a.length?b:a,'');}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "47745545-e55c-4b57-b44b-34132a528253",
+    "title": "Remove array duplicates",
+    "question": "Write a JavaScript function to remove array duplicates.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return [...new Set(a)];}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "7f01ffd9-5e21-4c6d-be64-5124ab3fb592",
+    "title": "Reverse a string",
+    "question": "Write a JavaScript function to reverse a string.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return [...s].reverse().join('');}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "636f1e36-1d21-4eec-badd-9779a07f6f02",
+    "title": "Factorial of a non-negative integer",
+    "question": "Write a JavaScript function to factorial of a non-negative integer.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(!Number.isInteger(n)||n<0)throw Error('Invalid n');let r=1;for(let i=2;i<=n;i++)r*=i;return r;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "b206fcd9-7329-4e4c-b128-c2e034fbe81a",
+    "title": "Sort numbers ascending",
+    "question": "Write a JavaScript function to sort numbers ascending.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return [...a].sort((x,y)=>x-y);}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "f4da2d99-a4f3-4ec0-9ee9-ef688c9ae425",
+    "title": "Intersection of two arrays",
+    "question": "Write a JavaScript function to intersection of two arrays.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){const s=new Set(b);return [...new Set(a)].filter(x=>s.has(x));}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "3b558c25-5314-4b32-bfd2-6d1ba506d73b",
+    "title": "Convert integer to Roman numerals",
+    "question": "Write a JavaScript function to convert integer to Roman numerals.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(n<1||n>3999||!Number.isInteger(n))throw Error('Use 1..3999');let r='';for(const [v,s] of [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']])while(n>=v){r+=s;n-=v;}return r;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "d5fecd04-f7ef-4678-b9f2-1729ddb2a6bc",
+    "title": "Sum positive numbers",
+    "question": "Write a JavaScript function to sum positive numbers.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return a.reduce((s,n)=>s+(n>0?n:0),0);}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "3e585dbc-1f30-46ea-89e9-fb0764b6ff88",
+    "title": "Merge two sorted arrays",
+    "question": "Write a JavaScript function to merge two sorted arrays.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){let i=0,j=0,r=[];while(i<a.length&&j<b.length)r.push(a[i]<=b[j]?a[i++]:b[j++]);return r.concat(a.slice(i),b.slice(j));}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "8be52561-ca3c-41b8-bac0-60d824ad078c",
+    "title": "Check prime number",
+    "question": "Write a JavaScript function to check prime number.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(!Number.isInteger(n)||n<2)return false;for(let i=2;i*i<=n;i++)if(n%i===0)return false;return true;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "154b46bc-6cdf-4320-8d34-de3e3559bc0d",
+    "title": "Greatest common divisor",
+    "question": "Write a JavaScript function to greatest common divisor.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){a=Math.abs(a);b=Math.abs(b);while(b)[a,b]=[b,a%b];return a;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "e0a52b3b-9090-491a-acbb-1ee18f2d61be",
+    "title": "Nth Fibonacci number (F0=0)",
+    "question": "Write a JavaScript function to nth Fibonacci number (F0=0).",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){let a=0,b=1;for(let i=0;i<n;i++)[a,b]=[b,a+b];return a;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "1e341945-02b0-4c9c-acff-d93242b4d7c7",
+    "title": "Capitalize each word",
+    "question": "Write a JavaScript function to capitalize each word.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return s.toLowerCase().replace(/\\b[a-z]/g,c=>c.toUpperCase());}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "bd8a39c2-a4d2-4766-90f5-f877480eff4c",
+    "title": "Largest difference in array",
+    "question": "Write a JavaScript function to largest difference in array.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return a.length<2?null:Math.max(...a)-Math.min(...a);}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0468bfea-7b47-4556-95ed-a2bc9ed28e6a",
+    "title": "Count vowels",
+    "question": "Write a JavaScript function to count vowels.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return (s.match(/[aeiou]/gi)||[]).length;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "e4836323-2526-4688-9f66-38a5c52c5e2f",
+    "title": "Check unique characters",
+    "question": "Write a JavaScript function to check unique characters.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){const a=[...s];return new Set(a).size===a.length;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "684e2ba5-61fc-440e-8188-022bbc22dc3a",
+    "title": "Maximum contiguous subarray sum",
+    "question": "Write a JavaScript function to maximum contiguous subarray sum.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){if(!a.length)return null;let c=a[0],m=c;for(const x of a.slice(1)){c=Math.max(x,c+x);m=Math.max(m,c);}return m;}",
+    "language": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "2878011b-17bf-4d85-9887-8a8788299aeb",
+    "title": "Generate string permutations",
+    "question": "Write a JavaScript function to generate string permutations.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){if(s.length<2)return [s];return [...new Set([...s].flatMap((c,i)=>solve(s.slice(0,i)+s.slice(i+1)).map(t=>c+t)))];}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "14c30cae-347a-4323-9519-cc7646154771",
+    "title": "Check anagrams (ignore punctuation/case)",
+    "question": "Write a JavaScript function to check anagrams (ignore punctuation/case).",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){const n=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'').split('').sort().join('');return n(a)===n(b);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "260a9a32-2fff-4b3b-aa3a-6c3a975f98d8",
+    "title": "Convert to snake_case",
+    "question": "Write a JavaScript function to convert to snake_case.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return s.trim().replace(/([a-z0-9])([A-Z])/g,'$1_$2').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'').toLowerCase();}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "6f24f391-0609-43b1-8bfa-bfc492a9764c",
+    "title": "Days between dates",
+    "question": "Write a JavaScript function to days between dates.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){const d=x=>Date.UTC(x.getFullYear(),x.getMonth(),x.getDate());return Math.abs((d(a)-d(b))/86400000);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "6b5491b1-7f55-4845-85e6-54948b6c2446",
+    "title": "Check leap year",
+    "question": "Write a JavaScript function to check leap year.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(y){return y%4===0&&(y%100!==0||y%400===0);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0f90b93d-5520-464b-aad8-ac3323a49be6",
+    "title": "Deep clone a structured value",
+    "question": "Write a JavaScript function to deep clone a structured value.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(value){return structuredClone(value);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "60559063-5226-4c82-939f-869ee145e768",
+    "title": "Second-largest distinct number",
+    "question": "Write a JavaScript function to second-largest distinct number.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){const b=[...new Set(a)].sort((x,y)=>y-x);return b.length>1?b[1]:null;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "124342be-c4b2-4aa6-aed1-5bd9e8c3f19a",
+    "title": "Binary string to decimal",
+    "question": "Write a JavaScript function to binary string to decimal.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){if(!/^[01]+$/.test(s))throw Error('Invalid binary');return parseInt(s,2);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "686b1a97-ccd3-4a66-b93f-58a8a5dc094e",
+    "title": "Group objects by property",
+    "question": "Write a JavaScript function to group objects by property.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,k){return a.reduce((r,x)=>((r[x[k]]??=[]).push(x),r),{});}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "ba68aa5b-ba7b-408c-b6d2-2b0adcfe7c08",
+    "title": "Rotate square matrix clockwise",
+    "question": "Write a JavaScript function to rotate square matrix clockwise.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(m){const n=m.length;if(m.some(r=>r.length!==n))throw Error('Square matrix required');return Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>m[n-1-j][i]));}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a03e5c1a-6f20-4f1a-ac2d-126e29572dda",
+    "title": "Validate basic email",
+    "question": "Write a JavaScript function to validate basic email.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(s);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "144ede9e-3d30-4581-8224-170922f9376e",
+    "title": "Random integer in inclusive range",
+    "question": "Write a JavaScript function to random integer in inclusive range.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(min,max){if(min>max)throw Error('Invalid range');return Math.floor(Math.random()*(max-min+1))+min;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "2114dc6a-ca08-47fc-8437-bac7831a1aa0",
+    "title": "Remove falsy array values",
+    "question": "Write a JavaScript function to remove falsy array values.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return a.filter(Boolean);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "84f025c0-6908-499d-aa3e-7ebcc799d5df",
+    "title": "Find missing number from 1..n",
+    "question": "Write a JavaScript function to find missing number from 1..n.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,n){return n*(n+1)/2-a.reduce((s,x)=>s+x,0);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0e51e01a-03af-44f4-a702-6068664c5418",
+    "title": "Array of objects to CSV",
+    "question": "Write a JavaScript function to array of objects to CSV.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(rows){if(!rows.length)return '';const h=[...new Set(rows.flatMap(Object.keys))],e=v=>{v=v==null?'':String(v);return /[\",\\n\\r]/.test(v)?'\"'+v.replace(/\"/g,'\"\"')+'\"':v;};return [h,...rows.map(r=>h.map(k=>r[k]))].map(r=>r.map(e).join(',')).join('\\n');}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "135e5b6a-88f4-419a-85d7-c45ef47c4055",
+    "title": "Sum integers in a range",
+    "question": "Write a JavaScript function to sum integers in a range.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){if(a>b)[a,b]=[b,a];return (b-a+1)*(a+b)/2;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "20939583-ccb7-4657-bef9-546ff396ae56",
+    "title": "Longest substring without repeating characters",
+    "question": "Write a JavaScript function to longest substring without repeating characters.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){let l=0,b=0,start=0,m=new Map();for(let r=0;r<s.length;r++){if(m.has(s[r])&&m.get(s[r])>=l)l=m.get(s[r])+1;m.set(s[r],r);if(r-l+1>b){b=r-l+1;start=l;}}return s.slice(start,start+b);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "972dac29-44f7-4d31-9426-cc8252ae0b17",
+    "title": "Count character occurrences",
+    "question": "Write a JavaScript function to count character occurrences.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){const r={};for(const c of s)r[c]=(r[c]||0)+1;return r;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "54c1f2ed-f64e-43e8-ad73-7c508b5b4490",
+    "title": "Convert to camelCase",
+    "question": "Write a JavaScript function to convert to camelCase.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return (s.match(/[A-Za-z0-9]+/g)||[]).map((w,i)=>i?w[0].toUpperCase()+w.slice(1).toLowerCase():w.toLowerCase()).join('');}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "61a6f98d-45fc-4a62-90df-03fc46c2e725",
+    "title": "Check Armstrong number",
+    "question": "Write a JavaScript function to check Armstrong number.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(n<0||!Number.isInteger(n))return false;const d=String(n).split('').map(Number);return d.reduce((s,x)=>s+x**d.length,0)===n;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "fba3523b-10a9-438a-af5d-619ab7fbc479",
+    "title": "Largest prime factor",
+    "question": "Write a JavaScript function to largest prime factor.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(n<2)return null;let p=null;for(let d=2;d*d<=n;d++)while(n%d===0){p=d;n/=d;}return n>1?n:p;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "56c5f301-a6de-4ee0-a024-d696558688c9",
+    "title": "Median of numbers",
+    "question": "Write a JavaScript function to median of numbers.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){if(!a.length)return null;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "54fbc899-e740-4617-9e17-170f35a19922",
+    "title": "Remove specific element",
+    "question": "Write a JavaScript function to remove specific element.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,x){return a.filter(v=>v!==x);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "f46fe728-9b97-4d9c-9028-9649c921c7db",
+    "title": "Palindrome ignoring spaces/punctuation",
+    "question": "Write a JavaScript function to palindrome ignoring spaces/punctuation.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){s=s.toLowerCase().replace(/[^a-z0-9]/g,'');return s===[...s].reverse().join('');}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "168f77f6-d8b4-4d1e-bf29-a0f6f70b34ff",
+    "title": "First n rows of Pascal triangle",
+    "question": "Write a JavaScript function to first n rows of Pascal triangle.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){const r=[];for(let i=0;i<n;i++){const row=Array(i+1).fill(1);for(let j=1;j<i;j++)row[j]=r[i-1][j-1]+r[i-1][j];r.push(row);}return r;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "d011d854-b911-4621-badd-b66625755054",
+    "title": "Common values in three sorted arrays",
+    "question": "Write a JavaScript function to common values in three sorted arrays.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b,c){let i=0,j=0,k=0,r=[];while(i<a.length&&j<b.length&&k<c.length){if(a[i]===b[j]&&b[j]===c[k]){if(r.at(-1)!==a[i])r.push(a[i]);i++;j++;k++;}else{const m=Math.min(a[i],b[j],c[k]);if(a[i]===m)i++;if(b[j]===m)j++;if(c[k]===m)k++;}}return r;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a42a17d4-b1f1-4d0c-a364-693a25f239db",
+    "title": "Power without Math.pow (integer exponent)",
+    "question": "Write a JavaScript function to power without Math.pow (integer exponent).",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(x,n){if(x===0&&n<0)throw Error('Division by zero');let r=1,b=x,e=Math.abs(n);while(e){if(e%2)r*=b;b*=b;e=Math.floor(e/2);}return n<0?1/r:r;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "cdc946b1-d6c2-4cd4-a32a-5b9bc6518d5a",
+    "title": "Merge objects, second takes precedence",
+    "question": "Write a JavaScript function to merge objects, second takes precedence.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){return {...a,...b};}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "f5da218f-7154-4fda-b320-5df70b540e24",
+    "title": "Digital root",
+    "question": "Write a JavaScript function to digital root.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(n===0)return 0;return 1+(n-1)%9;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "35a9fda6-9ca3-4213-872d-64999de3a1b6",
+    "title": "Longest common prefix",
+    "question": "Write a JavaScript function to longest common prefix.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){if(!a.length)return '';let p=a[0];for(const s of a.slice(1)){while(!s.startsWith(p))p=p.slice(0,-1);if(!p)return '';}return p;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0b245933-6336-4d49-a581-b3566050b32a",
+    "title": "Convert 12-hour time to 24-hour time",
+    "question": "Write a JavaScript function to convert 12-hour time to 24-hour time.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(t){const m=t.match(/^(0?[1-9]|1[0-2]):([0-5]\\d)\\s*(AM|PM)$/i);if(!m)throw Error('Invalid time');let h=+m[1]%12;if(m[3].toUpperCase()==='PM')h+=12;return String(h).padStart(2,'0')+':'+m[2];}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "dcd3ddac-84f8-4293-a1f6-5cc7d02fc77f",
+    "title": "Check whether rectangles overlap",
+    "question": "Write a JavaScript function to check whether rectangles overlap.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "af2ff0e8-773f-404f-895a-aea27799f723",
+    "title": "Generate non-empty subsequences/combinations",
+    "question": "Write a JavaScript function to generate non-empty subsequences/combinations.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){const r=[];function go(i,t){if(i===s.length){if(t)r.push(t);return;}go(i+1,t);go(i+1,t+s[i]);}go(0,'');return r;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "1792c20e-78c8-4695-b0ae-aebcf3cdb6a3",
+    "title": "Nth Fibonacci number",
+    "question": "Write a JavaScript function to nth Fibonacci number.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){let a=0,b=1;for(let i=0;i<n;i++)[a,b]=[b,a+b];return a;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "7815f863-084c-42a8-b2b5-721651261dbf",
+    "title": "Binary search sorted array",
+    "question": "Write a JavaScript function to binary search sorted array.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,x){let l=0,r=a.length-1;while(l<=r){const m=(l+r)>>1;if(a[m]===x)return m;if(a[m]<x)l=m+1;else r=m-1;}return -1;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a86e6763-602b-4a64-a0e5-15df6d65108d",
+    "title": "Sum even Fibonacci numbers up to limit",
+    "question": "Write a JavaScript function to sum even Fibonacci numbers up to limit.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){let a=0,b=1,s=0;while(a<=n){if(a%2===0)s+=a;[a,b]=[b,a+b];}return s;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a51e8a8b-1288-4280-8cf5-d36bd2e5117e",
+    "title": "Find majority element",
+    "question": "Write a JavaScript function to find majority element.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){let c=0,x;for(const n of a){if(!c)x=n;c+=n===x?1:-1;}return a.filter(n=>n===x).length>a.length/2?x:null;}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "7c58b206-82bd-43ef-af2a-701749529f9e",
+    "title": "Validate IPv4 address",
+    "question": "Write a JavaScript function to validate IPv4 address.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){const a=s.split('.');return a.length===4&&a.every(x=>/^(0|[1-9]\\d{0,2})$/.test(x)&&+x<=255);}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "90e77f42-150b-443e-a7c1-1ecbf878c637",
+    "title": "Shortest path in unweighted graph",
+    "question": "Write a JavaScript function to shortest path in unweighted graph.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(g,start,end){const q=[start],p=new Map([[start,null]]);for(let i=0;i<q.length;i++){const u=q[i];if(u===end)break;for(const v of g[u]||[])if(!p.has(v)){p.set(v,u);q.push(v);}}if(!p.has(end))return null;const r=[];for(let x=end;x!==null;x=p.get(x))r.push(x);return r.reverse();}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "d0c7ffd3-d99a-4fb3-8655-734e640e06b9",
+    "title": "Integer to English words (0..999999)",
+    "question": "Write a JavaScript function to integer to English words (0..999999).",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){const o=['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];function w(x){if(x<20)return o[x];if(x<100)return t[Math.floor(x/10)]+(x%10?' '+o[x%10]:'');return o[Math.floor(x/100)]+' Hundred'+(x%100?' '+w(x%100):'');}if(n<1000)return w(n);if(n<1000000)return w(Math.floor(n/1000))+' Thousand'+(n%1000?' '+w(n%1000):'');throw Error('Use 0..999999');}",
+    "language": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "8eff356b-9f6d-4522-ac52-016f2b07e731",
+    "title": "Length of longest increasing subsequence",
+    "question": "Write a JavaScript function to length of longest increasing subsequence.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){const t=[];for(const x of a){let l=0,r=t.length;while(l<r){let m=(l+r)>>1;if(t[m]<x)l=m+1;else r=m;}t[l]=x;}return t.length;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "449ca79e-d88c-44dd-8863-d5af4dd5c2e5",
+    "title": "Strings to objects with id and value",
+    "question": "Write a JavaScript function to strings to objects with id and value.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){return a.map((value,i)=>({id:i+1,value}));}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "4714aac3-52b4-4e4c-97d3-434b57a68e85",
+    "title": "Validate credit card with Luhn checksum",
+    "question": "Write a JavaScript function to validate credit card with Luhn checksum.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){s=String(s).replace(/[ -]/g,'');if(!/^\\d+$/.test(s))return false;let sum=0,d=false;for(let i=s.length-1;i>=0;i--){let n=+s[i];if(d&&(n*=2)>9)n-=9;sum+=n;d=!d;}return sum%10===0;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "491efe91-5179-4ee5-aad4-ec83b4eedbc7",
+    "title": "Flatten nested object using dotted keys",
+    "question": "Write a JavaScript function to flatten nested object using dotted keys.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(o,p='',r={}){for(const [k,v] of Object.entries(o)){const key=p?p+'.'+k:k;if(v&&typeof v==='object'&&!Array.isArray(v))solve(v,key,r);else r[key]=v;}return r;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "cdc9557f-3dfd-44f8-b742-34c4962879e1",
+    "title": "Check perfect number",
+    "question": "Write a JavaScript function to check perfect number.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(n<2)return false;let s=1;for(let d=2;d*d<=n;d++)if(n%d===0){s+=d;if(d!==n/d)s+=n/d;}return s===n;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "9e0cff14-0cc9-440a-b418-02c318e6b1c7",
+    "title": "Reverse words in sentence",
+    "question": "Write a JavaScript function to reverse words in sentence.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return s.trim().split(/\\s+/).filter(Boolean).reverse().join(' ');}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "54f21cb7-6dbb-4cac-9ff3-ad8e2d542bb3",
+    "title": "Remove all matching values from linked list",
+    "question": "Write a JavaScript function to remove all matching values from linked list.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(head,target){const d={next:head};let c=d;while(c.next){if(c.next.value===target)c.next=c.next.next;else c=c.next;}return d.next;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "fdc1578e-12dd-4fb2-b964-0ba652a4e25f",
+    "title": "Longest balanced parentheses length",
+    "question": "Write a JavaScript function to longest balanced parentheses length.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){const st=[-1];let best=0;for(let i=0;i<s.length;i++){if(s[i]==='(')st.push(i);else{st.pop();if(!st.length)st.push(i);else best=Math.max(best,i-st.at(-1));}}return best;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "4cccba12-1e7d-4c01-b62d-8841f289cfd8",
+    "title": "Count set bits",
+    "question": "Write a JavaScript function to count set bits.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){let c=0;while(n>0){n&=n-1;c++;}return c;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "bf229178-eba1-4ed6-8065-2550d3a4645b",
+    "title": "Convert integer to binary, octal, hexadecimal",
+    "question": "Write a JavaScript function to convert integer to binary, octal, hexadecimal.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){return {binary:n.toString(2),octal:n.toString(8),hexadecimal:n.toString(16)};}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "4f007555-4811-4256-9f76-c157b52d9b23",
+    "title": "Product of array except self without division",
+    "question": "Write a JavaScript function to product of array except self without division.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){const r=Array(a.length).fill(1);let p=1;for(let i=0;i<a.length;i++){r[i]=p;p*=a[i];}p=1;for(let i=a.length-1;i>=0;i--){r[i]*=p;p*=a[i];}return r;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "551474ed-88c7-42c3-a95b-ac051db25c6c",
+    "title": "First missing positive integer",
+    "question": "Write a JavaScript function to first missing positive integer.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){const s=new Set(a.filter(x=>Number.isInteger(x)&&x>0));let n=1;while(s.has(n))n++;return n;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "1b3cd372-d5a3-4771-819b-efdebdbbe78b",
+    "title": "Check valid integer or decimal number",
+    "question": "Write a JavaScript function to check valid integer or decimal number.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return /^[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?$/.test(s.trim());}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "f89be91b-9896-40a9-9419-38ef0d887c07",
+    "title": "Validate hexadecimal color code",
+    "question": "Write a JavaScript function to validate hexadecimal color code.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){return /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(s);}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "f63c1c0f-03db-4ecd-abc5-d9b7d41adb4e",
+    "title": "Longest palindromic substring",
+    "question": "Write a JavaScript function to longest palindromic substring.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){let best='';function ex(l,r){while(l>=0&&r<s.length&&s[l]===s[r]){l--;r++;}return s.slice(l+1,r);}for(let i=0;i<s.length;i++)for(const x of [ex(i,i),ex(i,i+1)])if(x.length>best.length)best=x;return best;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "07bcabf5-80c2-4447-a08c-575a8d0fab65",
+    "title": "Multiply two matrices",
+    "question": "Write a JavaScript function to multiply two matrices.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){if(!a.length||!b.length||a[0].length!==b.length)throw Error('Incompatible dimensions');return a.map(row=>b[0].map((_,j)=>row.reduce((s,x,k)=>s+x*b[k][j],0)));}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "c0e11760-c990-4deb-b0a3-5a649e41ce30",
+    "title": "Square root without Math.sqrt",
+    "question": "Write a JavaScript function to square root without Math.sqrt.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(n){if(n<0)throw Error('Negative input');if(n<2)return n;let x=n;for(let i=0;i<100;i++)x=(x+n/x)/2;return x;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "ae256e54-0538-4935-b1ae-83ca0a2c8707",
+    "title": "Check if binary tree is height-balanced",
+    "question": "Write a JavaScript function to check if binary tree is height-balanced.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(root){function h(n){if(!n)return 0;const l=h(n.left);if(l<0)return -1;const r=h(n.right);return r<0||Math.abs(l-r)>1?-1:1+Math.max(l,r);}return h(root)>=0;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "b9f9dafc-938d-461f-bdf6-b7faf10bc1d1",
+    "title": "Unique triplets summing to zero",
+    "question": "Write a JavaScript function to unique triplets summing to zero.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){a=[...a].sort((x,y)=>x-y);const out=[];for(let i=0;i<a.length-2;i++){if(i&&a[i]===a[i-1])continue;let l=i+1,r=a.length-1;while(l<r){const s=a[i]+a[l]+a[r];if(!s){out.push([a[i],a[l],a[r]]);while(a[l]===a[l+1])l++;while(a[r]===a[r-1])r--;l++;r--;}else if(s<0)l++;else r--;}}return out;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "42f6a23a-a74b-4e0f-bfa4-e9a7f9da0864",
+    "title": "Merge sort",
+    "question": "Write a JavaScript function to merge sort.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){if(a.length<2)return [...a];const m=a.length>>1,l=solve(a.slice(0,m)),r=solve(a.slice(m)),o=[];let i=0,j=0;while(i<l.length&&j<r.length)o.push(l[i]<=r[j]?l[i++]:r[j++]);return o.concat(l.slice(i),r.slice(j));}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "7daaaac8-7564-41f4-afdd-776ed88e3429",
+    "title": "Diameter of binary tree in edges",
+    "question": "Write a JavaScript function to diameter of binary tree in edges.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(root){let d=0;function h(n){if(!n)return 0;const l=h(n.left),r=h(n.right);d=Math.max(d,l+r);return 1+Math.max(l,r);}h(root);return d;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a16d72f2-96dc-4eec-95c7-70e3de5c42e7",
+    "title": "Build tree from parent-child objects",
+    "question": "Write a JavaScript function to build tree from parent-child objects.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){const m=new Map(a.map(x=>[x.id,{...x,children:[]}])),roots=[];for(const n of m.values()){const p=m.get(n.parentId);if(p)p.children.push(n);else roots.push(n);}return roots;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "580ad0cf-599d-4251-8225-5a70d12c78f3",
+    "title": "Simple grep matching lines",
+    "question": "Write a JavaScript function to simple grep matching lines.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(text,pattern){const re=pattern instanceof RegExp?pattern:new RegExp(String(pattern).replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&'));return text.split(/\\r?\\n/).filter(line=>re.test(line));}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "5910746b-71d9-4dbe-8610-f97691996c15",
+    "title": "Polygon area using vertices",
+    "question": "Write a JavaScript function to polygon area using vertices.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(p){let s=0;for(let i=0;i<p.length;i++){const [x,y]=p[i],[u,v]=p[(i+1)%p.length];s+=x*v-u*y;}return Math.abs(s)/2;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a4ce28de-06de-4ea2-8b25-f316a7e07b6d",
+    "title": "Shortest path in binary matrix (8 directions)",
+    "question": "Write a JavaScript function to shortest path in binary matrix (8 directions).",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(g){const n=g.length;if(!n||g[0][0]||g[n-1][n-1])return -1;const d=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]],q=[[0,0,1]],seen=new Set(['0,0']);for(let i=0;i<q.length;i++){const [r,c,k]=q[i];if(r===n-1&&c===n-1)return k;for(const [x,y] of d){const a=r+x,b=c+y,key=a+','+b;if(a>=0&&b>=0&&a<n&&b<n&&g[a][b]===0&&!seen.has(key)){seen.add(key);q.push([a,b,k+1]);}}}return -1;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "45954065-c9d3-4517-bfd0-00415270e8ea",
+    "title": "Basic calculator operation",
+    "question": "Write a JavaScript function to basic calculator operation.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,op,b){if(op==='+')return a+b;if(op==='-')return a-b;if(op==='*')return a*b;if(op==='/'){if(!b)throw Error('Division by zero');return a/b;}throw Error('Invalid operator');}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "c7aaa100-d03e-4836-aa7d-a383d3cfba7c",
+    "title": "Longest common subsequence",
+    "question": "Write a JavaScript function to longest common subsequence.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=a[i-1]===b[j-1]?d[i-1][j-1]+1:Math.max(d[i-1][j],d[i][j-1]);let i=a.length,j=b.length,r=[];while(i&&j){if(a[i-1]===b[j-1]){r.push(a[i-1]);i--;j--;}else if(d[i-1][j]>=d[i][j-1])i--;else j--;}return r.reverse().join('');}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "1ec6e1b0-f32f-41e9-9767-5338805a4abd",
+    "title": "Depth-first graph traversal",
+    "question": "Write a JavaScript function to depth-first graph traversal.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(g,start){const seen=new Set(),out=[];function visit(n){if(seen.has(n))return;seen.add(n);out.push(n);for(const v of g[n]||[])visit(v);}visit(start);return out;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "61edebd5-59ce-42b5-abdb-d6334df85158",
+    "title": "Quick sort",
+    "question": "Write a JavaScript function to quick sort.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){if(a.length<2)return [...a];const p=a[a.length>>1],l=[],e=[],r=[];for(const x of a)(x<p?l:x>p?r:e).push(x);return [...solve(l),...e,...solve(r)];}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "ae2d2d9c-2a41-4d2f-a8eb-e25ba93da3a9",
+    "title": "Largest rectangle in histogram",
+    "question": "Write a JavaScript function to largest rectangle in histogram.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(h){const a=[...h,0],st=[];let best=0;for(let i=0;i<a.length;i++){while(st.length&&a[st.at(-1)]>a[i]){const x=a[st.pop()],w=st.length?i-st.at(-1)-1:i;best=Math.max(best,x*w);}st.push(i);}return best;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "b8b457c6-e04d-42a1-9f41-c3baa2fb84ff",
+    "title": "Find linked-list cycle start",
+    "question": "Write a JavaScript function to find linked-list cycle start.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(head){let s=head,f=head;do{if(!f||!f.next)return null;s=s.next;f=f.next.next;}while(s!==f);s=head;while(s!==f){s=s.next;f=f.next;}return s;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0bbf3639-aa27-4fc1-8001-274ba3c6aade",
+    "title": "Validate JSON string",
+    "question": "Write a JavaScript function to validate JSON string.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s){try{JSON.parse(s);return true;}catch{return false;}}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "0f9d0d40-4d89-432e-9419-7ff0beaca76f",
+    "title": "Maximum product subarray",
+    "question": "Write a JavaScript function to maximum product subarray.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a){if(!a.length)return null;let hi=a[0],lo=a[0],best=a[0];for(const x of a.slice(1)){if(x<0)[hi,lo]=[lo,hi];hi=Math.max(x,hi*x);lo=Math.min(x,lo*x);best=Math.max(best,hi);}return best;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "2b588676-0dc6-44df-8eb7-57ea77cda5ec",
+    "title": "Serialize and deserialize binary tree",
+    "question": "Write a JavaScript function to serialize and deserialize binary tree.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function serialize(n){return JSON.stringify(n? [n.value,JSON.parse(serialize(n.left)),JSON.parse(serialize(n.right))]:null);} function deserialize(s){function b(n){return n===null?null:{value:n[0],left:b(n[1]),right:b(n[2])};}return b(JSON.parse(s));}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "a7ef6328-7bc3-49bb-b31f-0db907ae9b70",
+    "title": "Word break using dictionary",
+    "question": "Write a JavaScript function to word break using dictionary.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(s,dict){const w=new Set(dict),d=Array(s.length+1).fill(false);d[0]=true;for(let i=1;i<=s.length;i++)for(let j=0;j<i;j++)if(d[j]&&w.has(s.slice(j,i))){d[i]=true;break;}return d[s.length];}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "3645aeb1-ecd0-4834-8c07-b3a4caee4841",
+    "title": "All root-to-leaf paths",
+    "question": "Write a JavaScript function to all root-to-leaf paths.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(root){const out=[];function walk(n,p){if(!n)return;p=[...p,n.value];if(!n.left&&!n.right)out.push(p);else{walk(n.left,p);walk(n.right,p);}}walk(root,[]);return out;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "163f54d3-3990-4408-bc25-0e6766b8bb1f",
+    "title": "Edit distance between strings",
+    "question": "Write a JavaScript function to edit distance between strings.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,b){let p=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=a[i-1]===b[j-1]?p[j-1]:1+Math.min(p[j],c[j-1],p[j-1]);p=c;}return p[b.length];}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "69fe06dc-4228-43ba-aebd-07dffccf2266",
+    "title": "Implement a simple reduce",
+    "question": "Write a JavaScript function to implement a simple reduce.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,fn,initial){let i=0,r;if(arguments.length>=3)r=initial;else{if(!a.length)throw TypeError('Empty array');r=a[i++];}for(;i<a.length;i++)r=fn(r,a[i],i,a);return r;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "af1de298-42cc-4e56-bd4b-ae6c3249bb94",
+    "title": "Count islands in grid",
+    "question": "Write a JavaScript function to count islands in grid.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(g){let count=0;const R=g.length,C=R?g[0].length:0;function sink(r,c){if(r<0||c<0||r>=R||c>=C||g[r][c]!=='1')return;g[r][c]='0';sink(r+1,c);sink(r-1,c);sink(r,c+1);sink(r,c-1);}for(let r=0;r<R;r++)for(let c=0;c<C;c++)if(g[r][c]==='1'){count++;sink(r,c);}return count;}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  },
+  {
+    "id": "3b9de642-4615-4e65-bf71-ba2c99671458",
+    "title": "K-th largest element",
+    "question": "Write a JavaScript function to k-th largest element.",
+    "description": "Reference solution. Check the assumptions and edge cases for your interview requirements.",
+    "answer": "function solve(a,k){if(k<1||k>a.length)throw Error('Invalid k');return [...a].sort((x,y)=>y-x)[k-1];}",
+    "language": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "javascript",
+      "coding-interview"
+    ]
+  }
+]
