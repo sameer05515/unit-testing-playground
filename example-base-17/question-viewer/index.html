@@ -59,81 +59,42 @@
     .markdown-answer hr { border: 0; border-top: 1px solid #cbd5e1; margin: 1rem 0; }
 
   </style>
-
-
+<style id="v2-styles">
+.filter-control{width:100%;border:1px solid #cbd5e1;border-radius:.5rem;padding:.55rem .7rem;background:white;color:#1e293b}
+html.dark .filter-control{background:#111827;color:#e5e7eb;border-color:#4b5563}
+.icon-button{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border:1px solid #cbd5e1;border-radius:.55rem;padding:.5rem .75rem;font-size:.875rem;font-weight:600}
+html.dark .icon-button{border-color:#475569;color:#e5e7eb}
+html.dark body .bg-amber-50{background:#422006!important} html.dark body .text-amber-800{color:#fde68a!important}
+html.dark body .bg-emerald-50{background:#064e3b!important} html.dark body .text-emerald-800{color:#a7f3d0!important}
+html.dark body .icon-button:hover{background:#273449!important}
+</style>
   <style id="theme-toggle-styles">
-    /* Light theme defaults */
-    html { color-scheme: light; }
-    html.dark { color-scheme: dark; }
-
-    /* Dark theme: page and common Tailwind utility backgrounds */
-    html.dark body { background-color: #0b1220 !important; color: #e5e7eb !important; }
-    html.dark body .bg-white { background-color: #111827 !important; }
-    html.dark body .bg-slate-50 { background-color: #172033 !important; }
-    html.dark body .bg-slate-100 { background-color: #0b1220 !important; }
-    html.dark body .bg-slate-200 { background-color: #273449 !important; }
-    html.dark body .bg-slate-900 { background-color: #030712 !important; }
-
-    /* Text colors */
-    html.dark body .text-slate-900,
-    html.dark body .text-slate-800,
-    html.dark body .text-slate-700 { color: #f3f4f6 !important; }
-    html.dark body .text-slate-600,
-    html.dark body .text-slate-500,
-    html.dark body .text-slate-400 { color: #cbd5e1 !important; }
-    html.dark body .text-slate-300 { color: #d1d5db !important; }
-
-    /* Borders, inputs, cards, and hover states */
-    html.dark body .border-slate-100,
-    html.dark body .border-slate-200,
-    html.dark body .border-slate-300,
-    html.dark body .border-slate-400 { border-color: #374151 !important; }
-    html.dark body input,
-    html.dark body select,
-    html.dark body textarea { background-color: #111827 !important; color: #f3f4f6 !important; border-color: #4b5563 !important; }
-    html.dark body input::placeholder,
-    html.dark body textarea::placeholder { color: #9ca3af !important; }
-    html.dark body button:disabled { opacity: .4; }
-
-    /* Indigo/blue/red utility backgrounds and text */
-    html.dark body .bg-indigo-50 { background-color: #24204a !important; }
-    html.dark body .bg-indigo-100 { background-color: #312e81 !important; color: #e0e7ff !important; }
-    html.dark body .text-indigo-800 { color: #c7d2fe !important; }
-    html.dark body .bg-blue-50 { background-color: #102a43 !important; border-color: #1d4ed8 !important; color: #dbeafe !important; }
-    html.dark body .text-blue-900 { color: #dbeafe !important; }
-    html.dark body .border-blue-200 { border-color: #1d4ed8 !important; }
-    html.dark body .bg-red-50 { background-color: #450a0a !important; }
-    html.dark body .text-red-700 { color: #fecaca !important; }
-    html.dark body .border-red-200 { border-color: #991b1b !important; }
-
-    /* GFM Markdown content */
-    html.dark body .markdown-answer,
-    html.dark body .markdown { color: #e5e7eb !important; }
-    html.dark body .markdown-answer code,
-    html.dark body .markdown code { background-color: #273449 !important; color: #f9fafb !important; }
-    html.dark body .markdown-answer pre,
-    html.dark body .markdown pre { background-color: #030712 !important; color: #e5e7eb !important; border: 1px solid #374151; }
-    html.dark body .markdown-answer th,
-    html.dark body .markdown th { background-color: #273449 !important; color: #f9fafb !important; }
-    html.dark body .markdown-answer th,
-    html.dark body .markdown-answer td,
-    html.dark body .markdown th,
-    html.dark body .markdown td { border-color: #4b5563 !important; }
-    html.dark body .markdown-answer blockquote,
-    html.dark body .markdown blockquote { color: #cbd5e1 !important; border-color: #64748b !important; }
-    html.dark body .markdown-answer a,
-    html.dark body .markdown a { color: #93c5fd !important; }
-
-    /* Tailwind hover utilities */
-    html.dark body .hover\\:bg-slate-50:hover { background-color: #273449 !important; }
-    html.dark body .hover\\:bg-slate-200:hover { background-color: #374151 !important; }
-    html.dark body .hover\\:bg-indigo-400:hover { background-color: #6366f1 !important; }
-    html.dark body .hover\\:bg-slate-800:hover { background-color: #1f2937 !important; }
+    html { color-scheme: light; } html.dark { color-scheme: dark; }
+    html.dark body { background:#0b1220 !important; color:#e5e7eb !important; }
+    html.dark body .bg-white { background:#111827 !important; }
+    html.dark body .bg-slate-50 { background:#172033 !important; }
+    html.dark body .bg-slate-100 { background:#0b1220 !important; }
+    html.dark body .bg-slate-200 { background:#273449 !important; }
+    html.dark body .bg-slate-900 { background:#030712 !important; }
+    html.dark body .text-slate-900, html.dark body .text-slate-800, html.dark body .text-slate-700 { color:#f3f4f6 !important; }
+    html.dark body .text-slate-600, html.dark body .text-slate-500, html.dark body .text-slate-400 { color:#cbd5e1 !important; }
+    html.dark body .border-slate-100, html.dark body .border-slate-200, html.dark body .border-slate-300, html.dark body .border-slate-400 { border-color:#374151 !important; }
+    html.dark body input, html.dark body select, html.dark body textarea { background:#111827 !important; color:#f3f4f6 !important; border-color:#4b5563 !important; }
+    html.dark body .bg-indigo-50 { background:#24204a !important; }
+    html.dark body .bg-indigo-100 { background:#312e81 !important; color:#e0e7ff !important; }
+    html.dark body .bg-blue-50 { background:#102a43 !important; color:#dbeafe !important; }
+    html.dark body .text-blue-900 { color:#dbeafe !important; }
+    html.dark body .bg-amber-50 { background:#422006 !important; }
+    html.dark body .text-amber-800 { color:#fde68a !important; }
+    html.dark body .markdown-answer code, html.dark body .markdown code { background:#273449 !important; color:#f9fafb !important; }
+    html.dark body .markdown-answer pre, html.dark body .markdown pre { background:#030712 !important; color:#e5e7eb !important; }
+    html.dark body .markdown-answer th, html.dark body .markdown th { background:#273449 !important; color:#f9fafb !important; }
+    html.dark body .markdown-answer th, html.dark body .markdown-answer td, html.dark body .markdown th, html.dark body .markdown td { border-color:#4b5563 !important; }
   </style>
 
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
-  <div x-data="questionViewer()" x-init="document.documentElement.classList.toggle('dark', darkMode); $watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('qa-theme', value ? 'dark' : 'light'); })">
+  <div x-data="questionViewer()" x-cloak x-init="document.documentElement.classList.toggle('dark', darkMode); $watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('qa-theme', value ? 'dark' : 'light'); })">
     <header class="bg-slate-900 text-white">
       <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -144,11 +105,11 @@
           
           <button type="button"
                   @click="darkMode = !darkMode"
-                  class="inline-flex items-center justify-center rounded-lg border border-slate-600 px-4 py-2.5 text-sm font-semibold hover:bg-slate-800"
+                  class="inline-flex items-center justify-center rounded-lg border border-slate-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
                   :aria-label="darkMode ? 'Switch to light theme' : 'Switch to dark theme'"
                   :title="darkMode ? 'Switch to light theme' : 'Switch to dark theme'"
                   x-text="darkMode ? '☀️ Light mode' : '🌙 Dark mode'"></button>
-          
+
           <label class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold hover:bg-indigo-400">
             Select data folder
             <input type="file" class="hidden" webkitdirectory directory multiple accept=".json,application/json"
@@ -169,24 +130,19 @@
       <div class="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
         <aside class="h-fit rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <label for="search" class="mb-2 block text-sm font-semibold">Search questions</label>
-          <input id="search" x-model="search" type="search" placeholder="Search title, answer, tag..."
-                 class="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
-
-          <div class="mt-5 flex items-center justify-between">
-            <h2 class="font-bold">Questions</h2>
-            <span class="rounded-full bg-slate-100 px-2 py-1 text-xs" x-text="filteredQuestions.length"></span>
+          <input id="search" x-model="search" type="search" placeholder="Search title, answer, tag..." class="filter-control outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" />
+          <div class="mt-4 space-y-3">
+            <div><label for="categoryFilter" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Category</label>
+              <select id="categoryFilter" x-model="selectedCategory" class="filter-control"><option value="">All categories</option><template x-for="category in categories" :key="category"><option :value="category" x-text="category"></option></template></select></div>
+            <div><label for="tagFilter" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Tag</label>
+              <select id="tagFilter" x-model="selectedTag" class="filter-control"><option value="">All tags</option><template x-for="tag in tags" :key="tag"><option :value="tag" x-text="tag"></option></template></select></div>
+            <button type="button" @click="showBookmarksOnly = !showBookmarksOnly" class="w-full rounded-lg border px-3 py-2 text-sm font-semibold transition" :class="showBookmarksOnly ? 'border-amber-400 bg-amber-50 text-amber-800' : 'border-slate-200 hover:bg-slate-50'"><span x-text="showBookmarksOnly ? '★ Showing bookmarks' : '☆ Show bookmarks'"></span> <span class="ml-1 text-xs" x-text="'(' + bookmarks.length + ')' "></span></button>
+            <button type="button" @click="clearFilters()" class="w-full rounded-lg px-3 py-1.5 text-sm text-indigo-600 hover:bg-indigo-50">Clear filters</button>
           </div>
-          <div class="mt-3 space-y-2">
-            <template x-for="(q, index) in filteredQuestions" :key="q.id">
-              <button @click="selectedId = q.id"
-                      class="w-full rounded-lg border p-3 text-left transition"
-                      :class="selectedId === q.id ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 hover:bg-slate-50'">
-                <span class="block text-xs text-slate-500" x-text="q.category || 'General'"></span>
-                <span class="mt-1 block text-sm font-semibold" x-text="q.title"></span>
-              </button>
-            </template>
-            <p x-show="filteredQuestions.length === 0" class="py-4 text-sm text-slate-500">No questions found.</p>
-          </div>
+          <div class="mt-5 flex items-center justify-between"><h2 class="font-bold">Questions</h2><span class="rounded-full bg-slate-100 px-2 py-1 text-xs" x-text="filteredQuestions.length"></span></div>
+          <div class="mt-3 space-y-2"><template x-for="q in filteredQuestions" :key="q.id"><button @click="selectQuestion(q)" class="w-full rounded-lg border p-3 text-left transition" :class="selectedId === q.id ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 hover:bg-slate-50'">
+            <div class="flex items-start gap-2"><span class="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600" x-text="'#' + questionNumber(q)"></span><span class="min-w-0 flex-1"><span class="block text-xs text-slate-500" x-text="q.category || 'General'"></span><span class="mt-1 block text-sm font-semibold" x-text="q.title || q.question || 'Untitled question'"></span></span><span x-show="isBookmarked(q.id)" class="text-amber-500">★</span></div>
+          </button></template><p x-show="filteredQuestions.length === 0" class="py-4 text-sm text-slate-500">No questions found.</p></div>
         </aside>
 
         <section class="min-w-0">
@@ -209,13 +165,16 @@
 
           <template x-if="selectedQuestion">
             <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+              <div class="mb-4 flex flex-wrap items-center justify-between gap-2"><span class="text-sm font-semibold text-slate-500" x-text="'Question #' + questionNumber(selectedQuestion) + ' of ' + allQuestions.length"></span><div class="flex flex-wrap gap-2">
+                <button type="button" class="icon-button" @click="toggleBookmark(selectedQuestion.id)" :class="isBookmarked(selectedQuestion.id) ? 'border-amber-400 bg-amber-50 text-amber-800' : 'hover:bg-slate-50'"><span x-text="isBookmarked(selectedQuestion.id) ? '★ Bookmarked' : '☆ Bookmark'"></span></button>
+                <button type="button" class="icon-button hover:bg-slate-50" @click="copyQuestionLink()">🔗 Copy question link</button></div></div>
               <div class="flex flex-wrap items-center gap-2">
                 <span class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-800" x-text="selectedQuestion.category || 'General'"></span>
                 <template x-for="tag in (selectedQuestion.tags || [])" :key="tag">
                   <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600" x-text="tag"></span>
                 </template>
               </div>
-              <h2 class="mt-4 text-2xl font-bold leading-tight" x-text="selectedQuestion.title"></h2>
+              <h2 class="mt-4 text-2xl font-bold leading-tight" x-text="selectedQuestion.title || selectedQuestion.question || 'Untitled question'"></h2>
               <p x-show="selectedQuestion.description" class="mt-3 text-slate-600" x-text="selectedQuestion.description"></p>
 
               <div class="mt-7 border-t border-slate-200 pt-5">
@@ -259,33 +218,27 @@
   <script>
     function questionViewer() {
       return {
-        pageFiles: [],
-        allQuestions: [],
-        search: '',
-        selectedId: null,
-        pageIndex: 0,
-        error: '',
+        pageFiles: [], allQuestions: [], search: '', selectedId: null, pageIndex: 0, error: '',
         darkMode: localStorage.getItem('qa-theme') === 'dark',
+        bookmarks: JSON.parse(localStorage.getItem('qa-bookmarks') || '[]'),
+        showBookmarksOnly: false, selectedCategory: '', selectedTag: '',
+        get categories() { return [...new Set(this.allQuestions.map(q => q.category).filter(Boolean))].sort((a,b) => a.localeCompare(b)); },
+        get tags() { return [...new Set(this.allQuestions.flatMap(q => Array.isArray(q.tags) ? q.tags : []).filter(Boolean))].sort((a,b) => a.localeCompare(b)); },
+        get hasFilters() { return Boolean(this.search.trim() || this.selectedCategory || this.selectedTag || this.showBookmarksOnly); },
         get filteredQuestions() {
           const term = this.search.trim().toLowerCase();
-          // Normal browsing shows only the current JSON page (3 questions).
-          // Searching checks all loaded pages and navigates to matching questions.
-          const source = term ? this.allQuestions : (this.pageFiles[this.pageIndex]?.questions || this.allQuestions);
-          if (!term) return source;
-          return source.filter(q =>
-            [q.title, q.description, q.answer, q.category, ...(q.tags || [])]
-              .some(value => String(value || '').toLowerCase().includes(term))
-          );
+          const source = this.hasFilters ? this.allQuestions : (this.pageFiles[this.pageIndex]?.questions || this.allQuestions);
+          return source.filter(q => {
+            const textMatch = !term || [q.title,q.question,q.description,q.answer,q.explanation,q.category,...(Array.isArray(q.tags)?q.tags:[])].some(v => String(v||'').toLowerCase().includes(term));
+            return textMatch && (!this.selectedCategory || q.category === this.selectedCategory) && (!this.selectedTag || (Array.isArray(q.tags) && q.tags.includes(this.selectedTag))) && (!this.showBookmarksOnly || this.bookmarks.includes(q.id));
+          });
         },
-        get selectedQuestion() {
-          return this.filteredQuestions.find(q => q.id === this.selectedId) || this.filteredQuestions[0] || null;
-        },
-        get selectedIndex() {
-          return this.filteredQuestions.findIndex(q => q.id === (this.selectedQuestion && this.selectedQuestion.id));
-        },
+        get selectedQuestion() { return this.filteredQuestions.find(q => q.id === this.selectedId) || this.filteredQuestions[0] || null; },
+        get selectedIndex() { return this.filteredQuestions.findIndex(q => q.id === (this.selectedQuestion && this.selectedQuestion.id)); },
         init() {
           // Configure Marked with GitHub Flavored Markdown (tables, task lists, strikethrough, etc.).
           marked.setOptions({ gfm: true, breaks: false });
+          window.addEventListener('hashchange', () => this.selectQuestionFromUrl());
 
           // HTTP/HTTPS mode: automatically load every numbered JSON file from ./data/.
           // Direct file:// mode must use the folder picker because browsers block fetch().
@@ -313,6 +266,7 @@
             this.pageIndex = 0;
             this.allQuestions = parsedPages.flatMap(page => page.questions);
             this.selectedId = this.allQuestions[0]?.id ?? null;
+            this.selectQuestionFromUrl();
           } catch (err) {
             this.error = 'Unable to load JSON files: ' + err.message;
           } finally {
@@ -345,9 +299,34 @@
             this.pageIndex = 0;
             this.allQuestions = pages.flatMap(page => page.questions);
             this.selectedId = this.allQuestions[0]?.id ?? null;
+            this.selectQuestionFromUrl();
           } catch (err) {
             this.error = `Could not load JSON files from ./data/: ${err.message}. Use the folder picker when opening index.html directly, or run a local HTTP server.`;
           }
+        },
+        isBookmarked(id) { return this.bookmarks.includes(id); },
+        toggleBookmark(id) {
+          this.bookmarks = this.isBookmarked(id) ? this.bookmarks.filter(x => x !== id) : [...this.bookmarks, id];
+          localStorage.setItem('qa-bookmarks', JSON.stringify(this.bookmarks));
+        },
+        questionNumber(q) { return this.allQuestions.findIndex(item => item.id === q.id) + 1; },
+        clearFilters() {
+          this.search=''; this.selectedCategory=''; this.selectedTag=''; this.showBookmarksOnly=false; this.pageIndex=0;
+          const first=this.pageFiles[0]?.questions?.[0] || this.allQuestions[0]; if(first) this.selectQuestion(first);
+        },
+        selectQuestion(q) {
+          if(!q) return; this.selectedId=q.id;
+          const pi=this.pageFiles.findIndex(p => p.questions.some(item => item.id === q.id)); if(pi>=0) this.pageIndex=pi;
+          history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${encodeURIComponent(q.id)}`);
+        },
+        selectQuestionFromUrl() {
+          const id=decodeURIComponent(window.location.hash.replace(/^#/,'')); if(!id) return;
+          const q=this.allQuestions.find(item => item.id===id); if(q) { this.selectedId=q.id; const pi=this.pageFiles.findIndex(p=>p.questions.some(item=>item.id===q.id)); if(pi>=0) this.pageIndex=pi; }
+        },
+        async copyQuestionLink() {
+          if(!this.selectedQuestion) return;
+          const url=`${window.location.origin}${window.location.pathname}${window.location.search}#${encodeURIComponent(this.selectedQuestion.id)}`;
+          try { await navigator.clipboard.writeText(url); alert('Question link copied!'); } catch (_) { window.prompt('Copy this question link:', url); }
         },
         changePage(delta) {
           const next = this.pageIndex + delta;
@@ -355,15 +334,13 @@
           this.pageIndex = next;
           const page = this.pageFiles[next];
           const visible = page.questions.find(q => this.filteredQuestions.some(item => item.id === q.id));
-          if (visible) this.selectedId = visible.id;
+          if (visible) this.selectQuestion(visible);
         },
         selectAdjacent(delta) {
           const next = this.selectedIndex + delta;
           const q = this.filteredQuestions[next];
           if (q) {
-            this.selectedId = q.id;
-            const pageIndex = this.pageFiles.findIndex(page => page.questions.some(item => item.id === q.id));
-            if (pageIndex >= 0) this.pageIndex = pageIndex;
+            this.selectQuestion(q);
           }
         }
       };
